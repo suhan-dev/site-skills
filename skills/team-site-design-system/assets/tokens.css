@@ -51,6 +51,9 @@
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;background:var(--paper);touch-action:manipulation} /* no double-tap zoom */
+/* room under a bottom sheet's last row: the safe area, or in the iPhone Home Screen app the home indicator (--home, set
+   by the pre-paint script because env() stays 0 there without viewport-fit=cover) */
+:root{--sab:max(env(safe-area-inset-bottom,0px),var(--home,0px))}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;letter-spacing:-.006em;
   -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-feature-settings:"kern"}
 /* CJK text breaks between words, never inside one; long tokens (URLs) may still wrap */

@@ -35,7 +35,7 @@
 /* phones: a sheet docked at the bottom, above the safe area; the spotlight stays above it (js) */
 @media (max-width:760px){
   .guide-panel{top:auto;right:0;bottom:0;width:auto;max-height:calc(100dvh - 72px);transform:none!important;border-radius:14px 14px 0 0;
-    padding:16px max(20px,calc((100vw - 440px) / 2)) calc(10px + env(safe-area-inset-bottom,0px)); /* wider than a phone: lines stay short */
+    padding:16px max(20px,calc((100vw - 440px) / 2)) max(14px,calc(var(--sab,env(safe-area-inset-bottom,0px)) + 6px)); /* wider than a phone: lines stay short */
     box-shadow:0 -.5px 0 var(--sep2),0 -10px 36px rgba(0,0,0,.16)}
 }
 

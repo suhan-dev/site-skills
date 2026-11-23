@@ -6,7 +6,8 @@ description: Add a small team chat to a private team site, with comments on any 
 # Team chat
 
 A chat that lives inside the site, so a question about a passage is asked on the passage. Select words anywhere that
-allows comments and a small **Copy · Comment** bar appears. Comment opens the chat with the passage quoted; once sent,
+allows comments and a small **Copy · Comment** bar appears (on a phone, one **Comment** button, since the phone's own
+menu copies). Comment opens the chat with the passage quoted; once sent,
 the passage gets a thin underline, a tap on it opens the comment, and **Go to text** in the chat brings anyone back to
 the same line.
 
@@ -14,7 +15,8 @@ the same line.
 |---|---|---|---|
 | ![panel](screenshots/chat-1440-light.png) | ![copy comment](screenshots/copy-comment-1440-light.png) | ![sheet](screenshots/chat-390-light.png) | ![quote](screenshots/quote-390-dark.png) |
 
-Dark: [screenshots/chat-1440-dark.png](screenshots/chat-1440-dark.png).
+Dark: [screenshots/chat-1440-dark.png](screenshots/chat-1440-dark.png). Phone selection, one docked Comment button:
+[screenshots/select-390-light.png](screenshots/select-390-light.png).
 
 ## When to use / when not to
 
@@ -33,7 +35,7 @@ Dark: [screenshots/chat-1440-dark.png](screenshots/chat-1440-dark.png).
 | `assets/site/js/chat.js` | The client: header button and unread dot, panel or sheet, All / This page tabs, the composer, Copy · Comment, marks in the text, links back to a passage, polling. |
 | `assets/site/js/chat-strings.js` | The chat's EN/KO strings, added to the `i18n.js` tables. |
 | `assets/site/js/chat-util.js` | The few helpers `chat.js` needs (`api`, `$`, prefs, `dLong`, `TIMEZONE`). Use your site's own `util.js` instead if it has them. |
-| `assets/site/js/i18n.js`, `theme.js` | Copies from `team-site-design-system`, so the demo runs on its own. |
+| `assets/site/js/i18n.js`, `theme.js`, `sheet.js` | Copies from `team-site-design-system`, so the demo runs on its own. `sheet.js` locks the page behind the phone sheet and closes it on a pull down. |
 | `assets/site/css/chat.css` | Panel, sheet, list, composer, the selection bar, marks. Every measurement is in [references/design.md](references/design.md). |
 | `assets/tools/test-chat.mjs` | 92 checks against an in-memory D1 (Node 22.13+, `node:sqlite`); with the gate present, 5 more through it. |
 | `assets/demo/index.html` | The chat on a sample chapter with an in-memory `/api/messages`. `?state=open`, `here`, `select`, `quote`. |
@@ -45,8 +47,8 @@ Dark: [screenshots/chat-1440-dark.png](screenshots/chat-1440-dark.png).
    from `team-site-setup`.
 2. Copy `assets/lib/chat.js` → `lib/chat.js`, `assets/functions/api/messages.js` → `functions/api/messages.js`,
    `assets/tools/test-chat.mjs` → `tools/test-chat.mjs`.
-3. Copy `assets/site/js/chat.js`, `chat-strings.js`, `chat-util.js` → `site/js/`, and `assets/site/css/chat.css` →
-   `site/css/`. Set `TIMEZONE` in `chat-util.js` (`{{TIMEZONE}}`). Link `chat.css` after the design-system CSS.
+3. Copy `assets/site/js/chat.js`, `chat-strings.js`, `chat-util.js` → `site/js/` (and `sheet.js`, unless the design
+   system's copy is already there), and `assets/site/css/chat.css` → `site/css/`. Set `TIMEZONE` in `chat-util.js` (`{{TIMEZONE}}`). Link `chat.css` after the design-system CSS.
 4. Add the chat button to the header, between the theme button and sign-out (markup in `assets/demo/index.html`):
    `<button class="icon-btn chat-btn" id="chat-btn" aria-expanded="false" aria-controls="chat">` with the bubble SVG
    and `<i class="chat-dot" hidden></i>`.
@@ -73,8 +75,11 @@ Dark: [screenshots/chat-1440-dark.png](screenshots/chat-1440-dark.png).
   whose passage was rewritten stays in the chat without a mark.
 - **Typing Korean:** Enter never sends while a syllable is being composed (`isComposing`, keyCode 229). On touch
   screens Enter is a new line and the arrow sends.
-- **Phones:** the sheet fits the space the keyboard leaves (`visualViewport`), inputs are 16 px (no zoom on focus), the
-  selection bar docks at the bottom, clear of the phone's own selection menu.
+- **Phones:** the page behind the sheet never moves (`lockPage`) and is back where it was on close; a tap outside or a
+  pull down closes the sheet; the composer keeps room for the home indicator (`--sab`) and sits right above the
+  keyboard only while the keyboard is up; inputs are 16 px (no zoom on focus). On touch screens the site shows only a
+  Comment button (the phone's own menu copies), docked at the bottom, or at the top when the selection is low. Every
+  rule with its code and reason: [mobile.md](../team-site-design-system/references/mobile.md).
 - **The header button stays English** like the rest of the header; the panel follows the language switch.
 
 ## Configuration
@@ -96,7 +101,9 @@ Dark: [screenshots/chat-1440-dark.png](screenshots/chat-1440-dark.png).
 - [ ] A comment on a passage underlines it after a reload, and "Go to text" scrolls to it from another tab.
 - [ ] A message with `<img src=x onerror=alert(1)>` shows as text.
 - [ ] Korean typing: Enter in the middle of a syllable doesn't send.
-- [ ] Phone: the sheet stays above the keyboard; selection shows the docked bar; no zoom on focus.
+- [ ] Phone: dragging on the open sheet or the dim area never moves the page; a pull down or a tap outside closes it;
+      the composer stays above the keyboard and clear of the home indicator in the Home Screen app; selection shows
+      one Comment button; no zoom on focus.
 - [ ] 1440 and 390 px, light and dark, look like the screenshots.
 
 ## References

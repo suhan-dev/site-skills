@@ -6,14 +6,16 @@
 // Google sign-in, so nobody types a name. Others' text is only ever put on the page with textContent.
 //
 // Select text in the Theory chapters, the reader, the Research log or References and a small "Copy · Comment" bar
-// appears (above the selection with a mouse; at the bottom of the screen on touch screens, clear of the phone's own
-// menu). Comment opens the chat with the passage quoted. The passage gets a thin underline in the text; a tap on it
+// appears above the selection with a mouse. On touch screens the phone's own menu already copies, so only one Comment
+// button shows, docked at the bottom of the screen (at the top when the selection ends near the bottom). Comment opens
+// the chat with the passage quoted. The passage gets a thin underline in the text; a tap on it
 // shows the comment, and "Go to text" in the chat comes back to it.
 //
 // Where comments can go: any element with data-chat-page (a stable key such as theory/<part>/<chapter>,
 // log/<week>/<member> or refs) and data-chat-title (the words shown above the quote). The event dialog has its own
 // Comment button (calendar.js calls chat.commentOn).
 import { $, $$, api, GCOLORS, getPref, setPref, dLong, TIMEZONE } from "./chat-util.js";
+import { lockPage, unlockPage, pullToClose } from "./sheet.js"; // the design system's phone sheets
 import { t, LANG } from "./i18n.js";
 import "./chat-strings.js"; // adds the chat.* strings to both tables
 
@@ -401,18 +403,27 @@ export function createChat({ team, openEvent } = {}) {
   }
 
   /* ---------- open and close ---------- */
+  let locked = false, pageY = 0;
   function place() {
-    // wide screens: a panel under the header (or beside it when the page makes room); phones: the sheet fits the
-    // part of the screen the keyboard leaves
+    // wide screens: a panel under the header (or beside it when the page makes room)
     const head = $(".bar") || $(".rd-top");
     const top = head && !mm(WIDE) ? Math.max(0, head.getBoundingClientRect().bottom) : 0;
     box.style.setProperty("--chat-top", top + "px");
+    // phones: the sheet keeps its full height; only while the keyboard is up does it fit the part of the screen the
+    // keyboard leaves (and the room kept for the home indicator goes, since the keyboard covers it)
     const vv = window.visualViewport;
-    if (vv && mm(PHONE)) {
+    const kb = !!(vv && mm(PHONE) && vv.height < innerHeight - 120);
+    box.classList.toggle("kb", kb);
+    if (kb) {
       box.style.setProperty("--vv-h", vv.height + "px");
       box.style.setProperty("--vv-t", vv.offsetTop + "px");
+    } else {
+      box.style.removeProperty("--vv-h");
+      box.style.removeProperty("--vv-t");
     }
   }
+  // iPhone settles the keyboard over a few frames and does not always say when it is done: look again a little later
+  const settle = () => { place(); setTimeout(place, 120); setTimeout(place, 400); setTimeout(place, 800); };
   function open(f) {
     if (f) setFilter(f, true);
     if (!isOpen) {
@@ -420,6 +431,7 @@ export function createChat({ team, openEvent } = {}) {
       place();
       box.hidden = false;
       scrim.hidden = !mm(PHONE);
+      if (mm(PHONE) && !locked) { locked = true; pageY = scrollY; lockPage(); }
       document.documentElement.classList.add("chat-open");
       btn.setAttribute("aria-expanded", "true");
       requestAnimationFrame(() => box.classList.add("in"));
@@ -433,13 +445,22 @@ export function createChat({ team, openEvent } = {}) {
     if (!isOpen) return;
     isOpen = false;
     eventCtx = null;
+    if (document.activeElement === ta) ta.blur();
     box.classList.remove("in");
     scrim.hidden = true;
+    if (locked) {
+      locked = false;
+      unlockPage();
+      if (Math.abs(scrollY - pageY) > 2) scrollTo(0, pageY); // the keyboard may have moved the page: put it back
+    }
     document.documentElement.classList.remove("chat-open");
     btn.setAttribute("aria-expanded", "false");
     setTimeout(() => { if (!isOpen) box.hidden = true; }, 260);
     schedule();
   }
+  pullToClose(box, { scroller: () => list, close });
+  ta.addEventListener("focus", () => { if (isOpen) settle(); });
+  ta.addEventListener("blur", () => { if (isOpen) settle(); });
   function setFilter(f, quiet) {
     filter = f === "here" ? "here" : "all";
     $$(".chat-tabs button", box).forEach((b) => b.setAttribute("aria-selected", String(b.dataset.f === filter)));
@@ -451,7 +472,14 @@ export function createChat({ team, openEvent } = {}) {
   scrim.addEventListener("click", close);
   $$(".chat-tabs button", box).forEach((b) => b.addEventListener("click", () => setFilter(b.dataset.f)));
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && isOpen && !document.querySelector("dialog[open]")) close(); });
-  addEventListener("resize", () => { if (isOpen) { place(); scrim.hidden = !mm(PHONE); } });
+  addEventListener("resize", () => {
+    if (!isOpen) return;
+    place();
+    scrim.hidden = !mm(PHONE);
+    // turned or resized across the phone width: lock or free the page to match
+    if (mm(PHONE) && !locked) { locked = true; pageY = scrollY; lockPage(); }
+    else if (!mm(PHONE) && locked) { locked = false; unlockPage(); }
+  });
   if (window.visualViewport) {
     const vvp = () => { if (isOpen && mm(PHONE)) place(); };
     visualViewport.addEventListener("resize", vvp);
@@ -575,6 +603,7 @@ export function createChat({ team, openEvent } = {}) {
     q.title = ht && !base.endsWith(ht) ? (base ? base + " › " : "") + ht : base;
     return q;
   }
+  let lastQ = null; // the passage as it was when the bar appeared (a tap on the bar may clear the selection first)
   const hidePop = () => { pop.hidden = true; pop.classList.remove("done"); };
   function showPop() {
     const sel = getSelection();
@@ -584,8 +613,17 @@ export function createChat({ team, openEvent } = {}) {
     pop.hidden = false;
     pop.classList.remove("done");
     $('[data-a="copy"]', pop).textContent = t("chat.copy");
-    if (mm(TOUCH)) { pop.classList.add("dock"); pop.style.left = pop.style.top = ""; return; }
-    pop.classList.remove("dock");
+    if (mm(TOUCH)) {
+      // Touch screens: the phone's own menu (Copy, Look Up, …) sits by the selection, so only Comment shows here, as
+      // one bar at the bottom of the screen; at the top instead when the selection ends near the bottom
+      lastQ = capture();
+      const rs = r.getClientRects(), last = rs[rs.length - 1] || r.getBoundingClientRect();
+      pop.classList.add("dock");
+      pop.classList.toggle("up", last.bottom > innerHeight - 120);
+      pop.style.left = pop.style.top = "";
+      return;
+    }
+    pop.classList.remove("dock", "up");
     const rects = r.getClientRects(), first = rects[0] || r.getBoundingClientRect(), last = rects[rects.length - 1] || first;
     const pw = pop.offsetWidth, ph = pop.offsetHeight, vw = document.documentElement.clientWidth;
     const head = $(".bar") || $(".rd-top"), topSafe = head ? Math.max(0, head.getBoundingClientRect().bottom) : 0;
@@ -618,8 +656,9 @@ export function createChat({ team, openEvent } = {}) {
       else legacy();
       return;
     }
-    const q = capture();
+    const q = capture() || (pop.classList.contains("dock") ? lastQ : null);
     hidePop();
+    lastQ = null;
     if (!q) return;
     if (sel) sel.removeAllRanges();
     eventCtx = null;

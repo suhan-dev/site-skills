@@ -3,6 +3,7 @@ import "./fake-api.js";
 import { createCalendar } from "../site/js/calendar.js";
 import { initTheme } from "../../../team-site-design-system/assets/theme.js";
 import { wireLangButton } from "../../../team-site-design-system/assets/i18n.js";
+import { sheetDialogs } from "../../../team-site-design-system/assets/sheet.js";
 
 const team = { // the shape of team-site-setup's team.json
   members: [
@@ -28,6 +29,9 @@ const chat = {
 
 const cal = createCalendar({ owners, me, nameOf, chat });
 cal.load();
+// phones: the event and day sheets lock the page behind them and close on a pull down (calendar.js already closes
+// them on a tap outside, so that part is left off here)
+sheetDialogs("dialog.dlg", { tapOutside: false });
 window.demoCal = cal; // for screenshots: demoCal.openEditor(…), demoCal.setView("month")
 
 // header: light / dark and EN | KO from the design system (the calendar itself stays English, as on the source site)

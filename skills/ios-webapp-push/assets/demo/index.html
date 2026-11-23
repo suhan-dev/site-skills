@@ -118,6 +118,7 @@
   import { initTheme, lockPhoneZoom } from "../../../team-site-design-system/assets/theme.js";
   import { wireLangButton, apply } from "../../../team-site-design-system/assets/i18n.js";
   import { createPush } from "../site/js/push.js";
+  import { sheetDialogs } from "../../../team-site-design-system/assets/sheet.js";
 
   // the real markup: the bell goes first in the header's right side, the two dialogs at the end of <body>
   const html = await (await fetch("../site/push-dialogs.html")).text();
@@ -131,6 +132,7 @@
   initTheme({ button: document.getElementById("theme-btn") });
   wireLangButton();
   lockPhoneZoom();
+  sheetDialogs(); // phones: the page stays still behind the two sheets; tap outside or pull down to close
 
   const push = createPush({ appName: "Lab", member: "alex", seen: { install: false }, onOpen: (url) => console.log("open", url) });
   apply();

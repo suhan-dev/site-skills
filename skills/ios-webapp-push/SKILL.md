@@ -62,7 +62,9 @@ first step inside KakaoTalk.
    opens the manifest, `sw.js` and `/icons/*.png`); the calendar POST's `notifyCreated` lines; `"install"` in the
    gate's `ONCE`.
 6. **Start it in the page** (setup A.7): `createPush({ appName, member, seen, onOpen })`, then after the intro (or at
-   once without it) `welcome()` in the installed app or `offerInstall(showGuide)` after ~0.5 s in a browser.
+   once without it) `welcome()` in the installed app or `offerInstall(showGuide)` after ~0.5 s in a browser. Call the
+   design system's `sheetDialogs()` (sheet.js) once the dialogs are in the page, so on a phone the page stays still
+   behind them and a tap outside or a pull down closes them.
 7. **The user does the console part** (setup B and C): D1 bound as `DB` on the Pages project → Retry deployment; a
    Worker with `worker.js`, `SITE_URL`, the `DB` binding and a `* * * * *` cron trigger. Give the exact clicks from
    setup.md and wait. There is no secret to paste.

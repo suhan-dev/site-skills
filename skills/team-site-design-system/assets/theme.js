@@ -10,8 +10,10 @@
 export const THEME_KEY = "site_theme";
 export const LANG_KEY = "site_lang";
 
-// Inline this in <head> (keep the keys in sync with the two constants above):
-export const PREPAINT = `try{var t=localStorage.getItem("site_theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);if(localStorage.getItem("site_lang")==="ko")document.documentElement.lang="ko"}catch(e){}`;
+// Inline this in <head> (keep the keys in sync with the two constants above). The second try{} is sheet.js
+// HOME_PREPAINT: room for the home indicator under bottom sheets in the iPhone Home Screen app (tokens.css --sab).
+export const PREPAINT = `try{var t=localStorage.getItem("site_theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);if(localStorage.getItem("site_lang")==="ko")document.documentElement.lang="ko"}catch(e){}
+try{if((matchMedia("(display-mode: standalone)").matches||navigator.standalone===true)&&/iPhone|iPod/.test(navigator.userAgent)&&Math.max(screen.width,screen.height)>=812)document.documentElement.style.setProperty("--home","34px")}catch(e){}`;
 
 const get = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
 const set = (k, v) => { try { localStorage.setItem(k, v); } catch {} };
