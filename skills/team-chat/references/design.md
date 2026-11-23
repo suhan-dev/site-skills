@@ -70,7 +70,7 @@ chat was opened from). It follows tab, chapter and week changes.
 | Part | Value |
 |---|---|
 | List padding | 6 20 14 px (phones 4 16 12 px), scrolls on its own, `overscroll-behavior: contain` |
-| Day label | Sticky, 11.5 px 600 +.02em `--ink4`, 12 20 6 px, a `--paper` → transparent gradient behind it (phones `--card`). "Today", "Yesterday", else "Mon, Dec 22" / "12월 22일 (월)" |
+| Day label | Scrolls with its messages (not sticky: a label pinned to the top sat over the message under it). 11.5 px 600 +.02em `--ink4`, padding 12 0 6 px, no background. "Today", "Yesterday", else "Mon, Dec 22" / "12월 22일 (월)" |
 | Item | 9 px above, 10 px below; a `.5px --sep` hairline between items |
 | Name line | 12.5 px: 7 px dot in the member colour (`--gc-N`), name 600 `--ink` (your own: `--accent`), time `--ink4` tabular |
 | Delete (own only) | Right end, 12 px `--ink4`, visible on hover or focus (always on phones, 32 px tall). First tap: "Delete?" in `--bad` 600 for 3 s; second tap deletes |

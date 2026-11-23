@@ -85,7 +85,7 @@ More: [dark week](screenshots/week-1440-dark.png) · [month](screenshots/month-1
    sheetDialogs("dialog.dlg", { tapOutside: false }); // from the design system's sheet.js
    ```
 
-9. Run the tests: `node tools/test-calendar.mjs` (Node 20+). It must end with `✓ all 74 calendar tests passed`.
+9. Run the tests: `node tools/test-calendar.mjs` (Node 20+). It must end with `✓ all 75 calendar tests passed`.
 10. Run it locally against the mock: `node tools/mock-google.mjs 8790 .dev.vars`, then
     `npx wrangler pages dev dist --binding DEV_MEMBER=alex`. Add, edit and delete an event. Check `/api/status`.
 11. Give the user the console steps in [references/setup.md](references/setup.md) (calendar, service account, key,
@@ -138,7 +138,7 @@ More: [dark week](screenshots/week-1440-dark.png) · [month](screenshots/month-1
 
 ## Self-check before shipping
 
-- [ ] `node tools/test-calendar.mjs` → `✓ all 74 calendar tests passed`.
+- [ ] `node tools/test-calendar.mjs` → `✓ all 75 calendar tests passed`.
 - [ ] Widths 320, 375, 390, 768, 1024, 1440: no sideways page scroll; the head row fits; the week fits; month bars on
       phones.
 - [ ] Light and dark: owner tints readable; today's 3 % tint visible in dark; the now line and label on top.
