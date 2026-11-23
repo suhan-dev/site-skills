@@ -92,7 +92,7 @@ Measured at 1440 × 900 in the demo:
 | Position | `top: auto; right: 0; bottom: 0; width: auto` (full width), `transform: none` |
 | Max height | `calc(100dvh − 72px)` |
 | Radius | 14 14 0 0 |
-| Padding | 16 px top; sides `max(20px, (100vw − 440px) / 2)` (wider screens keep lines short); bottom `10px + env(safe-area-inset-bottom)` |
+| Padding | 16 px top; sides `max(20px, (100vw − 440px) / 2)` (wider screens keep lines short); bottom `max(14px, --sab + 6px)` (`--sab` from the design system: the safe area, or the home indicator in the Home Screen app) |
 | Edge | `box-shadow: 0 −.5px 0 var(--sep2), 0 −10px 36px rgba(0,0,0,.16)` |
 
 The hole always ends 10 px above the sheet. Before each step the page scrolls (smoothly, or at once with reduced motion)

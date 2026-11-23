@@ -199,8 +199,9 @@ desktop (≥ 761 px)                         phone (≤ 760 px)
 - Open: `dlg-in` 220 ms `cubic-bezier(.2,.8,.2,1)` from `translateY(8px) scale(.98)` and opacity 0.
 - Phones: full width, `margin: auto 0 0`, `max-height: 100dvh − 32px`, radius `18px 18px 0 0`, own vertical scroll with
   `overscroll-behavior: contain`, slides up from `translateY(100%)` in 320 ms. Content stays 560 px wide in the middle on
-  wider phones and small tablets: `padding: 18px max(16px, (100% − 560px)/2) calc(20px + env(safe-area-inset-bottom))`.
-  Cancel and Save share the last row (`flex: 1 1 0`).
+  wider phones and small tablets: `padding: 18px max(16px, (100% − 560px)/2) max(20px, var(--sab) + 10px)`.
+  Cancel and Save share the last row (`flex: 1 1 0`). While a sheet is open the page behind is locked (`html.locked` +
+  `sheet.js` `lockPage`); a tap on the dim area or a pull down closes it (`sheetDialogs()`, see mobile.md §2–3).
 - Fields `.fld`: 38 px tall (44 on phones), padding `0 12px`, radius 10, `--fill`, no border; textarea padding
   `9px 12px`, line height 1.55, vertical resize.
 - Notes `.dlg-note` 12.5 px `--ink3`; errors `.dlg-err` 13 px `--bad`; both hidden when empty.
@@ -249,8 +250,8 @@ desktop (≥ 761 px)                         phone (≤ 760 px)
 - Strips that scroll sideways (week tabs, references jump row) fade their right edge with a 32 px mask and lose the fade
   at the end (`.at-end`).
 - Sticky rows under the header sit at `top: 82px`; anchors they cover use `scroll-margin-top`.
-- Safe areas: sheets pad `env(safe-area-inset-bottom)`; the installed app's status bar colour follows the page
-  (`paintStatusBar`).
+- Safe areas: sheets pad `--sab` (`max(env(safe-area-inset-bottom), var(--home))`; `--home` is 34 px in the iPhone Home
+  Screen app, where `env()` stays 0); the installed app's status bar colour follows the page (`paintStatusBar`).
 
 ## 12. Icons
 

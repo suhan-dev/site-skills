@@ -26,7 +26,8 @@ row on desktop and two rows on phones without ever cutting anything off.
 | `assets/tokens.css` | Every colour, font stack, shadow and member colour as CSS custom properties, for light, explicit dark (`[data-theme=dark]`) and system dark (media query). Base element styles. |
 | `assets/components.css` | Header and tabs, buttons, pill nav (‹ Today ›), segmented control, dialogs → bottom sheets, fields, choice pills, the iOS switch, the 44 px tap-area rules, the small-phone tightening. |
 | `assets/doc.css` | Document style for rendered Markdown (`.doc`): headings, lists, task lists, tables, code, quotes. |
-| `assets/theme.js` | Pre-paint snippet, light/dark toggle, status-bar colour in the installed app, no zoom on upright phones. |
+| `assets/theme.js` | Pre-paint snippet (theme, language, the home-indicator room), light/dark toggle, status-bar colour in the installed app, no zoom on upright phones. |
+| `assets/sheet.js` | Phone sheets: `lockPage` / `unlockPage` (the page behind never moves), `pullToClose`, and `sheetDialogs()` that wires every `dialog.dlg` (lock, tap outside, pull down). |
 | `assets/i18n.js` | The two-table EN/KO pattern with `data-i18n*` attributes and `data-lang-fixed` sections. |
 | `assets/demo/index.html` | A style guide page that uses all of the above (the screenshots). |
 
@@ -41,7 +42,7 @@ row on desktop and two rows on phones without ever cutting anything off.
    (`role=tablist`, `aria-selected`), and `.bar-right` (bell, name pill `.me`, one language button `.lang-btn`, `.theme-btn`,
    chat `.chat-btn` if you add `team-chat`, sign-out `.out-btn`). Keep that order; the responsive rules depend on it.
 5. Call `initTheme({ button })` and `lockPhoneZoom()` from `theme.js`, and `wireLangButton()` from `i18n.js`. In the installed Home Screen app also call
-   `paintStatusBar()`.
+   `paintStatusBar()`. Once the dialogs are in the page, call `sheetDialogs()` from `sheet.js`.
 6. Put page content in `main.main` and use `.eyebrow` + `.page-h` for a page title, `.card` + `.card-h` for a section
    (a hairline on top, never a box), `.doc` for Markdown.
 7. Use only token colours. Member and calendar colours are `--gc-1` … `--gc-11` (Google Calendar's colorId 1–11);
@@ -64,7 +65,9 @@ row on desktop and two rows on phones without ever cutting anything off.
 - **Pills.** Buttons are fully rounded (`999px`), 32 px tall on desktop; text controls 13–13.5 px, weight 500.
 - **Phones first-class.** Every page works at 375 px (and 320 px) with nothing cut off and no sideways scroll. Every
   control has a 44 px tap area (real size, or an invisible `::after`). Inputs use 16 px text so iOS does not zoom.
-  Respect safe areas (`env(safe-area-inset-bottom)` in sheets). Upright phones do not zoom.
+  Sheets keep room for the home indicator (`--sab`, also in the Home Screen app where `env()` is 0). While a sheet is
+  open the page behind never moves; a tap outside or a pull down closes it. Upright phones do not zoom. Every phone
+  rule, with code and reasons: [references/mobile.md](references/mobile.md).
 - **Header never collides.** The tabs sit in the middle while both sides fit; when they do not, a side keeps its width
   and the tabs move over (CSS grid `minmax(max-content,1fr) auto minmax(max-content,1fr)`). On phones the tabs go to a
   second row spread edge to edge.
@@ -95,7 +98,7 @@ Everything else stays as is. Full tables: [references/design.md](references/desi
 - [ ] Toggle the theme and reload: no flash of the other theme.
 - [ ] `prefers-reduced-motion: reduce`: dialogs open without animation.
 - [ ] Open a dialog at 390 px: it is a bottom sheet, its buttons sit above the home indicator, focusing an input does not
-      zoom.
+      zoom, `<html>` has the class `locked` while it is open and loses it on close.
 - [ ] No colour literal outside `tokens.css` (`grep -nE '#[0-9a-f]{3,6}\b' site/css/*.css` shows only tokens and the
       intro's own palette).
 - [ ] In KO mode the header and main screen are still English; `check()` in `i18n.js` returns `[]`.

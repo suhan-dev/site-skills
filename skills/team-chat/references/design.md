@@ -9,7 +9,7 @@ quote as a hairline on the left. Colours come only from `team-site-design-system
 |---|---|---|
 | ≥ 1100 px | Panel on the right, 380 px, full height from the top | The page makes room: `html.chat-open body { padding-right: 380px }`, animated with the panel. No shadow. |
 | 761–1099 px | Panel on the right, 380 px, under the header (`--chat-top` = the header's bottom, kept in place on scroll) | The panel covers the page's right edge. Shadow `-18px 0 40px -32px rgba(0,0,0,.35)`. |
-| ≤ 760 px | Sheet from the bottom, full width, from the safe-area top (at least 10 px) to the top of the keyboard | Dimmed with a scrim `rgba(0,0,0,.28)`; the page doesn't scroll behind it. A tap on the scrim closes. |
+| ≤ 760 px | Sheet from the bottom, full width, from 44 px below the top (or the safe-area top if larger) to the bottom edge. While the keyboard is up: from `max(safe-area top, 10px)` to the top of the keyboard | Dimmed with a scrim `rgba(0,0,0,.28)`. The page behind is locked (`lockPage`, it does not move under a finger) and returns to its scroll position on close. A tap on the scrim or the 44 px strip closes; so does a pull down (§1a). |
 
 ```
 ≥ 1100 px                                                ≤ 760 px
@@ -30,6 +30,16 @@ quote as a hairline on the left. Colours come only from `team-site-design-system
 
 Motion: the panel slides in from the right (`translateX(100%)` → 0), the sheet from below (`translateY(100%)` → 0),
 both 280 ms `cubic-bezier(.2,.8,.2,1)`; with reduced motion, no transition. Closing hides it after 260 ms.
+
+### 1a. Phone sheet: lock, keyboard, close
+
+| Part | Value |
+|---|---|
+| Page behind | `lockPage()` on open, `unlockPage()` on close (`sheet.js` from the design system); `scrollY` saved on open and restored on close if it moved more than 2 px |
+| Keyboard | `.chat.kb` while `visualViewport.height < innerHeight − 120`: `--vv-t`, `--vv-h` from `visualViewport`, top gap 10 px, composer bottom padding 8 px. Measured on `visualViewport` `resize`/`scroll` and on the composer's focus and blur at 0, 120, 400, 800 ms |
+| Pull to close | `pullToClose(box, { scroller: () => list, close })`: from the head, or from the list when it is at the top; decided after 8 px, down only, not with text selected; closes past 110 px or on a flick (> 36 px, > 0.55 px/ms); otherwise springs back in 260 ms |
+| Close | blurs the composer first (the keyboard goes down with the sheet) |
+| Turned or resized across 760 px while open | locks or unlocks the page to match |
 
 ## 2. Header button
 
@@ -73,7 +83,7 @@ chat was opened from). It follows tab, chapter and week changes.
 
 | Part | Desktop | Phone |
 |---|---|---|
-| Area | 10 14 12 20 px + safe area, hairline above | 8 10 8 16 px + safe area, `--card` |
+| Area | 10 20 12 px + safe area, hairline above | 8 16 px, bottom `max(12px, var(--sab))` (8 px while the keyboard is up), `--card` |
 | Quoted passage | 2 px `--accent` rule; "Commenting on" 11.5 px 600 `--accent`; the words 13 px / 1.4 `--ink3`, 2 lines; × 28 px circle `--ink4` | × 36 px |
 | Field | Pill, radius 18, `.5px --sep2`, 8 12 px, 14 px / 1.4, 36 px min, grows to 132 px. Focus: border `--accent` 60 %, ring 3 px `--accent` 16 % | 16 px text (no zoom on focus), 38 px min, 8 14 px |
 | Send | 32 px `--accent` circle, white up arrow 16 px stroke 2.4; disabled while sending (opacity .5) | 34 px |
@@ -86,13 +96,14 @@ sends. Enter never sends while a Korean syllable is being composed.
 
 | | Mouse | Touch |
 |---|---|---|
-| Where | Centred 8 px above the selection's first line; under its last line when that would hide under the header; kept 8 px inside the window (and clear of an open panel) | Docked: fixed, centred, 18 px above the bottom + safe area, so the phone's own Copy/Look Up menu stays usable |
-| Size | 34 px tall, radius 9, 0 4 px; buttons 0 11 px, 13 px 500 | 44 px tall, radius 22, 0 6 px; buttons 0 16 px, 15 px |
-| Look | `#1d1d1f` (dark mode `#3a3a3c`), white text, shadow `0 8px 24px rgba(0,0,0,.22)` + `.5px` white 8 % ring, a `.5px` white 28 % divider 16 px tall (20 px docked). Fades in over 140 ms | same |
-| Shows | 10 ms after mouse-up or Shift-select | 400 ms after the selection settles |
+| Buttons | Copy · Comment | **Comment only** (the phone's own menu already has Copy), with a 17 px speech-bubble icon before the word |
+| Where | Centred 8 px above the selection's first line; under its last line when that would hide under the header; kept 8 px inside the window (and clear of an open panel) | Docked: fixed, centred, `calc(16px + var(--sab))` above the bottom, so the phone's own menu by the words stays usable. When the selection ends in the bottom 120 px: `.up`, `calc(safe-area top + 12px)` from the top |
+| Size | 34 px tall, radius 9, 0 4 px; buttons 0 11 px, 13 px 500 | 44 px tall, radius 22, 0 4 px; the button 0 20 0 16 px, radius 20, 15 px, icon gap 8 px |
+| Look | `#1d1d1f` (dark mode `#3a3a3c`), white text, shadow `0 8px 24px rgba(0,0,0,.22)` + `.5px` white 8 % ring, a `.5px` white 28 % divider 16 px tall. Fades in over 140 ms | same, no divider |
+| Shows | 10 ms after mouse-up or Shift-select | 400 ms after the selection settles; the passage is captured then, because a tap on the bar may clear the selection before the click |
 
-Copy writes to the clipboard, shows "Copied" alone for 0.9 s, then hides. Comment captures the passage, clears the
-selection, opens the chat with the quote in the composer and focuses the field. The bar never appears for a selection
+Copy (mouse only) writes to the clipboard, shows "Copied" alone for 0.9 s, then hides. Comment captures the passage,
+clears the selection, opens the chat with the quote in the composer and focuses the field. The bar never appears for a selection
 outside a `[data-chat-page]` root.
 
 ## 7. Marks in the text

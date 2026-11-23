@@ -308,8 +308,10 @@ Desktop: a centred dialog (`.dlg`), 620 px wide (`min(620px, 100vw − 32px)`; o
 with `dlg-in` (.22 s `cubic-bezier(.2,.8,.2,1)`, from opacity 0, 8 px lower, scale .98).
 
 Phone: a bottom sheet. Full width, radius `18px 18px 0 0`, max-height `calc(100dvh − 32px)`, scrolls inside
-(`overscroll-behavior:contain`), padding `18px 16px calc(20px + safe-area-inset-bottom)`. It slides up with `dlg-sheet`
-(.32 s, same easing, from `translateY(100%)`). Inputs are 16 px so iOS does not zoom in on focus.
+(`overscroll-behavior:contain`), padding `18px 16px max(20px, --sab + 10px)` (room for the home indicator, also in the
+Home Screen app). The page behind does not move while it is open; a tap outside or a pull down closes it (`sheet.js`).
+It slides up with `dlg-sheet` (.32 s, same easing, from `translateY(100%)`). Inputs are 16 px so iOS does not zoom in on
+focus.
 
 Fields, top to bottom:
 

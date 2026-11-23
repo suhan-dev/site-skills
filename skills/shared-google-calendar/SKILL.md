@@ -81,6 +81,8 @@ More: [dark week](screenshots/week-1440-dark.png) · [month](screenshots/month-1
    });
    cal.load();
    // a tapped notification (/?event=<id>&date=<YYYY-MM-DD>): cal.focus(date, id)
+   // phones: the page stays still behind the event sheet, and a pull down closes it (calendar.js closes on a tap outside)
+   sheetDialogs("dialog.dlg", { tapOutside: false }); // from the design system's sheet.js
    ```
 
 9. Run the tests: `node tools/test-calendar.mjs` (Node 20+). It must end with `✓ all 74 calendar tests passed`.

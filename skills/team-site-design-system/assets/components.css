@@ -127,11 +127,13 @@
 .sw-row:focus-visible .sw{outline:3px solid color-mix(in srgb,var(--accent) 55%,transparent);outline-offset:2px}
 
 /* ---------- phones: dialogs as bottom sheets ---------- */
+/* a sheet is open on a phone: the page behind stays still (sheet.js lockPage also stops the finger) */
+html.locked,html.locked body{overflow:hidden}
 @media (max-width:760px){
   dialog.dlg{width:100%;max-width:none;max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);margin:auto 0 0;border-radius:18px 18px 0 0;
     overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain}
   .dlg[open]{animation:dlg-sheet .32s cubic-bezier(.2,.8,.2,1)}
-  .dlg-in{padding:18px max(16px,calc((100% - 560px) / 2)) calc(20px + env(safe-area-inset-bottom,0px))}
+  .dlg-in{padding:18px max(16px,calc((100% - 560px) / 2)) max(20px,calc(var(--sab) + 10px))}
   .fld input,.fld textarea{font-size:16px} /* 16 px: iOS does not zoom in on focus */
   .chk{font-size:15px}
   .chk input{width:18px;height:18px}

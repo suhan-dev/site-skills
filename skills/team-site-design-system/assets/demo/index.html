@@ -160,9 +160,11 @@
 <script type="module">
   import { initTheme, lockPhoneZoom } from "../theme.js";
   import { wireLangButton } from "../i18n.js";
+  import { sheetDialogs } from "../sheet.js";
   initTheme({ button: document.getElementById("theme-btn") });
   wireLangButton();
   lockPhoneZoom();
+  sheetDialogs(); // phones: the page stays still behind the sheet; tap outside or pull down to close
   const css = getComputedStyle(document.documentElement);
   const names = ["paper","card","card2","ink","ink2","ink3","ink4","fill","fill2","sep","sep2","accent","ok","warn","bad"];
   const paint = () => {

@@ -69,7 +69,7 @@ Regenerate with `node tools/make-index.mjs`.
 |---|---|
 | ![Chat · 1440 px · dark](../skills/team-chat/screenshots/chat-1440-dark.png)<br>Chat · 1440 px · dark | ![Chat · 1440 px · light](../skills/team-chat/screenshots/chat-1440-light.png)<br>Chat · 1440 px · light |
 | ![Chat · 390 px · light](../skills/team-chat/screenshots/chat-390-light.png)<br>Chat · 390 px · light | ![Copy comment · 1440 px · light](../skills/team-chat/screenshots/copy-comment-1440-light.png)<br>Copy comment · 1440 px · light |
-| ![Quote · 390 px · dark](../skills/team-chat/screenshots/quote-390-dark.png)<br>Quote · 390 px · dark |  |
+| ![Quote · 390 px · dark](../skills/team-chat/screenshots/quote-390-dark.png)<br>Quote · 390 px · dark | ![Select · 390 px · light](../skills/team-chat/screenshots/select-390-light.png)<br>Select · 390 px · light |
 
 ## [First-visit spotlight guide](../skills/first-visit-spotlight-guide/SKILL.md)
 

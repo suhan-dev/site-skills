@@ -15,6 +15,10 @@ and why.
 | Centred dialogs on phones that overlapped, panned sideways and zoomed on focus | Bottom sheets with their own vertical scroll, 16 px inputs, Start/End one row each | The event editor was unusable on iPhone. |
 | Desktop tabs whose edges did not line up with the header | Rules and edges aligned with the header, a clearer type hierarchy, a reading measure, a contents column that follows the reading | Polish for desktop without changing phones. |
 | "EN \| KO" as two buttons side by side | One language button that reads EN or KO (a tap switches), and a chat button with an unread dot after the theme button | Make room for the team chat without crowding the phone header. See `team-chat`. |
+| Sheets padded by `env(safe-area-inset-bottom)` only | `--sab`: the larger of `env()` and `--home` (34 px, set in the iPhone Home Screen app) | In the installed app `env()` is 0 without `viewport-fit=cover`, yet the page runs under the home indicator; the chat's composer touched it. |
+| `overflow:hidden` on the page while the chat sheet was open | `lockPage()`: `html.locked` plus a touch guard that lets a finger move only what can still scroll, for the chat and every dialog | On iPhone the page still slid behind the sheet under a finger, which felt broken. `body{position:fixed}` was not used: it jumps the page and moves the sticky header. |
+| Sheets closed only with × (dialogs also on the dim area) | Tap outside or pull down closes every sheet; a 44 px strip above the chat sheet to tap; no half-height state | How sheets close in iOS, asked for by the team. |
+| Copy · Comment docked at the bottom on touch screens | One Comment button (no Copy), at the bottom, or at the top when the selection is low | The phone's own selection menu already has Copy; two menus overlapped. |
 
 ## Rejected
 
