@@ -189,6 +189,7 @@ async function layoutTests() {
   // overlap columns
   const cols = L.packDay([{ s: 60, en: 120 }, { s: 90, en: 150 }, { s: 130, en: 200 }, { s: 300, en: 360 }]);
   eq(cols.map((c) => [c.k, c.n]), [[0, 2], [1, 2], [0, 2], [0, 1]], "packDay columns");
+  eq(cols.map((c) => c.g), [0, 0, 0, 1], "packDay overlap groups (phones draw a group of two or more as one block)");
   // lanes: four all-day bars on one day → three shown, "+1 more"
   const bars = [1, 2, 3, 4].map((i) => ev({ title: "Bar " + i, allDay: true, start: "2026-12-22", end: "2026-12-22", startTime: "" }));
   const lw = L.layoutWeek("2026-12-20", bars);

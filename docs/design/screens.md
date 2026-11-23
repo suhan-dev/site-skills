@@ -212,7 +212,7 @@ and `lockPage` in `sheet.js`); only the sheet scrolls.
 | 1440 | Two columns: `minmax(0,1fr) 312px`, gap 28 (calendar.css:7). The head row fits on one line (`flex-wrap`, :9). The grid runs down to 28 px above the window's bottom edge: `height:max(440px, calc(100vh − var(--cal-top) − 28px))` (:102). |
 | 1024 | One column (:170–173). The right column moves under the grid as cards (`repeat(auto-fill,minmax(260px,1fr))`), below the fold here because the grid fills the window. |
 | 768 | As 1024. The head row wraps: the sync note and New event go to a second line, still on the right (`.cal-end{margin-left:auto}`, :10). |
-| 390 | One head row that never wraps, at least 44 px (:180). Title 20 px, the month only, cut with an ellipsis (:181). No sync note and no New event (:182): a tap on an empty slot adds an event. Today becomes a small calendar page with the date (:201–204). Day header: weekday letter over the date (:216–218). Gutter 36 px, labels 9.5 px (:213, :220). Blocks keep their own height; titles are clamped (:223–226). All-day bars 19 px, one line (:228–232). The grid ends at the bottom edge: `max(320px, calc(100dvh − var(--cal-top) − 1px))` (:213). The main area's top padding drops to 8 px (:179). |
+| 390 | One head row that never wraps, at least 44 px (:180). Title 20 px, the month only, cut with an ellipsis (:181). No sync note and no New event (:182): a tap on an empty slot adds an event. Today becomes a small calendar page with the date (:201–204). Day header: weekday letter over the date (:216–218). Gutter 36 px, labels 9.5 px (:213, :220). Blocks keep their own height; titles are clamped (:223–226). Events that overlap become one block with the first title and "+n" (`.wv-grp`, :227–230; `groupBlock()` in calendar.js); a tap opens the day's list. All-day bars 19 px, one line (:228–232). The grid ends at the bottom edge: `max(320px, calc(100dvh − var(--cal-top) − 1px))` (:213). The main area's top padding drops to 8 px (:179). |
 | 320 | Head gap 6, title 19 px (≤ 374, :260–263), then 17 px; ‹ › 26 px wide; Week | Month 12 px with 7 px sides (≤ 340, :265–268). |
 
 **Fixed and scrolling:**
@@ -477,7 +477,7 @@ and round send button).
 | 390, 320 | A sheet from the bottom: full width, from 44 px below the top (or the safe area) to the bottom, radius 14 14 0 0, `--card` background, a grab handle (:80–85). A scrim `rgba(0,0,0,.28)` dims the page (:76). Title 17 px, tabs 30 px, close 44 px (:86–89). Message text 15 px; Delete always visible on your own messages (:93–94). Composer field 16 px text (:99). |
 
 **Fixed and scrolling:** the panel and the sheet are fixed. Only the message list scrolls (`overflow-y:auto`,
-`overscroll-behavior:contain`, :31); its day labels stick to its top (:32). The head and the composer stay. On phones
+`overscroll-behavior:contain`, :31); its day labels scroll with their messages (:33). The head and the composer stay. On phones
 the page behind is locked while the sheet is open.
 
 | Width | Light · Dark |
@@ -673,16 +673,12 @@ top only, because scrolling it plays the film. The script prints this check at t
 
 **Things that look off.** No code was changed; these are notes for the skill owners.
 
-1. **Chat: the sticky day label covers the first message in view.** The list opens scrolled to the end, so the
-   top row is cut in half. The sticky day label then sits over it. Its background fades to transparent over the
-   last 30% (`linear-gradient(var(--paper) 70%,transparent)`, chat.css:32-33; `--card` on phones, chat.css:92), so
-   the label and the message text show through each other. You can see "Yesterday" over "Casey 22:05" in
-   [chat-open-1024.jpg](screens/chat-open-1024.jpg) and "Today" over "Go to text" in
-   [chat-open-320.jpg](screens/chat-open-320.jpg).
-2. **Calendar week at 320: overlapping events are too narrow to read.** Design review and Data check overlap on the
-   same day, so they share one narrow column. The titles are clamped and never split inside a word
-   (calendar.css:222-226), so only the first letter and an ellipsis show. This follows the CSS as written, but the
-   blocks cannot be read without opening them. See [calendar-week-320.jpg](screens/calendar-week-320.jpg).
+1. **Chat: the sticky day label covered the first message in view.** Fixed: the day label now scrolls with its
+   messages and has no background (chat.css:33; site PR #40).
+2. **Calendar week at 320: overlapping events were too narrow to read** (one letter each). Fixed: on phones each
+   overlap group is one block with the first title and "+n", and a tap opens the day's list (calendar.js
+   `groupBlock()`, calendar.css `.wv-grp`; site PR #40). Wider screens keep side-by-side columns. See
+   [calendar-week-320.jpg](screens/calendar-week-320.jpg).
 3. **Guide demo: the stand-in calendar cuts off event times.** The event blocks in the demo page have a fixed height
    and `overflow:hidden` (first-visit-spotlight-guide/assets/demo/index.html:31). At 768 and 320 the time line under
    the title is cut. This CSS is in the demo page only, not in the skill. See

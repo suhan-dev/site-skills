@@ -245,6 +245,31 @@ export function createCalendar(ctx) {
     return `<button type="button" class="${cls.join(" ")}" style="--c:${colorOf(e)};--hh:${h.toFixed(1)}px;--hmax:${room.toFixed(1)}px${clamp};top:${top.toFixed(1)}px;left:calc(${(it.k * w).toFixed(3)}% + ${gap}px);width:calc(${w.toFixed(3)}% - ${2 * gap}px)" data-ev="${esc(e.id)}" data-st="${e.start}" title="${esc(tip)}"><span class="t">${esc(e.title)}</span>${time}</button>`;
   }
 
+  // phones: a day's column is about 40 px wide, too narrow to split. Events that overlap become one block with the
+  // first one's title and "+n"; a tap on it opens that day's list. Wider screens put them side by side.
+  function dayBlocks(timed, date) {
+    if (!phone()) return timed.map(timedBlock).join("");
+    const groups = new Map();
+    for (const it of timed) {
+      if (!groups.has(it.g)) groups.set(it.g, []);
+      groups.get(it.g).push(it);
+    }
+    return [...groups.values()].map((g) => (g.length === 1 ? timedBlock(g[0]) : groupBlock(g, date))).join("");
+  }
+  function groupBlock(g, date) {
+    const first = g[0]; // packDay sorts by start time, the longest first
+    const s = first.s, en = Math.max(...g.map((it) => it.en));
+    const top = (s / 60) * HOUR_PX, h = Math.max(((en - s) / 60) * HOUR_PX - 2, 20);
+    const two = h - PH_PAD >= PH_LINE + PH_TIME + 1; // room for the title and "+n" under it
+    const lines = two ? Math.max(1, Math.floor((h - PH_PAD - PH_TIME - 1) / PH_LINE)) : 1;
+    const more = t("cal.more", { n: g.length - 1 }).replace(/ .*/, ""); // "+1"
+    const tip = g.map((it) => `${it.e.title} · ${it.e.startTime}${it.e.endTime ? `–${it.e.endTime}` : ""}`).join("\n");
+    const cls = ["wv-ev", "wv-grp"];
+    if (S.mode !== "live") cls.push("preview");
+    if (!two) cls.push("tight");
+    return `<button type="button" class="${cls.join(" ")}" style="--c:${colorOf(first.e)};--hh:${h.toFixed(1)}px;--hmax:${h.toFixed(1)}px;--cl:${lines};top:${top.toFixed(1)}px;left:1px;width:calc(100% - 2px)" data-grp="${date}" title="${esc(tip)}" aria-label="${esc(`${g.length} events: ${g.map((it) => it.e.title).join(", ")}`)}">${two ? "" : `<span class="n">${more}</span>`}<span class="t">${esc(first.e.title)}</span>${two ? `<span class="n">${more}</span>` : ""}</button>`;
+  }
+
   function renderWeekView() {
     const ws = S.ws;
     const today = calToday();
@@ -268,7 +293,7 @@ export function createCalendar(ctx) {
         .filter((e) => place(e).grid && place(e).ds === d && visible(e))
         .map((e) => ({ e, s: place(e).top, en: place(e).end })));
       for (const it of timed) it.next = Math.min(1440, ...timed.filter((o) => o.s >= it.en).map((o) => o.s));
-      cols += `<div class="wv-col${td}" data-wcol="${d}">${timed.map(timedBlock).join("")}${td ? `<div class="wv-now" aria-hidden="true"></div>` : ""}</div>`;
+      cols += `<div class="wv-col${td}" data-wcol="${d}">${dayBlocks(timed, d)}${td ? `<div class="wv-now" aria-hidden="true"></div>` : ""}</div>`;
     }
     // hour labels from DAY0 + 1 h to DAY0 − 1 h (the top edge is DAY0); midnight also gets a line across the days
     let hours = "";
@@ -640,8 +665,8 @@ export function createCalendar(ctx) {
     // phones, month view: a tap anywhere in a day (its thin bars and "+n" too) opens the week of that day
     const pday = phone() && tg.closest("#cal-grid .day");
     if (pday) { setView("week", pday.dataset.day); return; }
-    const more = tg.closest("[data-more]");
-    if (more) { e.stopPropagation(); openDay(more.dataset.more); return; }
+    const more = tg.closest("[data-more], #cal-grid [data-grp]");
+    if (more) { e.stopPropagation(); openDay(more.dataset.more || more.dataset.grp); return; }
     const vb = tg.closest("#cal-view [data-view]");
     if (vb) { setView(vb.dataset.view); return; }
     const col = tg.closest("#cal-grid .wv-col");

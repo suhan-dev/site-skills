@@ -85,6 +85,7 @@ The grid's height runs from where it starts to 28 px above the window's bottom e
 │ all  ▌Eq▌Re      ▌Workshop──         │  all-day bars 19 px, one line, ellipsis
 │ 08 ─┼───┼───┼───┼───┼───┼───┼──      │  36 px gutter, 9.5 px labels
 │ 09  │   │▌We│   │▌St│   │   │        │  blocks keep their height, titles clamp
+│ 11  │   │▌De│   │   │   │   │        │  overlapping events: one block, title + "+1"
 │ …   │   │   │   ━━━━ now             │
 │ 00 ═══════ midnight ═══════════      │
 │ …                                    │  the grid ends at the bottom edge (100dvh)
@@ -200,7 +201,15 @@ yet, the fallbacks are 170 px (desktop) and 160 px (phone).
   is at least its own height and at most `--hmax`, so a short block with a long title still shows the whole title when
   there is free space below it.
 - Hover and keyboard focus: fill + 8 %, z 5, no max height, shadow `0 8px 22px rgba(0,0,0,.14)`.
-- Overlaps: `packDay()` gives each block a column `k` of `n`. Width `100/n %`, 2 px gap on each side (phone 1 px).
+- Overlaps (wider than 760 px): `packDay()` gives each block a column `k` of `n`. Width `100/n %`, 2 px gap on each
+  side.
+- Overlaps on phones (≤ 760 px): a day's column is about 40 px wide, too narrow to split. `packDay()` also numbers each
+  overlap group (`it.g`), and a group of two or more is drawn as **one block** (`groupBlock()`, `.wv-ev.wv-grp`,
+  `data-grp=<date>`): from the group's earliest start to its latest end, full column width (1 px each side), in the
+  first event's colour with its title, then a "+n" line (10 px / 12, 600, tabular, opacity .75). When the block is too
+  short for the title and "+n" on two lines (`.wv-grp.tight`, `h − 4 < 26`), "+n" goes before the title on one line.
+  The tooltip lists every title with its time; `aria-label` is "3 events: Design review, Lab session, …". A tap opens
+  that day's list (`#day-dlg`), where each event opens the editor as before. A single event stays a normal block.
 - Phone: the block keeps exactly its own height (no growing; there is no room). Padding `2px 1px 2px 5px`, radius 4,
   10.5 px / line-height 13, −.015em. The title is clamped to `--cl` lines with an ellipsis, never split inside a word.
   `--cl = max(1, floor((h − 4 − time) / 13))`. The start time (10 px, line-height 12) is shown only in a full-width block

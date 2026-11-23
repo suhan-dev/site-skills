@@ -67,11 +67,12 @@ export function layoutWeek(weekStart, evs, visible = () => true) {
 }
 
 // Side-by-side columns for overlapping timed blocks in one day. list: [{ s, en }] in minutes after DAY0.
-// Sets it.k (its column) and it.n (columns in its overlap group): the block is 1/n wide at k/n.
+// Sets it.k (its column), it.n (columns in its overlap group: the block is 1/n wide at k/n) and it.g (the overlap
+// group's number in the day, from 0; phones draw each group of two or more as one block).
 export function packDay(list) {
   list.sort((a, b) => a.s - b.s || b.en - a.en);
-  let cols = [], group = [], gEnd = -1;
-  const flush = () => { group.forEach((it) => (it.n = cols.length)); cols = []; group = []; };
+  let cols = [], group = [], gEnd = -1, g = 0;
+  const flush = () => { group.forEach((it) => { it.n = cols.length; it.g = g; }); g++; cols = []; group = []; };
   for (const it of list) {
     if (group.length && it.s >= gEnd) flush();
     let k = cols.findIndex((end) => end <= it.s);

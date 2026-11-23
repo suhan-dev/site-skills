@@ -58,6 +58,7 @@ See [time-model.md](time-model.md) for the rule and its consequences.
 | Only the arrows changed the week | A quick sideways swipe (> 56 px, < 700 ms, clearly sideways) changes it, with a 240 ms slide | The phone gesture people expect | 454feb4 (#35) |
 | Pinch and double-tap zoomed the page, and the grid panned | No zoom on an upright phone (viewport script + `gesturestart`), `touch-action: pan-y` on the grid | Zooming broke the one-screen layout | 454feb4 (#35) |
 | The event editor was a centred dialog on phones; Starts/Ends sat in one cramped row (`1.25fr .9fr`), the time lost its AM/PM, the sheet overlapped and panned sideways, iOS zoomed into fields | A bottom sheet; Starts and Ends one row each (word, date, time); 16 px fields; on desktop the dialog is 620 px so a time keeps its AM/PM | The iPhone editor was unusable | 623cf11 (#35) |
+| On phones, overlapping events split one ~40 px day column side by side; at 320 px each showed one letter ("D…", "r…") | One block per overlap group from its first start to its last end, the first title and "+n"; a tap opens the day's list. Wider screens keep side-by-side columns | Unreadable blocks; the day list already shows each event in full | 29f8f93 (#40) |
 
 ## Against the owner's design brief
 

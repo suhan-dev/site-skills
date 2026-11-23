@@ -224,6 +224,10 @@
   .wv-ev{gap:1px;padding:2px 1px 2px 5px;border-radius:4px;font-size:10.5px;line-height:13px;letter-spacing:-.015em}
   .wv-ev .t{flex:none;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:var(--cl,1);overflow:hidden;text-overflow:ellipsis;overflow-wrap:normal}
   .wv-ev .tm{font-size:10px;line-height:12px;white-space:nowrap;overflow:hidden}
+  /* overlapping events as one block: the first title, then "+n" (on the same line when the block is short) */
+  .wv-grp .n{flex:none;font-size:10px;line-height:12px;font-weight:600;font-variant-numeric:tabular-nums;opacity:.75}
+  .wv-grp.tight{flex-direction:row;align-items:baseline;gap:2px}
+  .wv-grp.tight .t{min-width:0}
   /* all-day bars: one line with an ellipsis; "+n" gets its own line below the lanes */
   .wv-alllanes{grid-auto-rows:minmax(19px,auto)}
   .wv-alllanes .ev{gap:3px;min-height:19px;margin:0 1px;padding:2px 1px 2px 5px;border-radius:4px}

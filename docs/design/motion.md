@@ -27,8 +27,8 @@ What moves, how long it takes, and where. Every value is read from the CSS.
 | Dialog rising into place (wider than a phone) | 220 ms | `cubic-bezier(.2,.8,.2,1)` | `@keyframes dlg-in` | `.dlg[open]` [components.css:85](../../skills/team-site-design-system/assets/components.css#L85) |
 | Chat panel sliding in, and the page making room beside it | 280 ms | `cubic-bezier(.2,.8,.2,1)` | `transform, padding-right` | `.chat` [chat.css:7](../../skills/team-chat/assets/site/css/chat.css#L7)<br>`body` [chat.css:12](../../skills/team-chat/assets/site/css/chat.css#L12) |
 | Bottom sheet sliding up (phones) | 320 ms | `cubic-bezier(.2,.8,.2,1)` | `@keyframes dlg-sheet` | `.dlg[open]` [components.css:135](../../skills/team-site-design-system/assets/components.css#L135) |
-| Copy · Comment bar appearing | 140 ms | `ease-out` | `@keyframes pop-in` | `.selpop` [chat.css:106](../../skills/team-chat/assets/site/css/chat.css#L106) |
-| Highlight after a jump (a message, a commented passage, a section, an equation) | 1600 ms, 1800 ms, 2000 ms | `ease-out` | `@keyframes cm-flash, @keyframes mk-flash, @keyframes th-hit, @keyframes rd-hit` | `.cm.flash` 1600 ms [chat.css:53](../../skills/team-chat/assets/site/css/chat.css#L53)<br>`mark.cm-mark.flash` 1800 ms [chat.css:129](../../skills/team-chat/assets/site/css/chat.css#L129)<br>`.th-doc .hit` 1800 ms [theory.css:67](../../skills/lecture-notes-reader/assets/site/css/theory.css#L67)<br>`.rd-text :is(.katex-display,figure,h2,h3):target` 2000 ms [reader.css:133](../../skills/lecture-notes-reader/assets/site/css/reader.css#L133) |
+| Copy · Comment bar appearing | 140 ms | `ease-out` | `@keyframes pop-in` | `.selpop` [chat.css:105](../../skills/team-chat/assets/site/css/chat.css#L105) |
+| Highlight after a jump (a message, a commented passage, a section, an equation) | 1600 ms, 1800 ms, 2000 ms | `ease-out` | `@keyframes cm-flash, @keyframes mk-flash, @keyframes th-hit, @keyframes rd-hit` | `.cm.flash` 1600 ms [chat.css:53](../../skills/team-chat/assets/site/css/chat.css#L53)<br>`mark.cm-mark.flash` 1800 ms [chat.css:128](../../skills/team-chat/assets/site/css/chat.css#L128)<br>`.th-doc .hit` 1800 ms [theory.css:67](../../skills/lecture-notes-reader/assets/site/css/theory.css#L67)<br>`.rd-text :is(.katex-display,figure,h2,h3):target` 2000 ms [reader.css:133](../../skills/lecture-notes-reader/assets/site/css/reader.css#L133) |
 | Sync dot while the calendar loads | 1000 ms | `ease-in-out` | `@keyframes cal-pulse` | `.sync.busy i` [calendar.css:30](../../skills/shared-google-calendar/assets/site/css/calendar.css#L30) |
 | Intro: the scene dots (the current one grows) | 300 ms | not written (`ease`) | `background, transform` | `.ix-dots button::after` [intro.css:40](../../skills/scroll-3d-intro/assets/intro.css#L40) |
 | Intro: the app fading in after the intro, and out before a replay | 260 ms, 400 ms | `ease` | `@keyframes ix-arrive, opacity` | `html.intro-arrive .app` 400 ms [intro.css:84](../../skills/scroll-3d-intro/assets/intro.css#L84)<br>`html.ix-leave .app` 260 ms [intro.css:86](../../skills/scroll-3d-intro/assets/intro.css#L86) |
@@ -39,10 +39,10 @@ Motion started from the JS:
 
 | Role | Value | Where |
 |---|---|---|
-| Calendar week or month change | 240 ms, `cubic-bezier(.2,.8,.2,1)` | [calendar.js:374](../../skills/shared-google-calendar/assets/site/js/calendar.js#L374) |
+| Calendar week or month change | 240 ms, `cubic-bezier(.2,.8,.2,1)` | [calendar.js:399](../../skills/shared-google-calendar/assets/site/js/calendar.js#L399) |
 | Bottom sheet let go after a pull (slides out or springs back) | `transform .26s cubic-bezier(.2,.8,.2,1)` | [team-site-design-system/sheet.js:69](../../skills/team-site-design-system/assets/sheet.js#L69) |
 | Guide spotlight and panel moving between steps | 280 ms, cubic ease-out | [guide.js:22](../../skills/first-visit-spotlight-guide/assets/site/js/guide.js#L22) |
-| Banner shake when the calendar is read-only | 300 ms | [calendar.js:626](../../skills/shared-google-calendar/assets/site/js/calendar.js#L626) |
+| Banner shake when the calendar is read-only | 300 ms | [calendar.js:651](../../skills/shared-google-calendar/assets/site/js/calendar.js#L651) |
 | Intro camera arrival | 2.5 s, cubic ease-out | [intro-scene.js:346](../../skills/scroll-3d-intro/assets/intro-scene.js#L346) |
 
 ## Every transition and animation
@@ -132,7 +132,7 @@ Animations:
 
 | Selector | Keyframes | Duration | Easing | Delay | Repeat | Fill | Reduced motion | Where |
 |---|---|---|---|---|---|---|---|---|
-| `.sync.busy i` | `cal-pulse` | 1000 ms | `ease-in-out` |  | infinite |  | off [calendar.css:276](../../skills/shared-google-calendar/assets/site/css/calendar.css#L276) | [calendar.css:30](../../skills/shared-google-calendar/assets/site/css/calendar.css#L30) |
+| `.sync.busy i` | `cal-pulse` | 1000 ms | `ease-in-out` |  | infinite |  | off [calendar.css:280](../../skills/shared-google-calendar/assets/site/css/calendar.css#L280) | [calendar.css:30](../../skills/shared-google-calendar/assets/site/css/calendar.css#L30) |
 
 Keyframes:
 
@@ -155,16 +155,16 @@ Animations:
 | Selector | Keyframes | Duration | Easing | Delay | Repeat | Fill | Reduced motion | Where |
 |---|---|---|---|---|---|---|---|---|
 | `.cm.flash` | `cm-flash` | 1600 ms | `ease-out` |  |  |  | kept | [chat.css:53](../../skills/team-chat/assets/site/css/chat.css#L53) |
-| `.selpop` | `pop-in` | 140 ms | `ease-out` |  |  |  | kept | [chat.css:106](../../skills/team-chat/assets/site/css/chat.css#L106) |
-| `mark.cm-mark.flash` | `mk-flash` | 1800 ms | `ease-out` |  |  |  | kept | [chat.css:129](../../skills/team-chat/assets/site/css/chat.css#L129) |
+| `.selpop` | `pop-in` | 140 ms | `ease-out` |  |  |  | kept | [chat.css:105](../../skills/team-chat/assets/site/css/chat.css#L105) |
+| `mark.cm-mark.flash` | `mk-flash` | 1800 ms | `ease-out` |  |  |  | kept | [chat.css:128](../../skills/team-chat/assets/site/css/chat.css#L128) |
 
 Keyframes:
 
 | @keyframes | Steps | Used by | Where |
 |---|---|---|---|
 | `cm-flash` | `0%,30%{background:color-mix(in srgb,var(--accent) 12%,transparent)} 100%{background:transparent}` | `.cm.flash` | [chat.css:54](../../skills/team-chat/assets/site/css/chat.css#L54) |
-| `pop-in` | `from{opacity:0}` | `.selpop` | [chat.css:123](../../skills/team-chat/assets/site/css/chat.css#L123) |
-| `mk-flash` | `0%,35%{background:color-mix(in srgb,var(--accent) 22%,transparent)} 100%{background:transparent}` | `mark.cm-mark.flash` | [chat.css:130](../../skills/team-chat/assets/site/css/chat.css#L130) |
+| `pop-in` | `from{opacity:0}` | `.selpop` | [chat.css:122](../../skills/team-chat/assets/site/css/chat.css#L122) |
+| `mk-flash` | `0%,35%{background:color-mix(in srgb,var(--accent) 22%,transparent)} 100%{background:transparent}` | `mark.cm-mark.flash` | [chat.css:129](../../skills/team-chat/assets/site/css/chat.css#L129) |
 
 ### team-site-design-system
 
@@ -224,7 +224,7 @@ Every CSS duration, shortest first, with what it moves. Generated from the table
 | Duration | Count | Easings | What changes | Where |
 |---|---:|---|---|---|
 | 120 ms | 1 | not written | `background` | `.day` [calendar.css:40](../../skills/shared-google-calendar/assets/site/css/calendar.css#L40) |
-| 140 ms | 1 | `ease-out` | `@keyframes pop-in` | `.selpop` [chat.css:106](../../skills/team-chat/assets/site/css/chat.css#L106) |
+| 140 ms | 1 | `ease-out` | `@keyframes pop-in` | `.selpop` [chat.css:105](../../skills/team-chat/assets/site/css/chat.css#L105) |
 | 150 ms | 16 | not written, `ease` | `background`, `transform`, `color`, `opacity`, `box-shadow` | `.guide-next::before` [guide.css:29](../../skills/first-visit-spotlight-guide/assets/site/css/guide.css#L29)<br>`.th-mtoc summary::after` [theory.css:30](../../skills/lecture-notes-reader/assets/site/css/theory.css#L30)<br>`.cal-view button` [calendar.css:20](../../skills/shared-google-calendar/assets/site/css/calendar.css#L20)<br>`.cm-del` [chat.css:42](../../skills/team-chat/assets/site/css/chat.css#L42)<br>`.tabs a` [components.css:14](../../skills/team-site-design-system/assets/components.css#L14)<br>`.btn` [components.css:44](../../skills/team-site-design-system/assets/components.css#L44)<br>`.segmented button` [components.css:77](../../skills/team-site-design-system/assets/components.css#L77)<br>`.fld input,.fld textarea` [components.css:95](../../skills/team-site-design-system/assets/components.css#L95)<br>`.week-tabs button` [records.css:12](../../skills/weekly-research-log/assets/site/css/records.css#L12)<br>`.wk-table summary::after` [records.css:82](../../skills/weekly-research-log/assets/site/css/records.css#L82)<br>`.pill` [google-signin-team-gate/_middleware.js:118](../../skills/google-signin-team-gate/assets/functions/_middleware.js#L118) |
 | 200 ms | 8 | not written, `ease` | `opacity`, `background`, `transform`, `background-color`, `border-color` | `.guide` [guide.css:3](../../skills/first-visit-spotlight-guide/assets/site/css/guide.css#L3)<br>`.guide-dots i` [guide.css:25](../../skills/first-visit-spotlight-guide/assets/site/css/guide.css#L25)<br>`.push-ios summary::after` [push.css:35](../../skills/ios-webapp-push/assets/site/css/push.css#L35)<br>`.rd-bar-btn svg` [reader.css:179](../../skills/lecture-notes-reader/assets/site/css/reader.css#L179)<br>`.wv-hours span` [calendar.css:129](../../skills/shared-google-calendar/assets/site/css/calendar.css#L129)<br>`.sw` [components.css:121](../../skills/team-site-design-system/assets/components.css#L121)<br>`.pill` [google-signin-team-gate/_middleware.js:118](../../skills/google-signin-team-gate/assets/functions/_middleware.js#L118) |
 | 220 ms | 2 | `cubic-bezier(.2,.8,.2,1)`, `cubic-bezier(.3,.7,.4,1)` | `@keyframes dlg-in`, `transform` | `.dlg[open]` [components.css:85](../../skills/team-site-design-system/assets/components.css#L85)<br>`.sw::after` [components.css:123](../../skills/team-site-design-system/assets/components.css#L123) |
@@ -238,7 +238,7 @@ Every CSS duration, shortest first, with what it moves. Generated from the table
 | 900 ms | 1 | `ease` | `opacity` | `html:not(.ix-login) .ix-gl` [intro.css:21](../../skills/scroll-3d-intro/assets/intro.css#L21) |
 | 1000 ms | 1 | `ease-in-out` | `@keyframes cal-pulse` | `.sync.busy i` [calendar.css:30](../../skills/shared-google-calendar/assets/site/css/calendar.css#L30) |
 | 1600 ms | 1 | `ease-out` | `@keyframes cm-flash` | `.cm.flash` [chat.css:53](../../skills/team-chat/assets/site/css/chat.css#L53) |
-| 1800 ms | 2 | `ease-out` | `@keyframes th-hit`, `@keyframes mk-flash` | `.th-doc .hit` [theory.css:67](../../skills/lecture-notes-reader/assets/site/css/theory.css#L67)<br>`mark.cm-mark.flash` [chat.css:129](../../skills/team-chat/assets/site/css/chat.css#L129) |
+| 1800 ms | 2 | `ease-out` | `@keyframes th-hit`, `@keyframes mk-flash` | `.th-doc .hit` [theory.css:67](../../skills/lecture-notes-reader/assets/site/css/theory.css#L67)<br>`mark.cm-mark.flash` [chat.css:128](../../skills/team-chat/assets/site/css/chat.css#L128) |
 | 2000 ms | 1 | `ease-out` | `@keyframes rd-hit` | `.rd-text :is(.katex-display,figure,h2,h3):target` [reader.css:133](../../skills/lecture-notes-reader/assets/site/css/reader.css#L133) |
 
 ## Reduced motion
@@ -259,8 +259,8 @@ Every rule inside `@media (prefers-reduced-motion:reduce)`, by file.
 | intro.css | `html.ix-login.ix-go .ix-dim,html.ix-login.ix-go .h0 .rise,html:not(.i…` | `transition:none` | [intro.css:75](../../skills/scroll-3d-intro/assets/intro.css#L75) |
 | intro.css | `html.intro-arrive .app` | `animation:none` | [intro.css:87](../../skills/scroll-3d-intro/assets/intro.css#L87) |
 | intro.css | `html.ix-leave .app` | `transition:none` | [intro.css:87](../../skills/scroll-3d-intro/assets/intro.css#L87) |
-| calendar.css | `.sync.busy i` | `animation:none` | [calendar.css:276](../../skills/shared-google-calendar/assets/site/css/calendar.css#L276) |
-| calendar.css | `.sync.busy i` | `opacity:.6` | [calendar.css:276](../../skills/shared-google-calendar/assets/site/css/calendar.css#L276) |
+| calendar.css | `.sync.busy i` | `animation:none` | [calendar.css:280](../../skills/shared-google-calendar/assets/site/css/calendar.css#L280) |
+| calendar.css | `.sync.busy i` | `opacity:.6` | [calendar.css:280](../../skills/shared-google-calendar/assets/site/css/calendar.css#L280) |
 | chat.css | `.chat,body` | `transition:none` | [chat.css:16](../../skills/team-chat/assets/site/css/chat.css#L16) |
 | components.css | `.dlg[open]` | `transition:none` | [components.css:214](../../skills/team-site-design-system/assets/components.css#L214) |
 | components.css | `.dlg[open]` | `animation:none` | [components.css:214](../../skills/team-site-design-system/assets/components.css#L214) |
@@ -284,8 +284,8 @@ Motion with no reduced-motion rule over it. Colour and opacity fades are expecte
 | `.wv-hours span` | `opacity` | 200 ms | no | [calendar.css:129](../../skills/shared-google-calendar/assets/site/css/calendar.css#L129) |
 | `.cm-del` | `opacity` | 150 ms | no | [chat.css:42](../../skills/team-chat/assets/site/css/chat.css#L42) |
 | `.cm.flash` | `@keyframes cm-flash` | 1600 ms | no | [chat.css:53](../../skills/team-chat/assets/site/css/chat.css#L53) |
-| `.selpop` | `@keyframes pop-in` | 140 ms | no | [chat.css:106](../../skills/team-chat/assets/site/css/chat.css#L106) |
-| `mark.cm-mark.flash` | `@keyframes mk-flash` | 1800 ms | no | [chat.css:129](../../skills/team-chat/assets/site/css/chat.css#L129) |
+| `.selpop` | `@keyframes pop-in` | 140 ms | no | [chat.css:105](../../skills/team-chat/assets/site/css/chat.css#L105) |
+| `mark.cm-mark.flash` | `@keyframes mk-flash` | 1800 ms | no | [chat.css:128](../../skills/team-chat/assets/site/css/chat.css#L128) |
 | `.tabs a` | `color` | 150 ms | no | [components.css:14](../../skills/team-site-design-system/assets/components.css#L14) |
 | `.tabs a` | `box-shadow` | 150 ms | no | [components.css:14](../../skills/team-site-design-system/assets/components.css#L14) |
 | `.btn` | `background` | 150 ms | no | [components.css:44](../../skills/team-site-design-system/assets/components.css#L44) |
@@ -299,7 +299,7 @@ Motion with no reduced-motion rule over it. Colour and opacity fades are expecte
 
 | What changes with reduced motion | Where |
 |---|---|
-| No slide when the week or month changes. | [calendar.js:373](../../skills/shared-google-calendar/assets/site/js/calendar.js#L373) |
+| No slide when the week or month changes. | [calendar.js:398](../../skills/shared-google-calendar/assets/site/js/calendar.js#L398) |
 | The spotlight and the panel jump to the next step. | [guide.js:198](../../skills/first-visit-spotlight-guide/assets/site/js/guide.js#L198) |
 | The layer is removed at once, without the fade. | [guide.js:278](../../skills/first-visit-spotlight-guide/assets/site/js/guide.js#L278) |
 | The page scrolls to the next target without smooth scrolling. | [guide.js:160](../../skills/first-visit-spotlight-guide/assets/site/js/guide.js#L160) |
@@ -376,11 +376,11 @@ Timing constants in the skill JS that change what people see. Read from the code
 
 | Value | What people see | Where |
 |---|---|---|
-| 30000 ms | The now line and its time label move; an hour label within 14 minutes of it fades out (`.near`, opacity `.2s` in calendar.css). | [calendar.js:322](../../skills/shared-google-calendar/assets/site/js/calendar.js#L322) |
-| 240 ms, `cubic-bezier(.2,.8,.2,1)` | Next or previous week (month): the grid slides in from that side (`translateX(±22px)`, opacity .25 → 1). Skipped with reduced motion. | [calendar.js:374](../../skills/shared-google-calendar/assets/site/js/calendar.js#L374) |
-| under 700 ms | Phones: a sideways swipe changes the week (month) only if it is this quick, longer than 56 px and clearly sideways (|dx| > 1.8 |dy|). | [calendar.js:385](../../skills/shared-google-calendar/assets/site/js/calendar.js#L385) |
-| 30 ms | The event sheet puts the cursor in the title field this long after it opens (only when the calendar can be written). | [calendar.js:498](../../skills/shared-google-calendar/assets/site/js/calendar.js#L498) |
-| 300 ms | Adding an event while the calendar cannot be written shows `#cal-banner` and shakes it (translateX 0 → −6 px → 6 px → 0). No reduced-motion check. | [calendar.js:626](../../skills/shared-google-calendar/assets/site/js/calendar.js#L626) |
+| 30000 ms | The now line and its time label move; an hour label within 14 minutes of it fades out (`.near`, opacity `.2s` in calendar.css). | [calendar.js:347](../../skills/shared-google-calendar/assets/site/js/calendar.js#L347) |
+| 240 ms, `cubic-bezier(.2,.8,.2,1)` | Next or previous week (month): the grid slides in from that side (`translateX(±22px)`, opacity .25 → 1). Skipped with reduced motion. | [calendar.js:399](../../skills/shared-google-calendar/assets/site/js/calendar.js#L399) |
+| under 700 ms | Phones: a sideways swipe changes the week (month) only if it is this quick, longer than 56 px and clearly sideways (|dx| > 1.8 |dy|). | [calendar.js:410](../../skills/shared-google-calendar/assets/site/js/calendar.js#L410) |
+| 30 ms | The event sheet puts the cursor in the title field this long after it opens (only when the calendar can be written). | [calendar.js:523](../../skills/shared-google-calendar/assets/site/js/calendar.js#L523) |
+| 300 ms | Adding an event while the calendar cannot be written shows `#cal-banner` and shakes it (translateX 0 → −6 px → 6 px → 0). No reduced-motion check. | [calendar.js:651](../../skills/shared-google-calendar/assets/site/js/calendar.js#L651) |
 
 ### team-chat/site/js/chat.js (team-chat)
 
@@ -411,8 +411,8 @@ Found by the same search, left out above because nothing on screen moves with th
 | What it does | Where |
 |---|---|
 | Reads Google again every minute while the tab is visible. | [calendar.js:20](../../skills/shared-google-calendar/assets/site/js/calendar.js#L20) |
-| Reads again on return to the tab after 15 s away. | [calendar.js:706](../../skills/shared-google-calendar/assets/site/js/calendar.js#L706) |
-| Waits for a running load before opening an event from a notification. | [calendar.js:601](../../skills/shared-google-calendar/assets/site/js/calendar.js#L601) |
+| Reads again on return to the tab after 15 s away. | [calendar.js:731](../../skills/shared-google-calendar/assets/site/js/calendar.js#L731) |
+| Waits for a running load before opening an event from a notification. | [calendar.js:626](../../skills/shared-google-calendar/assets/site/js/calendar.js#L626) |
 | Polling: every 4 s while the chat is open, 45 s while closed, 5 min when the server is off. | [team-chat/site/js/chat.js:29](../../skills/team-chat/assets/site/js/chat.js#L29) |
 | The reader ignores the jump at load, then keeps the reading place… | [reader.js:231](../../skills/lecture-notes-reader/assets/site/js/reader.js#L231) |
 | …400 ms after scrolling stops. | [reader.js:232](../../skills/lecture-notes-reader/assets/site/js/reader.js#L232) |
@@ -448,12 +448,12 @@ Found by the same search, left out above because nothing on screen moves with th
 | `setTimeout(() => html.classList.add("ix-go"), 4000); // never leave the arrival dimmed if the scene is slow t…` | yes | [intro.js:234](../../skills/scroll-3d-intro/assets/intro.js#L234) |
 | `const wait = (ms) => new Promise((r) => setTimeout(r, ms));` | yes | [fake-api.js:60](../../skills/shared-google-calendar/assets/demo/fake-api.js#L60) |
 | `await wait(120);` | yes | [fake-api.js:66](../../skills/shared-google-calendar/assets/demo/fake-api.js#L66) |
-| `setInterval(updateNow, 30_000);` | yes | [calendar.js:322](../../skills/shared-google-calendar/assets/site/js/calendar.js#L322) |
-| `` $("#cal-grid").animate([{ transform: `translateX(${n * 22}px)`, opacity: 0.25 }, { transform: "none", opacity… `` | yes | [calendar.js:374](../../skills/shared-google-calendar/assets/site/js/calendar.js#L374) |
-| `if (writable()) setTimeout(() => f("title").focus(), 30);` | yes | [calendar.js:498](../../skills/shared-google-calendar/assets/site/js/calendar.js#L498) |
-| `const settle = async () => { while (S.busy) await new Promise((r) => setTimeout(r, 80)); };` | yes | [calendar.js:601](../../skills/shared-google-calendar/assets/site/js/calendar.js#L601) |
-| `b.animate([{ transform: "translateX(0)" }, { transform: "translateX(-6px)" }, { transform: "translateX(6px)" …` | yes | [calendar.js:626](../../skills/shared-google-calendar/assets/site/js/calendar.js#L626) |
-| `setInterval(() => { if (document.visibilityState === "visible" && isActive() && !dlg.open) load({ quiet: true…` | yes | [calendar.js:705](../../skills/shared-google-calendar/assets/site/js/calendar.js#L705) |
+| `setInterval(updateNow, 30_000);` | yes | [calendar.js:347](../../skills/shared-google-calendar/assets/site/js/calendar.js#L347) |
+| `` $("#cal-grid").animate([{ transform: `translateX(${n * 22}px)`, opacity: 0.25 }, { transform: "none", opacity… `` | yes | [calendar.js:399](../../skills/shared-google-calendar/assets/site/js/calendar.js#L399) |
+| `if (writable()) setTimeout(() => f("title").focus(), 30);` | yes | [calendar.js:523](../../skills/shared-google-calendar/assets/site/js/calendar.js#L523) |
+| `const settle = async () => { while (S.busy) await new Promise((r) => setTimeout(r, 80)); };` | yes | [calendar.js:626](../../skills/shared-google-calendar/assets/site/js/calendar.js#L626) |
+| `b.animate([{ transform: "translateX(0)" }, { transform: "translateX(-6px)" }, { transform: "translateX(6px)" …` | yes | [calendar.js:651](../../skills/shared-google-calendar/assets/site/js/calendar.js#L651) |
+| `setInterval(() => { if (document.visibilityState === "visible" && isActive() && !dlg.open) load({ quiet: true…` | yes | [calendar.js:730](../../skills/shared-google-calendar/assets/site/js/calendar.js#L730) |
 | `timer = setTimeout(() => { if (document.visibilityState === "visible") load(); else schedule(); }, off ? POLL…` | yes | [team-chat/site/js/chat.js:229](../../skills/team-chat/assets/site/js/chat.js#L229) |
 | `markT = setTimeout(markNow, 60);` | yes | [team-chat/site/js/chat.js:323](../../skills/team-chat/assets/site/js/chat.js#L323) |
 | `const settle = () => { place(); setTimeout(place, 120); setTimeout(place, 400); setTimeout(place, 800); };` | yes | [team-chat/site/js/chat.js:426](../../skills/team-chat/assets/site/js/chat.js#L426) |
