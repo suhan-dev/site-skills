@@ -168,3 +168,5 @@ node tools/make-index.mjs      # docs/gallery.md and llms.txt
 
 Built from the NAND Capstone 2026 Winter team site. All names, events and chapter text in the demos and screenshots are
 placeholders.
+
+If these skills helped, a ⭐ on [the repository](https://github.com/suhan-dev/site-skills) is appreciated.
