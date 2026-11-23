@@ -400,7 +400,7 @@ by time; all-day first), and **New event on this day** (hidden when read only). 
 | State | Where it shows |
 |---|---|
 | loading (first) | sync "Loading", empty grid lines, Upcoming empty |
-| syncing (quiet reload) | the sync dot pulses; nothing else moves |
+| syncing | the sync dot pulses while a load shows "Loading" (the first load, Retry). A quiet reload (polling, coming back to the tab) changes nothing on screen until its result arrives |
 | live | green dot "Synced 2:20 PM", events in owner colours |
 | empty week | grid lines only; "Nothing scheduled." in Upcoming |
 | not configured | orange dot, warn banner, striped official schedule, read only, a tap shakes the banner |

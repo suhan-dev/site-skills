@@ -75,6 +75,16 @@ Cloudflare Variables and Secrets by the user's own hand.
 `;
 for (const n of names) tx += `- [${n}](${RAW}skills/${n}/SKILL.md): ${desc(n)}\n`;
 tx += `
+## Design, UI and UX
+
+- [docs/design/README.md](${RAW}docs/design/README.md): the look in one paragraph and where every design detail lives
+- [docs/design/tokens.md](${RAW}docs/design/tokens.md): every token with its light and dark value (generated from the CSS)
+- [docs/design/motion.md](${RAW}docs/design/motion.md): every transition, animation and timed delay (generated)
+- [docs/design/components.md](${RAW}docs/design/components.md): each shared control in every state
+- [docs/design/screens.md](${RAW}docs/design/screens.md): each screen at 1440, 1024, 768, 390 and 320 px, light and dark
+- [docs/design/ux.md](${RAW}docs/design/ux.md): journeys, empty/loading/error states with their words, wording, keyboard, accessibility
+- [team-site-design-system/references/mobile.md](${RAW}skills/team-site-design-system/references/mobile.md): every phone rule with code and reason
+
 ## Optional
 
 - [docs/gallery.md](${RAW}docs/gallery.md): every screenshot

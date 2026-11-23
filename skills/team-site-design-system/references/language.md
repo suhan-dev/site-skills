@@ -10,7 +10,7 @@ rules kept the two from drifting apart.
 | Sign-in page, intro | English | English |
 | Header (tabs, buttons, tooltips) | English | English |
 | Main screen (Calendar tab, its dialogs, the status line) | English | English |
-| Content tabs (Research log, References, Theory) — UI strings | English | Korean |
+| Content tabs (Research log, References, Theory) — UI strings | English | Korean on the source site; the skills ship English tables only (`rec-strings.js`, `refs-strings.js`, `theory-tab.js`) with a place to add a KO table |
 | Content itself (logs, notes, chapters) | as written (English, by the repo rule) | as written |
 | Terms and proper names (technical terms, a company's name, a simulator's name …) | English | English |
 
@@ -25,7 +25,8 @@ Mark a fixed section with `data-lang-fixed`; `i18n.js` then uses the English tab
   (placeholder), `data-i18n-aria`.
 - Placeholders in strings use `{name}`: `t("wk.tip", { n: 3, a: "12/22", b: "12/28" })`.
 - Dates and weekdays are formatted by small helpers per language (`dows`, `dShort`, `monthTitle`), not by
-  `toLocaleString` (its output differs by browser).
+  `toLocaleString` (its output differs by browser). One exception: the calendar's "Synced 2:20 PM" note uses
+  `toLocaleTimeString("en-US")` (`cal-util.js`), which is fixed to English like the rest of the Calendar tab.
 - The choice is saved in `localStorage` (`site_lang`) and applied before first paint (`<html lang>`), and a
   `site:lang` event lets each tab re-render.
 

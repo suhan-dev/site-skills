@@ -28,6 +28,7 @@ There are two kinds of jobs here. Find out which one the user wants.
    bash tools/privacy-scan.sh     # must print only ✓
    node tools/check-skills.mjs    # frontmatter, sections, links, sizes, marketplace
    node tools/make-index.mjs      # regenerates docs/gallery.md and llms.txt
+   node tools/design-inventory.mjs # after a CSS change: docs/design/tokens.md and motion.md
    ```
 4. A new skill must also be added to `.claude-plugin/marketplace.json`, `README.md` (the table) and the build order in
    `tools/make-index.mjs` and `docs/START-HERE.md`.
@@ -52,8 +53,9 @@ SECURITY.md             what is never committed, how secrets are handled
 CONTRIBUTING.md         how a skill folder is built
 docs/START-HERE.md      build playbook: intake → order → checks
 docs/gallery.md         every screenshot in one page (generated)
+docs/design/            design, UI and UX across all skills: tokens, motion, components, screens, journeys
 skills/<name>/          SKILL.md · references/ · assets/ · screenshots/
-tools/                  shoot.mjs (screenshots) · privacy-scan.sh · check-skills.mjs · make-index.mjs
+tools/                  shoot.mjs · shoot-screens.mjs · design-inventory.mjs · privacy-scan.sh · check-skills.mjs · make-index.mjs
 .claude-plugin/         marketplace.json (install as a Claude Code plugin)
 ```
 

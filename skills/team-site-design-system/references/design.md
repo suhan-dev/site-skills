@@ -11,7 +11,7 @@ Three blocks in `tokens.css` carry the same names: `:root` (light), `:root[data-
 |---|---|---|---|
 | `--paper` | `#ffffff` | `#1c1c1e` | page background, header glass base |
 | `--card` | `#ffffff` | `#2c2c2e` | dialogs, sheets, focused inputs |
-| `--card2` | `#f5f5f7` | `#3a3a3c` | rare second surface (status-bar colour in light) |
+| `--card2` | `#f5f5f7` | `#3a3a3c` | spare second surface; defined but not used by any skill's CSS today |
 | `--ink` | `#1d1d1f` | `#f5f5f7` | primary text, selected tab underline |
 | `--ink2` | `#424245` | `#d1d1d6` | body text in documents, secondary controls |
 | `--ink3` | `#6e6e73` | `#98989d` | labels, meta, unselected tabs |
@@ -28,7 +28,7 @@ Three blocks in `tokens.css` carry the same names: `:root` (light), `:root[data-
 | `--ok` | `#28a745` | `#30d158` | "open" week dot, success |
 | `--warn` | `#c25e00` | `#ff9f0a` | warning banner rule, setup states |
 | `--bad` | `#d70015` | `#ff453a` | errors, delete |
-| `--lift` | `0 1px 2px rgba(0,0,0,.04), 0 0 0 .5px rgba(0,0,0,.05)` | `0 0 0 .5px rgba(255,255,255,.06)` | events, small raised things |
+| `--lift` | `0 1px 2px rgba(0,0,0,.04), 0 0 0 .5px rgba(0,0,0,.05)` | `0 0 0 .5px rgba(255,255,255,.06)` | spare shadow for small raised things; defined but not used by any skill's CSS today |
 | `--shadow` | `0 24px 64px rgba(0,0,0,.18), 0 2px 8px rgba(0,0,0,.08), 0 0 0 .5px rgba(0,0,0,.06)` | `0 24px 64px rgba(0,0,0,.6), 0 0 0 .5px rgba(255,255,255,.1)` | dialogs and popovers only |
 | `--ev-bg` | `15%` | `26%` | how much of a member colour tints an event background |
 | `--ev-ink` | `58%` | `52%` | how much of the member colour goes into event text |
@@ -74,7 +74,7 @@ Body: 15 px / 1.5, letter-spacing −.006em, antialiased, `font-feature-settings
 |---|---|---|---|---|
 | Page title `.page-h` | `clamp(26px, 2.6vw, 34px)` (23 px on phones) | 700 | −.025em | 1.12, `text-wrap: balance` |
 | Calendar title | 26 px (20 → 19 → 17 px on phones) | 700 | −.025em | 1.2 |
-| Section title (`h2` in a tab) | 24 px (22 on phones) | 700 | −.022em | 1.25 |
+| Section title (`h2` in a tab) | 24 px (the References sections stay 24 px on phones too) | 700 | −.022em | 1.25 |
 | Dialog title | 19 px | 700 | −.02em | — |
 | Doc h1 | 22 px (19 in a log column) | 700 | −.022em | 1.3 |
 | Doc h2 | 17 px | 650 | −.015em | 1.4 |
@@ -97,11 +97,11 @@ Numbers in tables, dates and times use `font-variant-numeric: tabular-nums`.
   `main` padding `36px 28px 56px`; phones `22px 16px 36px`.
 - Header height 52 px (one row). Phones: 44 px top row + 38 px tab row = 82 px; sticky things below the header use
   `top: 82px` on phones.
-- Footer: 12 px text, hairline on top, `18px 0 32px`, same edges as the content.
+- Footer: 12 px text, hairline on top, padding `18px 28px 32px` (phones `16px 16px 28px`), same edges as the content.
 - Gaps: 6–8 px between related controls, 12–14 px between a head and its content, 24–28 px between columns,
   44 px between page sections, 64 px between reference sections.
 - Radii: pills `999px`; dialogs 20 px (sheets `18px 18px 0 0`); inputs 10 px; code blocks and images 10 px; inline
-  code 5 px; small links 7 px; tiles 16 px.
+  code 5 px; small links 7 px; the switch track 16 px.
 - Hairlines are `.5px` (they render as one device pixel on Retina).
 - Icon buttons 32 px round (44 on phones), icons 18 px, stroke 1.7, round caps and joins, `fill: none`.
 
@@ -110,11 +110,11 @@ Numbers in tables, dates and times use `font-variant-numeric: tabular-nums`.
 | Width | What changes |
 |---|---|
 | ≥ 1101 | Calendar has its right sidebar (312 px). Two-column layouts. |
-| 1024–1100 | Sidebar moves under the calendar. |
+| ≤ 1100 | Sidebar moves under the calendar (`calendar.css`, `max-width:1100px`). |
 | 961– | Sign-out icon shows in the header. ≤ 960: it moves into the name menu. |
 | 761–1023 | Header one row, tighter: padding 20 px, gap 12 px, tab padding 10 px. ≤ 900: the name pill shows only its dot. |
 | ≤ 760 | Phone layout: header two rows, dialogs → bottom sheets, 44 px tap areas, inputs 16 px, no zoom upright, no intro. |
-| ≤ 460 | Name text hidden (dot only), language button 30 px min, icon buttons 30 px wide. |
+| ≤ 460 | Name text hidden (dot only), tighter gaps. (The 30 px widths this block sets for the language and icon buttons are overridden by the 44 px phone block after it, so they stay 44 px.) |
 | ≤ 374 | Small phones (360 Android, 375 mini): header and tabs close up (tabs 12.5 px). |
 | ≤ 340 | 320 px iPhone SE: tabs 11.5 px with no gap, brand 14 px, field labels back above fields. |
 
@@ -148,8 +148,8 @@ Also `(pointer:coarse) and (max-height:500px)` = a phone on its side: treated as
   notifications · Sign out" as a row of links).
 - Language `.lang-btn`: one pill button that reads the language in use, "EN" or "KO"; a tap switches to the other.
   32 px tall, min-width 34 px, padding 0 6 px, 12 px 600, +.03em, `--ink2`; hover `--fill` and `--ink`. Its title and
-  label say what a tap does ("Switch to Korean"). Phones: a 44 px circle; ≤ 460 min-width 30; ≤ 374 min 38; ≤ 340 min
-  36. Wired by `wireLangButton()` in `i18n.js`.
+  label say what a tap does ("Switch to Korean"). Phones: a 44 px circle; ≤ 374 min 38; ≤ 340 min 36.
+  Wired by `wireLangButton()` in `i18n.js`.
 - Theme button: a moon when light, a sun when dark (`aria-pressed=true` = dark).
 - Bell: same icon button; opens "App & notifications" (`ios-webapp-push`).
 - Chat `.chat-btn` (`team-chat`): an icon button with a 19 px speech bubble, between the theme button and sign-out.
@@ -168,7 +168,7 @@ Also `(pointer:coarse) and (max-height:500px)` = a phone on its side: treated as
 | `.btn.small` | 28 px, padding 0 12 px, 12.5 px | | |
 | `.btn.sq` | 32 × 32 (44 × 44 on phones) | square pill for an icon | |
 | `.icon-btn` | 32 px circle (44 on phones) | no fill, `--ink2` | `--fill`, `--ink` |
-| `.pill-nav` | 2 px padding track, `--fill`, pill | buttons inside are 28 px, transparent | `--fill` |
+| `.pill-nav` | no track of its own in `components.css` (the calendar draws one: `.cal-nav`, 2 px padding, `--fill`) | buttons inside are 28 px, transparent | `--fill` |
 | `.segmented` | same track; buttons 28 px, min 62 px, 13 px 500 | selected: `--seg-on` knob, 600, `0 1px 3px rgba(0,0,0,.1), 0 0 0 .5px rgba(0,0,0,.04)` | `--ink` |
 | `.seg` choice pills | 30 px, padding `0 12px 0 10px`, 13 px 500, 9 px colour dot | `--fill` | checked: tinted + 1.5 px ring in `--c`, 600 |
 | `.sw` switch | 51 × 31 px track, 27 px knob, 2 px inset | `--sw-off` / `--sw-on` | knob slides 20 px in 220 ms `cubic-bezier(.3,.7,.4,1)` |
@@ -224,7 +224,7 @@ desktop (≥ 761 px)                         phone (≤ 760 px)
 | Hover (pointer) | fills step up one level (`--fill` → `--fill2`), text `--ink3` → `--ink`; links underline 2 px offset |
 | Focus | accent ring (above) |
 | Selected tab / segment | `--ink`, 600, underline or knob |
-| Disabled | opacity .4 (buttons), .42 (switch rows) |
+| Disabled | opacity .4 (buttons), .42 (switch rows), .5 (the chat's send button while sending) |
 | Empty | one line in `--ink3`, 13.5 px, with the action as a button or link beside it |
 | Loading | a grey dot + "Loading"; never a spinner over content |
 | Error | red text line or a `.banner.bad`, with what to do |
@@ -234,10 +234,15 @@ desktop (≥ 761 px)                         phone (≤ 760 px)
 
 ## 10. Motion
 
-- Colour and background transitions 150 ms; switch 200–220 ms; dialog 220 ms; sheet 320 ms; all
-  `cubic-bezier(.2,.8,.2,1)` unless noted.
-- `prefers-reduced-motion: reduce` removes dialog, sheet and switch motion.
-- Nothing bounces, nothing pulses.
+- Colour and background transitions 150 ms with the default `ease`; the switch track `.2s ease`; dialog 220 ms and
+  sheet 320 ms with `cubic-bezier(.2,.8,.2,1)`. Every value with its file and line: [docs/design/motion.md](../../../docs/design/motion.md).
+- `prefers-reduced-motion: reduce` removes the dialog and sheet animations and the switch transitions
+  (`components.css`), and each skill removes its own larger motion (the chat panel slide, smooth scrolling to a passage, the intro's
+  arrival; see each skill's design.md). Still running
+  with reduced motion: colour fades (hover colours, the chat's flash on a message or a passage, the selection bar's
+  fade-in), the intro's progress dots growing, the calendar banner's short shake on a read-only event, and the
+  pull-to-close spring of a phone sheet (it follows the finger).
+- Nothing bounces. One thing pulses: the calendar's small sync dot while a load is in progress (`calendar.css`).
 
 ## 11. Phones in detail
 
@@ -247,8 +252,8 @@ desktop (≥ 761 px)                         phone (≤ 760 px)
 - Inputs at 16 px so iOS Safari does not zoom on focus.
 - Upright phones: viewport gets `maximum-scale=1,user-scalable=no`, `gesturestart` is prevented (iOS ignores
   user-scalable), and `html { touch-action: pan-x pan-y }` stops double-tap zoom. Landscape keeps zoom.
-- Strips that scroll sideways (week tabs, references jump row) fade their right edge with a 32 px mask and lose the fade
-  at the end (`.at-end`).
+- Strips that scroll sideways fade their right edge with a 32 px mask and lose the fade at the end (`.at-end`): the
+  Research log's week tabs (from 761 px; `records.css`) and the Theory sub-tabs (`theory.css`).
 - Sticky rows under the header sit at `top: 82px`; anchors they cover use `scroll-margin-top`.
 - Safe areas: sheets pad `--sab` (`max(env(safe-area-inset-bottom), var(--home))`; `--home` is 34 px in the iPhone Home
   Screen app, where `env()` stays 0); the installed app's status bar colour follows the page (`paintStatusBar`).
