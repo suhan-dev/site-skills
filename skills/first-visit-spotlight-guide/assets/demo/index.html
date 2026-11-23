@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- Demo of the first-visit guide on a placeholder app page. Serve the skills/ folder with any static server:
+       python3 -m http.server 8125 -d skills  →  http://localhost:8125/first-visit-spotlight-guide/assets/demo/
+     ?as=alex|blair|casey picks the member (casey is the owner: no tour by itself), ?reset forgets every "seen".
+     GET/POST /api/me are faked in this page; "the server" is a localStorage key, so clearing only the guide's own key
+     acts like a second device. -->
+<title>Example Lab</title>
+<script>try{var t=localStorage.getItem("site_theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);if(localStorage.getItem("site_lang")==="ko")document.documentElement.lang="ko"}catch(e){}</script>
+<link rel="stylesheet" href="../../../team-site-design-system/assets/tokens.css">
+<link rel="stylesheet" href="../../../team-site-design-system/assets/components.css">
+<link rel="stylesheet" href="../site/css/guide.css">
+<style>
+  /* demo-only: a placeholder week calendar and an upcoming list, enough for the tour to point at */
+  .cal-wrap{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:40px}
+  .cal-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+  .cal-head .page-h{margin-right:auto}
+  #cal-grid{display:grid;grid-template-columns:52px repeat(7,minmax(0,1fr));border-top:.5px solid var(--sep2);border-bottom:.5px solid var(--sep2)}
+  .day{padding:10px 0 12px;text-align:center;font-size:13px;color:var(--ink3);border-left:.5px solid var(--sep);border-bottom:.5px solid var(--sep2)}
+  .day b{margin-left:6px;font-size:19px;font-weight:600;color:var(--ink)}
+  .day.today{color:var(--accent);background:color-mix(in srgb,var(--accent) var(--today),transparent)}
+  .day.today b{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--accent);color:var(--on-accent)}
+  .hours{grid-column:1;display:grid;grid-template-rows:repeat(9,48px);font-size:11.5px;color:var(--ink3);text-align:right;padding-right:8px}
+  .hours span{transform:translateY(-7px)}
+  .col{position:relative;display:grid;grid-template-rows:repeat(9,48px);border-left:.5px solid var(--sep)}
+  .col i{border-top:.5px solid var(--sep)}
+  .col.today{background:color-mix(in srgb,var(--accent) var(--today),transparent)}
+  .ev{position:absolute;left:3px;right:3px;padding:4px 8px;border-radius:6px;font-size:12.5px;line-height:1.3;overflow:hidden;
+    background:color-mix(in srgb,var(--c) var(--ev-bg),var(--card));color:color-mix(in srgb,var(--c) var(--ev-ink),var(--ev-mix));box-shadow:inset 3px 0 0 var(--c)}
+  .ev b{display:block;font-weight:600}
+  .up h2{margin:0 0 12px;font-size:19px;font-weight:700;letter-spacing:-.02em}
+  .up ol{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+  .up li{display:grid;grid-template-columns:40px minmax(0,1fr);gap:10px;align-items:start}
+  .up .d{font-size:22px;font-weight:600;line-height:1;text-align:center;font-variant-numeric:tabular-nums}
+  .up .d small{display:block;margin-top:3px;font-size:10.5px;font-weight:600;color:var(--ink3)}
+  .up b{font-weight:500}
+  .up span{display:block;font-size:13px;color:var(--ink3)}
+  .up i{display:inline-block;width:7px;height:7px;margin-right:7px;border-radius:50%;background:var(--c);vertical-align:1px}
+  .pane[hidden]{display:none}
+  .me-menu .dlg-in{gap:10px}
+  .me-menu a.out{display:inline-flex;align-items:center;min-height:44px;font-size:13.5px;font-weight:500;color:var(--ink2);text-decoration:none}
+  @media (max-width:1100px){.cal-wrap{grid-template-columns:minmax(0,1fr)}.up{display:none}}
+  @media (max-width:760px){
+    #cal-add{display:none} /* phones add by tapping a slot: step 3 falls back to the calendar (alt) */
+    #cal-grid{grid-template-columns:40px repeat(3,minmax(0,1fr))}
+    .day:not(.ph),.col:not(.ph){display:none} /* three days: Mon to Wed */
+  }
+</style>
+</head>
+<body>
+<div id="app">
+<header class="bar" data-lang-fixed>
+  <div class="bar-in">
+    <button class="brand" type="button"><span>Example Lab</span></button>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <a role="tab" href="#calendar" data-tab="calendar" aria-selected="true">Calendar</a>
+      <a role="tab" href="#records" data-tab="records" aria-selected="false">Research log</a>
+      <a role="tab" href="#refs" data-tab="refs" aria-selected="false">References</a>
+      <a role="tab" href="#theory" data-tab="theory" aria-selected="false">Theory</a>
+    </nav>
+    <div class="bar-right">
+      <button class="icon-btn" type="button" title="App &amp; notifications" aria-label="App &amp; notifications">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6c-2.95 0-5.1 2.3-5.1 5.25v3.6l-1.55 2.7c-.24.42.06.95.55.95h12.2c.49 0 .79-.53.55-.95l-1.55-2.7v-3.6C17.1 5.9 14.95 3.6 12 3.6z"/><path d="M9.75 18.6a2.3 2.3 0 0 0 4.5 0"/></svg>
+      </button>
+      <button class="me set" type="button" id="me-btn" style="--c:var(--gc-7)" aria-haspopup="dialog"><span class="me-dot"></span><span id="me-name">Alex</span></button>
+      <button class="lang-btn" type="button" id="lang-btn">EN</button>
+      <button class="icon-btn theme-btn" type="button" id="theme-btn" title="Light or dark" aria-pressed="false">
+        <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.4 14.6A8.5 8.5 0 0 1 9.4 3.6a8.5 8.5 0 1 0 11 11z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+      </button>
+      <button class="icon-btn chat-btn" type="button" id="chat-btn" title="Team chat" aria-label="Team chat" aria-expanded="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.2c-4.7 0-8.3 3-8.3 6.9 0 2.2 1.2 4.1 3 5.4-.1 1.3-.7 2.5-1.6 3.4 1.9 0 3.6-.7 4.8-1.8.7.2 1.4.2 2.1.2 4.7 0 8.3-3 8.3-7.2S16.7 4.2 12 4.2z"/></svg>
+        <i class="chat-dot" hidden></i>
+      </button>
+      <a class="icon-btn out-btn" href="#" title="Sign out" aria-label="Sign out"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 16.5 14.5 12 10 7.5M14.5 12H4"/></svg></a>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+  <section class="pane" id="pane-calendar">
+    <div class="cal-wrap">
+      <div>
+        <div class="cal-head">
+          <h1 class="page-h">Nov 22 – 28, 2026</h1>
+          <span class="sync" id="sync"><i style="background:var(--ok)"></i>Synced 2:20 PM</span>
+          <button class="btn primary" type="button" id="cal-add"><svg viewBox="0 0 24 24" aria-hidden="true" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>New event</button>
+        </div>
+        <div id="cal-grid"></div>
+      </div>
+      <aside class="up" aria-label="Upcoming">
+        <h2>Upcoming</h2>
+        <ol id="up-list"></ol>
+      </aside>
+    </div>
+  </section>
+  <section class="pane" id="pane-records" hidden><p class="eyebrow">Research log</p><h1 class="page-h">Week 3</h1></section>
+  <section class="pane" id="pane-refs" hidden><p class="eyebrow">References</p><h1 class="page-h">Papers</h1></section>
+  <section class="pane" id="pane-theory" hidden><p class="eyebrow">Theory</p><h1 class="page-h">Chapters</h1></section>
+</main>
+</div>
+
+<!-- the member's name menu: the name, then Site guide and Sign out -->
+<dialog class="dlg me-menu" id="me-dlg" aria-labelledby="me-dlg-h">
+  <div class="dlg-in">
+    <div class="dlg-top"><h2 id="me-dlg-h">Alex</h2><button class="icon-btn" type="button" data-close title="Close" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg></button></div>
+    <p class="dlg-note">Signed in with Google.</p>
+    <button type="button" class="guide-link" id="menu-guide">Site guide</button>
+    <a class="out" href="#">Sign out</a>
+  </div>
+</dialog>
+
+<script type="module">
+import { createGuide } from "../site/js/guide.js";
+import { firstVisit } from "../site/js/first-visit.js";
+import { initTheme } from "../../../team-site-design-system/assets/theme.js";
+import { wireLangButton } from "../../../team-site-design-system/assets/i18n.js";
+
+initTheme({ button: document.getElementById("theme-btn") });
+wireLangButton();
+
+/* ---------- the fake server: GET/POST /api/me, "seen" kept per member in localStorage ---------- */
+const q = new URLSearchParams(location.search);
+const TEAM = { alex: { name: "Alex", c: "--gc-7" }, blair: { name: "Blair", c: "--gc-10" }, casey: { name: "Casey", c: "--gc-6" } };
+const MEMBER = TEAM[q.get("as")] ? q.get("as") : "alex";
+const SERVER = "demo_server_seen"; // { alex: ["guide"], … }
+const read = () => { try { return JSON.parse(localStorage.getItem(SERVER)) || {}; } catch (e) { return {}; } };
+if (q.has("reset")) { try { localStorage.removeItem(SERVER); Object.keys(TEAM).forEach((id) => localStorage.removeItem("site_guide_v1_" + id)); } catch (e) {} }
+const realFetch = window.fetch.bind(window);
+window.fetch = async (url, init = {}) => {
+  if (String(url) !== "/api/me") return realFetch(url, init);
+  const all = read(), mine = new Set(all[MEMBER] || []);
+  if ((init.method || "GET") === "POST") {
+    const what = JSON.parse(init.body || "{}").seen;
+    if (!["install", "guide"].includes(what)) return new Response(JSON.stringify({ error: "bad" }), { status: 400 });
+    mine.add(what);
+    all[MEMBER] = [...mine];
+    try { localStorage.setItem(SERVER, JSON.stringify(all)); } catch (e) {}
+  }
+  return new Response(JSON.stringify({ auth: "google", member: MEMBER, seen: { install: mine.has("install"), guide: mine.has("guide") } }),
+    { headers: { "Content-Type": "application/json" } });
+};
+
+/* ---------- placeholder page ---------- */
+const $ = (s) => document.querySelector(s);
+$("#me-name").textContent = $("#me-dlg-h").textContent = TEAM[MEMBER].name;
+$("#me-btn").style.setProperty("--c", `var(${TEAM[MEMBER].c})`);
+const days = [["Sun", 22], ["Mon", 23], ["Tue", 24], ["Wed", 25], ["Thu", 26], ["Fri", 27], ["Sat", 28]];
+const EV = [ // [day index, start hour, end hour, title, colour]
+  [1, 9, 10, "Weekly sync", "--gc-9"], [1, 10.5, 12, "Design review", "--gc-7"], [2, 13, 15.5, "Lab session", "--gc-10"],
+  [3, 9, 9.5, "Stand-up", "--gc-9"], [4, 16, 17, "Office hours", "--gc-7"], [5, 11, 12.5, "Reading group", "--gc-6"],
+];
+const hhmm = (h) => `${String(Math.floor(h)).padStart(2, "0")}:${h % 1 ? "30" : "00"}`;
+$("#cal-grid").innerHTML = `<div></div>${days.map(([d, n], k) => `<div class="day${k === 3 ? " today" : ""}${k >= 1 && k <= 3 ? " ph" : ""}">${d}<b>${n}</b></div>`).join("")}
+  <div class="hours">${Array.from({ length: 9 }, (_, k) => `<span>${hhmm(9 + k)}</span>`).join("")}</div>
+  ${days.map((_, k) => `<div class="col${k === 3 ? " today" : ""}${k >= 1 && k <= 3 ? " ph" : ""}">${"<i></i>".repeat(9)}${EV.filter((e) => e[0] === k).map(([, s, e, t, c]) =>
+    `<div class="ev" style="--c:var(${c});top:${(s - 9) * 48 + 1}px;height:${(e - s) * 48 - 3}px"><b>${t}</b>${hhmm(s)}–${hhmm(e)}</div>`).join("")}</div>`).join("")}`;
+$("#up-list").innerHTML = [[25, "WED", "Stand-up", "09:00–09:30", "--gc-9"], [26, "THU", "Office hours", "16:00–17:00", "--gc-7"],
+  [27, "FRI", "Reading group", "11:00–12:30", "--gc-6"]].map(([d, w, t, h, c]) =>
+  `<li><div class="d">${d}<small>NOV<br>${w}</small></div><div><b><i style="--c:var(${c})"></i>${t}</b><span>${h}</span></div></li>`).join("");
+
+// tabs by hash
+const show = () => {
+  const tab = (location.hash.slice(1) || "calendar").split("/")[0];
+  document.querySelectorAll(".pane").forEach((p) => { p.hidden = p.id !== "pane-" + tab; });
+  document.querySelectorAll(".tabs a").forEach((a) => a.setAttribute("aria-selected", String(a.dataset.tab === tab)));
+};
+addEventListener("hashchange", show);
+show();
+
+// the name menu
+const dlg = $("#me-dlg");
+$("#me-btn").addEventListener("click", () => dlg.showModal());
+dlg.querySelector("[data-close]").addEventListener("click", () => dlg.close());
+
+/* ---------- the guide ---------- */
+const account = await fetch("/api/me").then((r) => r.json());
+const STEPS = [
+  { title: ({ name }) => (name ? `Welcome, ${name}` : "Welcome"),
+    text: "This is the team site of Example Lab. Here's a 30-second tour." },
+  { at: ["#cal-grid"], title: "Shared calendar",
+    text: "This is the team's Google Calendar. Events added here or in Google Calendar show up in both places." },
+  { at: ["#cal-add"], alt: "#cal-grid", title: "Add a meeting",
+    text: ({ phone }) => `Tap an empty slot${phone ? "" : " or New event"}. Your name is attached, so everyone sees who added it.` },
+  { at: ['.tabs [data-tab="records"]', '.tabs [data-tab="refs"]'], alt: ".tabs", tight: true, title: "Log and papers",
+    text: "One page per week for each member, and the papers the team has collected." },
+  { at: ["#me-btn", "#lang-btn", "#theme-btn"], alt: ".bar-right", title: "Make it yours",
+    text: "Switch language and light or dark here. Your name opens a menu with this guide and Sign out." },
+  { title: "You're set", text: "You can reopen this guide from your name menu." },
+];
+const guide = createGuide({
+  steps: STEPS,
+  me: () => ({ id: MEMBER, name: TEAM[MEMBER].name }),
+  serverSeen: () => (account.seen ? account.seen.guide : null),
+  markSeen: () => fetch("/api/me", { method: "POST", body: JSON.stringify({ seen: "guide" }) }),
+  noAuto: ["casey"], // the site's owner
+  home: { pane: "#pane-calendar", hash: "#calendar" },
+  menuItem: "#menu-guide",
+});
+window.demoGuide = guide; // for the tests and screenshots
+firstVisit({ member: account.member, guide });
+</script>
+</body>
+</html>

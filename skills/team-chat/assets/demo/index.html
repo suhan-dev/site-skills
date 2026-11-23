@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Team chat · Example Lab</title>
+<script>try{var t=localStorage.getItem("site_theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<!-- Serve the repository root (python3 -m http.server) so the design system next door is found. -->
+<link rel="stylesheet" href="../../../team-site-design-system/assets/tokens.css">
+<link rel="stylesheet" href="../../../team-site-design-system/assets/components.css">
+<link rel="stylesheet" href="../../../team-site-design-system/assets/doc.css">
+<link rel="stylesheet" href="../site/css/chat.css">
+<style>
+  /* demo only: a reading column like the Theory tab */
+  .demo-doc{max-width:680px}
+  .demo-note{margin-top:40px;color:var(--ink3);font-size:12.5px}
+</style>
+</head>
+<body>
+<header class="bar" data-lang-fixed>
+  <div class="bar-in">
+    <button class="brand" type="button"><span>Example Lab</span></button>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <a role="tab" href="#">Calendar</a>
+      <a role="tab" href="#">Research log</a>
+      <a role="tab" href="#">References</a>
+      <a role="tab" href="#" aria-selected="true">Theory</a>
+    </nav>
+    <div class="bar-right">
+      <button class="icon-btn" type="button" title="App &amp; notifications" aria-label="App &amp; notifications">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6c-2.95 0-5.1 2.3-5.1 5.25v3.6l-1.55 2.7c-.24.42.06.95.55.95h12.2c.49 0 .79-.53.55-.95l-1.55-2.7v-3.6C17.1 5.9 14.95 3.6 12 3.6z"/><path d="M9.75 18.6a2.3 2.3 0 0 0 4.5 0"/></svg>
+      </button>
+      <button class="me set" type="button" id="me-btn" style="--c:var(--gc-7)"><span class="me-dot"></span><span id="me-name">Alex</span></button>
+      <button class="lang-btn" type="button" id="lang-btn">EN</button>
+      <button class="icon-btn theme-btn" type="button" id="theme-btn" title="Light or dark" aria-pressed="false">
+        <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.4 14.6A8.5 8.5 0 0 1 9.4 3.6a8.5 8.5 0 1 0 11 11z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+      </button>
+      <!-- team chat (js/chat.js); the dot means unread messages -->
+      <button class="icon-btn chat-btn" type="button" id="chat-btn" title="Team chat" aria-label="Team chat" aria-expanded="false" aria-controls="chat">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.2c-4.7 0-8.3 3-8.3 6.9 0 2.2 1.2 4.1 3 5.4-.1 1.3-.7 2.5-1.6 3.4 1.9 0 3.6-.7 4.8-1.8.7.2 1.4.2 2.1.2 4.7 0 8.3-3 8.3-7.2S16.7 4.2 12 4.2z"/></svg>
+        <i class="chat-dot" hidden></i>
+      </button>
+      <a class="icon-btn out-btn" href="#" title="Sign out" aria-label="Sign out"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 16.5 14.5 12 10 7.5M14.5 12H4"/></svg></a>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+  <!-- Anything with data-chat-page can be commented on. The key must stay the same for the same content. -->
+  <article class="demo-doc" data-chat-page="theory/part-a/a1-sample-chapter" data-chat-title="A1 Sample chapter">
+    <p class="eyebrow">Theory · Part A</p>
+    <h1 class="page-h">A1 Sample chapter</h1>
+    <div class="doc">
+    <h2 id="s1">1. What this page shows</h2>
+    <p>This is placeholder text for the demo. Select any words in it and a small bar appears with Copy and Comment.
+      Comment opens the team chat with the passage quoted, and the passage gets a thin underline once it is sent.</p>
+    <p>Every comment keeps the words around it, so the mark finds its place again after the rest of the page is edited.
+      If the passage itself is rewritten, the comment stays in the chat and simply has no mark.</p>
+    <h2 id="s2">2. Two ideas</h2>
+    <p>Here is a passage that two people read differently. A comment on it is a better place for the question than a
+      message with a screenshot, because the link in the chat brings everyone back to the same line.</p>
+    <p>The chat has two tabs. All is the whole conversation; This page holds only the comments on what is on screen,
+      with a count next to it.</p>
+    <p class="demo-note">Demo: the messages come from an in-memory stand-in for <code>/api/messages</code>. Nothing is saved.</p>
+    </div>
+  </article>
+</main>
+
+<script type="module">
+  // ---- an in-memory /api/messages with the same answers as functions/api/messages.js ----
+  const ME = "alex";
+  const KST = 9 * 3600e3; // the demo's times are set in the team's zone (Asia/Seoul)
+  const dayStart = (offsetDays) => { const n = Date.now() + KST; return n - (n % 864e5) - KST + offsetDays * 864e5; };
+  const at = (d, h, m) => dayStart(d) + (h * 60 + m) * 60e3;
+  const P = "theory/part-a/a1-sample-chapter";
+  const rows = [
+    { member: "blair", ts: at(-1, 21, 40), text: "Uploaded this week's log. The second table is still rough." },
+    { member: "casey", ts: at(-1, 22, 5), text: "Thanks, I'll read it tomorrow morning." },
+    { member: "alex", ts: at(0, 9, 12), text: "Does this mean the same thing as in section 1? I read it the other way.",
+      page: P, title: "A1 Sample chapter › 2. Two ideas", anchor: "s2", quote: "a passage that two people read differently", prefix: "Here is ", suffix: ". A comment on it" },
+    { member: "blair", ts: at(0, 9, 30), text: "Same question. Let's settle it at Tuesday's meeting." },
+    { member: "casey", ts: at(0, 10, 2), text: "Good: so edits elsewhere on the page won't break the mark.",
+      page: P, title: "A1 Sample chapter › 1. What this page shows", anchor: "s1", quote: "Every comment keeps the words around it", prefix: "it is sent. ", suffix: ", so the mark finds" },
+    { member: "blair", ts: at(0, 10, 15), text: "Slides draft for Tuesday: https://example.com/slides" },
+  ];
+  const db = rows.map((r, i) => ({ id: i + 1, rev: i + 1, page: "", title: "", anchor: "", quote: "", prefix: "", suffix: "", ...r }));
+  let rev = db.length;
+  const json = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "Content-Type": "application/json" } });
+  const real = window.fetch.bind(window);
+  window.fetch = async (input, init = {}) => {
+    const u = new URL(typeof input === "string" ? input : input.url, location.href);
+    if (u.pathname !== "/api/messages") return real(input, init);
+    const method = (init.method || "GET").toUpperCase();
+    if (method === "POST") {
+      const b = JSON.parse(init.body || "{}");
+      const m = { id: db.length + 1, rev: ++rev, ts: Date.now(), member: ME, text: String(b.text || "").trim(), page: b.page || "", title: b.title || "",
+        anchor: b.anchor || "", quote: b.quote || "", prefix: b.prefix || "", suffix: b.suffix || "" };
+      db.push(m);
+      return json({ message: m, rev }, 201);
+    }
+    if (method === "DELETE") {
+      const m = db.find((x) => x.id === +u.searchParams.get("id") && !x.deleted);
+      if (!m) return json({ error: "none" }, 404);
+      m.deleted = true; m.rev = ++rev;
+      return json({ deleted: m.id, rev });
+    }
+    const since = +u.searchParams.get("since") || 0;
+    const out = since ? db.filter((m) => m.rev > since).map((m) => (m.deleted ? { id: m.id, rev: m.rev, deleted: true } : m)) : db.filter((m) => !m.deleted);
+    return json({ messages: out, rev, me: ME });
+  };
+
+  // ---- the page ----
+  const { initTheme, lockPhoneZoom } = await import("../site/js/theme.js");
+  const { wireLangButton } = await import("../site/js/i18n.js");
+  const { createChat } = await import("../site/js/chat.js");
+  initTheme({ button: document.getElementById("theme-btn") });
+  lockPhoneZoom();
+  wireLangButton();
+  try { localStorage.setItem("site_chat_seen", "3"); } catch (e) { /* the dot shows either way */ }
+  const team = { members: [{ id: "alex", name: "Alex", colorId: "7" }, { id: "blair", name: "Blair", colorId: "10" }, { id: "casey", name: "Casey", colorId: "6" }] };
+  const chat = createChat({ team });
+
+  // ---- demo states for screenshots: ?state=open | here | quote | select ----
+  const state = new URLSearchParams(location.search).get("state");
+  const selectWords = (words) => {
+    const p = [...document.querySelectorAll(".demo-doc p")].find((x) => x.textContent.includes(words));
+    const tw = document.createTreeWalker(p, NodeFilter.SHOW_TEXT);
+    for (let n = tw.nextNode(); n; n = tw.nextNode()) {
+      const i = n.nodeValue.indexOf(words);
+      if (i < 0) continue;
+      const r = document.createRange();
+      r.setStart(n, i); r.setEnd(n, i + words.length);
+      getSelection().removeAllRanges(); getSelection().addRange(r);
+      return;
+    }
+  };
+  setTimeout(() => {
+    if (state === "open") chat.open("all");
+    if (state === "here") chat.open("here");
+    if (state === "select" || state === "quote") {
+      selectWords("the link in the chat brings everyone back to the same line");
+      document.dispatchEvent(new MouseEvent("mouseup", { bubbles: true }));
+      document.dispatchEvent(new Event("selectionchange"));
+      if (state === "quote") setTimeout(() => document.querySelector('.selpop [data-a="comment"]').click(), 900);
+    }
+  }, 300);
+</script>
+</body>
+</html>

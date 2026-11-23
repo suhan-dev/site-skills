@@ -1,0 +1,160 @@
+{
+ "timeZone": "Asia/Seoul",
+ "weeks": [
+  {
+   "no": 1,
+   "date": "2027-01-05",
+   "end": "2027-01-11",
+   "dir": "logs/week01_0105",
+   "exists": true,
+   "title": "Kickoff",
+   "team": {
+    "path": "logs/week01_0105/team.md",
+    "md": "# Week 1 · 1.05 (Tue) — Kickoff\n\n- Scribe: Blair\n- Attendees: Alex, Blair, Casey\n\n## Decisions this week\n- We study heat flow in a thin rod: one heated end, the other end in a water bath.\n- Each of us owns one topic for the first three weeks (table below).\n- Logs go in by Monday night; the meeting is every Tuesday at 10:00.\n\n## Progress\n| Topic | Owner | This week | Next week |\n|---|---|---|---|\n| Setup and sensors | Alex | Listed the parts | Build the stand |\n| Model | Blair | Read the textbook chapter | First simulation |\n| Data and plots | Casey | Set up the notebook | Plot a test file |\n\n## To do by next week\n- [x] Book the lab bench for Thursday — Alex\n- [x] Share the reading list — Blair\n- [ ] Agree on file names for the data — everyone\n"
+   },
+   "people": {
+    "alex": {
+     "path": "logs/week01_0105/alex.md",
+     "md": "# Alex · Week 1 (1.05)\n\n## Done\n- Listed the parts for the rod stand: clamp, 30 cm aluminium rod, 4 thermocouples, a 20 W heater.\n- Checked the data logger: 4 channels, 1 sample per second.\n\n## Learned · results\n- The logger's channels drift by about 0.2 °C in the first 10 min, so we let it warm up first.\n\n## Stuck · questions\n- Where to put the sensors: evenly, or closer to the heater?\n\n## Next week\n- [ ] Build the stand\n- [ ] First test run at 10 W\n\n## Links (notes · code · figures)\n- [Parts list](../../research/setup/parts.md)\n"
+    },
+    "blair": {
+     "path": "logs/week01_0105/blair.md",
+     "md": "# Blair · Week 1 (1.05)\n\n## Done\n- Read the chapter on one-dimensional heat flow.\n\n## Learned · results\nIn steady state the temperature along the rod falls off in a straight line when the side is insulated. With heat loss\nfrom the side it bends:\n\n$$\\frac{d^2 T}{dx^2} = m^2 \\left(T - T_\\infty\\right), \\qquad m^2 = \\frac{h P}{k A}$$\n\nwhere $k$ is the conductivity and $h$ the loss to the air.\n\n## Next week\n- [ ] Write a small finite-difference model\n"
+    },
+    "casey": {
+     "path": "logs/week01_0105/casey.md",
+     "md": "# Casey · Week 1 (1.05)\n\n## Done\n- Made a shared notebook that reads the logger's CSV files.\n\n## Next week\n- [ ] Plot a test file\n"
+    }
+   },
+   "extra": []
+  },
+  {
+   "no": 2,
+   "date": "2027-01-12",
+   "end": "2027-01-18",
+   "dir": "logs/week02_0112",
+   "exists": true,
+   "title": "First measurements",
+   "team": {
+    "path": "logs/week02_0112/team.md",
+    "md": "# Week 2 · 1.12 (Tue) — First measurements\n\n- Scribe: Casey\n- Attendees: Alex, Blair, Casey\n\n## Decisions this week\n- Sensors at 5, 10, 20 and 28 cm from the heater (closer where the curve is steep).\n- Runs last 40 min; the last 10 min count as steady state.\n\n## Progress\n| Topic | Owner | This week | Next week |\n|---|---|---|---|\n| Setup and sensors | Alex | Stand built, first run at 10 W | Runs at 15 and 20 W |\n| Model | Blair | Model runs, matches the textbook case | Fit $h$ to the data |\n| Data and plots | Casey | First plot (below) | Plot all runs together |\n\n![Temperature along the rod, first run](profile.svg)\n\n## To do by next week\n- [ ] Three runs at 10, 15 and 20 W — Alex\n- [ ] Fit the loss coefficient — Blair\n"
+   },
+   "people": {
+    "alex": {
+     "path": "logs/week02_0112/alex.md",
+     "md": "# Alex · Week 2 (1.12)\n\n## Done\n- Built the stand and ran the first test at 10 W for 40 min.\n- Data: `run01_10W.csv` in this folder.\n\n## Stuck · questions\n- The sensor at 28 cm reads 0.5 °C above the bath. Contact problem, or real?\n\n## Next week\n- [ ] Re-seat the last sensor with thermal paste\n- [ ] Runs at 15 and 20 W\n"
+    },
+    "blair": {
+     "path": "logs/week02_0112/blair.md",
+     "md": "# Blair · Week 2 (1.12)\n\n## Done\n- Finite-difference model with 60 points; it reaches steady state after about 1800 steps.\n\n## Learned · results\n| Case | End temperature (model) | Textbook |\n|---|---|---|\n| Insulated side | 41.8 °C | 41.8 °C |\n| $h = 10$ W/m²K | 33.5 °C | 33.4 °C |\n\n## Next week\n- [ ] Fit $h$ to Alex's first run\n"
+    }
+   },
+   "extra": [
+    {
+     "name": "run01_10W.csv",
+     "path": "logs/week02_0112/run01_10W.csv"
+    }
+   ]
+  },
+  {
+   "no": 3,
+   "date": "2027-01-19",
+   "end": "2027-01-25",
+   "dir": "logs/week03_0119",
+   "exists": true,
+   "title": "Model vs data",
+   "team": {
+    "path": "logs/week03_0119/team.md",
+    "md": "# Week 3 · 1.19 (Tue) — Model vs data\n\n- Scribe: Alex\n- Attendees: Alex, Blair, Casey\n\n## Decisions this week\n- Fit $h$ from the steady part of each run, then compare the three fits.\n\n## To do by next week\n- [ ] Runs at 15 and 20 W — Alex\n- [ ] One plot with all runs and the model — Casey\n"
+   },
+   "people": {
+    "alex": {
+     "path": "logs/week03_0119/alex.md",
+     "md": "# Alex · Week 3 (1.19)\n\n## Done\n- Re-seated the 28 cm sensor: it now reads within 0.1 °C of the bath. The old offset was contact.\n- Ran 15 W (40 min). 20 W is booked for Thursday.\n\n## Next week\n- [ ] 20 W run\n"
+    },
+    "casey": {
+     "path": "logs/week03_0119/casey.md",
+     "md": "# Casey · Week 3 (1.19)\n\n## Done\n- \n\n## Learned · results\n- \n\n## Stuck · questions\n- \n\n## Next week\n- [ ] \n\n## Links (notes · code · figures)\n- \n"
+    }
+   },
+   "extra": []
+  },
+  {
+   "no": 4,
+   "date": "2027-01-26",
+   "end": "2027-02-01",
+   "dir": "logs/week04_0126",
+   "exists": false,
+   "title": "",
+   "team": null,
+   "people": {},
+   "extra": []
+  },
+  {
+   "no": 5,
+   "date": "2027-02-02",
+   "end": "2027-02-08",
+   "dir": "logs/week05_0202",
+   "exists": false,
+   "title": "",
+   "team": null,
+   "people": {},
+   "extra": []
+  },
+  {
+   "no": 6,
+   "date": "2027-02-09",
+   "end": "2027-02-15",
+   "dir": "logs/week06_0209",
+   "exists": false,
+   "title": "",
+   "team": null,
+   "people": {},
+   "extra": []
+  },
+  {
+   "no": 7,
+   "date": "2027-02-16",
+   "end": "2027-02-22",
+   "dir": "logs/week07_0216",
+   "exists": false,
+   "title": "",
+   "team": null,
+   "people": {},
+   "extra": []
+  },
+  {
+   "no": 8,
+   "date": "2027-02-23",
+   "end": "2027-03-01",
+   "dir": "logs/week08_0223",
+   "exists": false,
+   "title": "",
+   "team": null,
+   "people": {},
+   "extra": []
+  },
+  {
+   "no": 9,
+   "date": "2027-03-02",
+   "end": "2027-03-08",
+   "dir": "logs/week09_0302",
+   "exists": false,
+   "title": "",
+   "team": null,
+   "people": {},
+   "extra": []
+  },
+  {
+   "no": 10,
+   "date": "2027-03-09",
+   "end": "2027-03-15",
+   "dir": "logs/week10_0309",
+   "exists": false,
+   "title": "",
+   "team": null,
+   "people": {},
+   "extra": []
+  }
+ ]
+}

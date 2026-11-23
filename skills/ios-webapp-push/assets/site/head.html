@@ -1,0 +1,15 @@
+<!-- ios-webapp-push: put these in <head> of every page that can be the first page (index.html, sign-in page).
+     The manifest and the icons must stay reachable without signing in (the sign-in gate lists them in PUBLIC), or iOS shows a grey
+     letter instead of the icon and "Add to Home Screen" opens a plain bookmark. -->
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<!-- the name under the icon on the Home Screen: about 12 characters before iOS cuts it with "…" -->
+<meta name="apple-mobile-web-app-title" content="{{SITE_SHORT_NAME}}">
+<!-- open from the Home Screen without Safari's bars (the manifest's "display": "standalone" says the same) -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<!-- "default": dark text on the page colour; theme.js paintStatusBar() then keeps the bar the colour of the page -->
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<link rel="stylesheet" href="/css/push.css">

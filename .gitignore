@@ -1,0 +1,24 @@
+# local secrets and build output — never committed
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+.env
+.env.*
+!.env.example
+*.key.json
+service-account*.json
+dist/
+node_modules/
+.wrangler/
+__pycache__/
+*.pyc
+.DS_Store
+
+# third-party libraries are fetched by each skill's fetch-vendor.sh, never committed
+vendor/
+
+# no PDFs (copyright)
+*.[pP][dD][fF]
+
+# real names for the privacy scan: never committed
+tools/private-patterns.txt

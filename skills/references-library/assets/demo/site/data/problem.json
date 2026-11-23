@@ -1,0 +1,24 @@
+{
+  "_note": "Demo overview (made up).",
+  "en": {
+    "eyebrow": "Example Lab · Winter 2027",
+    "title": "Heat flow in a rod: model it, measure it, explain the gap",
+    "facts": [
+      { "k": "Period", "v": "Jan 5 – Mar 15, 2027 (10 weeks)" },
+      { "k": "Meetings", "v": "Every Tuesday, 10:00, Room 101" },
+      { "k": "Team", "v": "3 members" },
+      { "k": "Deliverables", "v": "A report and a 10-minute talk" },
+      { "k": "Bench", "v": "Lab B, Thursdays" },
+      { "k": "Final talk", "v": "Tue, Mar 9" },
+      { "k": "Weights", "kpi": [["Task 1", "30"], ["Task 2", "30"], ["Task 3", "30"], ["Final talk", "10"]], "unit": "%" }
+    ],
+    "background": "A thin aluminium rod is heated at one end and cooled in a water bath at the other. The team builds a model of the temperature along the rod, measures it, and explains where and why the two differ.",
+    "premises": ["The rod is 30 cm long and 6 mm across.", "The heater gives 10 to 20 W.", "Room air is still; the bath is at 21 °C."],
+    "steps": [
+      { "no": 1, "name": "Set up and measure", "q": "Build the stand, place four sensors and record a steady temperature profile at three heater powers." },
+      { "no": 2, "name": "Fit the losses", "q": "Fit the heat-loss coefficient to each profile and say whether one value fits all three." },
+      { "no": 3, "name": "Model and compare", "q": "Write a finite-difference model, compare it with the data, and explain the largest difference." }
+    ],
+    "grading": "Each task counts 30 % and the final talk 10 %. Clear plots and honest error bars count more than a perfect fit."
+  }
+}

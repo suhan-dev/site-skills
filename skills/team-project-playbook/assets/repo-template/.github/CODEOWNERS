@@ -1,0 +1,7 @@
+# Site files are owned by the site owner. Rules: CLAUDE.md §2.
+/site/        @{{OWNER_LOGIN}}
+/functions/   @{{OWNER_LOGIN}}
+/lib/         @{{OWNER_LOGIN}}
+/build.py     @{{OWNER_LOGIN}}
+/tools/       @{{OWNER_LOGIN}}
+/.github/     @{{OWNER_LOGIN}}

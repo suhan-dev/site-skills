@@ -1,0 +1,13 @@
+# Local settings for `npx wrangler pages dev`. Copy to .dev.vars (never committed) and fill in only what you need.
+# Production values go in Cloudflare Pages → Settings → Variables and Secrets, never in a file.
+
+# Sign every local request in as this member, without Google (works on localhost only). Example: alex
+DEV_MEMBER=
+
+# Real Google sign-in on http://localhost:8788 (references/setup.md, "Run it locally").
+# The client id from Google Cloud → Google Auth Platform → Clients (public, but keep it out of the repo anyway).
+GOOGLE_CLIENT_ID=
+# Optional: only accounts of this Google Workspace domain, e.g. example.edu. Empty = any Google account on the list.
+GOOGLE_HD=
+# One "address=member" per person, commas or new lines. A secret: addresses never go in the repository.
+ALLOWED_EMAILS=

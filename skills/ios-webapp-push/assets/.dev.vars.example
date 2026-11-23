@@ -1,0 +1,10 @@
+# ios-webapp-push needs no secret of its own: the VAPID key pair and the tick secret are made inside D1 on first use.
+# What it reads at run time comes from the other skills; for a local `npx wrangler pages dev dist --d1 DB=<name>`
+# copy the lines you use into .dev.vars (never commit it). On Cloudflare they live in Pages → Settings →
+# Variables and Secrets (references/setup.md).
+# shared-google-calendar: the calendar the tick reads
+GOOGLE_SA_JSON=
+GOOGLE_CALENDAR_ID=
+# google-signin-team-gate: devices belong to members on this list (Secret)
+GOOGLE_CLIENT_ID=
+ALLOWED_EMAILS=

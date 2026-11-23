@@ -1,0 +1,93 @@
+{
+ "papers": [
+  {
+   "group": "Task 1",
+   "title": "Steady heat conduction in slender rods with side losses",
+   "authors": "B. Hart, C. Lin",
+   "year": "2021",
+   "venue": "Journal of Example Thermal Science 12(3)",
+   "doi": "10.0000/jets.2021.0312",
+   "url": "",
+   "read_by": "blair",
+   "note": "the m² = hP/kA model we use"
+  },
+  {
+   "group": "Task 1",
+   "title": "A simple bench for measuring thermal conductivity",
+   "authors": "A. Moreno, D. Okafor",
+   "year": "2019",
+   "venue": "Example Lab Methods 4",
+   "doi": "10.0000/elm.2019.0042",
+   "url": "",
+   "read_by": "alex",
+   "note": "their sensor spacing is close to ours"
+  },
+  {
+   "group": "Task 1",
+   "title": "Contact resistance in clamped thermocouples",
+   "authors": "D. Okafor, E. Novak",
+   "year": "2023",
+   "venue": "Example Sensors Letters 8",
+   "doi": "10.0000/esl.2023.0107",
+   "url": "",
+   "read_by": "",
+   "note": ""
+  },
+  {
+   "group": "Task 2",
+   "title": "Fitting convection coefficients from temperature profiles",
+   "authors": "C. Lin, B. Hart, F. Ito",
+   "year": "2022",
+   "venue": "Journal of Example Thermal Science 13(1)",
+   "doi": "10.0000/jets.2022.0105",
+   "url": "",
+   "read_by": "alex, casey",
+   "note": ""
+  },
+  {
+   "group": "Task 2",
+   "title": "Natural convection from horizontal cylinders at low power",
+   "authors": "G. Rossi",
+   "year": "2018",
+   "venue": "Example Heat Transfer Review 30",
+   "doi": "10.0000/ehtr.2018.0330",
+   "url": "",
+   "read_by": "",
+   "note": ""
+  },
+  {
+   "group": "Task 3",
+   "title": "Finite-difference schemes for the heat equation: a practical guide",
+   "authors": "E. Novak, A. Moreno",
+   "year": "2020",
+   "venue": "Example Numerical Notes 2",
+   "doi": "10.0000/enn.2020.0021",
+   "url": "",
+   "read_by": "blair",
+   "note": "stability rule on page 4"
+  },
+  {
+   "group": "Task 3",
+   "title": "Error estimates for coarse grids in 1D conduction",
+   "authors": "F. Ito, G. Rossi",
+   "year": "2024",
+   "venue": "Example Numerical Notes 6",
+   "doi": "10.0000/enn.2024.0063",
+   "url": "",
+   "read_by": "",
+   "note": ""
+  },
+  {
+   "group": "",
+   "title": "Reporting uncertainty in student lab work",
+   "authors": "H. Weber",
+   "year": "2017",
+   "venue": "Example Teaching Journal 9",
+   "doi": "10.0000/etj.2017.0090",
+   "url": "",
+   "read_by": "casey",
+   "note": ""
+  }
+ ],
+ "readme": "# references\n\nMaterial for the heat-flow project (demo data: every name, link and paper below is made up).\n\n## Project links\n- [Course page: Heat transfer lab](https://example.edu/heat-lab) — the brief, the schedule and the grading sheet. (verified)\n- [Lab safety sheet](https://example.edu/heat-lab/safety) — heater limits and the bench rules. (verified)\n- [Sensor data sheet](https://example.com/sensors/tc-k) — type-K thermocouple accuracy and response time. (unverified)\n- [Open thermal data set](https://example.org/thermal-data) — rod and fin measurements to compare against. (unverified)\n\n## Earlier projects\nNo report from earlier years was found online (searched 2027-01-04). We ask the course staff at the first meeting.\n\n## Notation\nWe write the fin parameter as $m^2 = hP/(kA)$, as in the 2021 rod paper. The steady profile is then\n$$T(x) = T_\\infty + (T_0 - T_\\infty)\\,\\frac{\\cosh m(L - x)}{\\cosh mL}.$$\nOur paper notes are in [notes/](notes/).\n\n## Tools\n- [Finite-difference notes](https://example.org/fd-notes) — how to discretise the heat equation on a grid, with a stability rule. (verified)\n- [Plotting style guide](https://example.com/plot-guide) — axis labels, units and colour-blind-safe palettes. (verified)\n"
+}

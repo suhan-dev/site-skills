@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calendar · Example Lab</title>
+<!-- Demo only: ?now=2026-11-25T14:20:00+09:00 freezes the clock (stable screenshots). Runs before any module. -->
+<script>
+(function(){var s=new URLSearchParams(location.search).get("now");if(!s)return;var D=Date,delta=D.parse(s)-D.now();
+function F(){var a=[].slice.call(arguments);return a.length?new (Function.prototype.bind.apply(D,[null].concat(a)))():new D(D.now()+delta)}
+F.prototype=D.prototype;F.now=function(){return D.now()+delta};F.parse=D.parse;F.UTC=D.UTC;window.Date=F})();
+</script>
+<script>
+(function(){var m=document.querySelector('meta[name="viewport"]'),q=matchMedia("(max-width:760px) and (orientation:portrait)"),b="width=device-width,initial-scale=1";
+function s(){m.setAttribute("content",q.matches?b+",maximum-scale=1,user-scalable=no":b)}s();if(q.addEventListener)q.addEventListener("change",s);
+document.addEventListener("gesturestart",function(e){if(q.matches)e.preventDefault()},{passive:false})})();
+</script>
+<!-- the demo's filled settings replace site/js/cal-config.js (whose zone is still the {{TIMEZONE}} placeholder) -->
+<script type="importmap">{"imports":{"../site/js/cal-config.js":"./cal-config.js"}}</script>
+<link rel="stylesheet" href="../../../team-site-design-system/assets/tokens.css">
+<link rel="stylesheet" href="../../../team-site-design-system/assets/components.css">
+<link rel="stylesheet" href="../site/css/calendar.css">
+</head>
+<body>
+<div id="app" class="app">
+  <header class="bar" data-lang-fixed>
+    <div class="bar-in">
+      <button class="brand" type="button"><span>Example Lab</span></button>
+      <nav class="tabs" role="tablist" aria-label="Sections">
+        <a role="tab" href="#calendar" aria-selected="true">Calendar</a>
+        <a role="tab" href="#records" aria-selected="false">Research log</a>
+        <a role="tab" href="#refs" aria-selected="false">References</a>
+      </nav>
+      <!-- bell · name · language · theme · chat · sign-out (team-site-design-system) -->
+      <div class="bar-right">
+        <button class="icon-btn" type="button" title="App &amp; notifications" aria-label="App &amp; notifications">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6c-2.95 0-5.1 2.3-5.1 5.25v3.6l-1.55 2.7c-.24.42.06.95.55.95h12.2c.49 0 .79-.53.55-.95l-1.55-2.7v-3.6C17.1 5.9 14.95 3.6 12 3.6z"/><path d="M9.75 18.6a2.3 2.3 0 0 0 4.5 0"/></svg>
+        </button>
+        <button class="me set" type="button" id="me-btn" style="--c:var(--gc-7)"><span class="me-dot"></span><span id="me-name">Alex</span></button>
+        <button class="lang-btn" type="button" id="lang-btn">EN</button>
+        <button class="icon-btn theme-btn" type="button" id="theme-btn" title="Light or dark" aria-label="Light or dark" aria-pressed="false">
+          <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.4 14.6A8.5 8.5 0 0 1 9.4 3.6a8.5 8.5 0 1 0 11 11z"/></svg>
+          <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+        </button>
+        <button class="icon-btn chat-btn" type="button" id="chat-btn" title="Team chat" aria-label="Team chat" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.2c-4.7 0-8.3 3-8.3 6.9 0 2.2 1.2 4.1 3 5.4-.1 1.3-.7 2.5-1.6 3.4 1.9 0 3.6-.7 4.8-1.8.7.2 1.4.2 2.1.2 4.7 0 8.3-3 8.3-7.2S16.7 4.2 12 4.2z"/></svg>
+          <i class="chat-dot" hidden></i>
+        </button>
+        <a class="icon-btn out-btn" href="#" title="Sign out" aria-label="Sign out"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 16.5 14.5 12 10 7.5M14.5 12H4"/></svg></a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="tab-pane" id="pane-calendar" data-pane="calendar">
+      <div class="cal-layout">
+        <div class="cal-main">
+          <div class="cal-head">
+            <h2 class="cal-title" id="cal-title">–</h2>
+            <div class="cal-nav">
+              <button class="btn ghost sq" type="button" id="cal-prev" title="Previous" aria-label="Previous"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6 8.5 12l6 6"/></svg></button>
+              <button class="btn ghost" type="button" id="cal-today" title="Today" aria-label="Today"><span>Today</span><i class="tdy" aria-hidden="true"></i></button>
+              <button class="btn ghost sq" type="button" id="cal-next" title="Next" aria-label="Next"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 6 6 6-6 6"/></svg></button>
+            </div>
+            <div class="cal-view" id="cal-view" role="group" aria-label="Calendar view">
+              <button type="button" data-view="week" aria-pressed="true">Week</button><button type="button" data-view="month" aria-pressed="false">Month</button>
+            </div>
+            <div class="cal-end">
+              <span class="sync" id="sync"><i></i><span>Loading</span></span>
+              <button class="btn primary" type="button" id="cal-add"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>New event</span></button>
+            </div>
+          </div>
+          <div class="banner" id="cal-banner" hidden></div>
+          <div class="cal-grid" id="cal-grid" aria-live="polite"></div>
+        </div>
+        <aside class="cal-side">
+          <div class="card">
+            <h3 class="card-h">Upcoming</h3>
+            <ol class="up-list" id="up-list"></ol>
+          </div>
+          <div class="card">
+            <h3 class="card-h"><span>Calendars</span> <small>Click to hide</small></h3>
+            <div class="legend" id="legend"></div>
+          </div>
+          <div class="card gcal-card" id="gcal-card"></div>
+        </aside>
+      </div>
+    </section>
+  </main>
+</div>
+
+<dialog class="dlg" id="ev-dlg" aria-labelledby="ev-dlg-h">
+  <form class="dlg-in" id="ev-form" method="dialog" novalidate>
+    <div class="dlg-top">
+      <h2 id="ev-dlg-h">New event</h2>
+      <button class="icon-btn" type="button" data-close title="Close" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg></button>
+    </div>
+    <label class="fld"><span>Title</span><input name="title" required maxlength="300" placeholder="e.g. Design review" autocomplete="off"></label>
+    <div class="fld"><span>Calendar</span><div class="seg" id="owner-seg"></div></div>
+    <label class="chk"><input type="checkbox" name="allDay"> <span>All day</span></label>
+    <div class="dt-row">
+      <label class="fld"><span>Starts</span><input type="date" name="start" required></label>
+      <label class="fld t"><span>&nbsp;</span><input type="time" name="startTime" step="300" aria-label="Start time"></label>
+      <span class="dt-arrow" aria-hidden="true">→</span>
+      <label class="fld"><span>Ends</span><input type="date" name="end" required></label>
+      <label class="fld t"><span>&nbsp;</span><input type="time" name="endTime" step="300" aria-label="End time"></label>
+    </div>
+    <label class="fld"><span>Location</span><input name="location" maxlength="500" placeholder="e.g. Room 101 · Zoom" autocomplete="off"></label>
+    <label class="fld"><span>Notes</span><textarea name="memo" rows="4" maxlength="8000" placeholder="Links, things to bring…"></textarea></label>
+    <p class="dlg-note" id="ev-note"></p>
+    <p class="dlg-err" id="ev-err" role="alert"></p>
+    <div class="dlg-act">
+      <button class="btn danger" type="button" id="ev-del" hidden>Delete</button>
+      <a class="btn ghost" id="ev-glink" target="_blank" rel="noopener" hidden><span>Google Calendar</span><span class="ext" aria-hidden="true">↗</span></a>
+      <button class="btn ghost" type="button" id="ev-comment" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.2c-4.7 0-8.3 3-8.3 6.9 0 2.2 1.2 4.1 3 5.4-.1 1.3-.7 2.5-1.6 3.4 1.9 0 3.6-.7 4.8-1.8.7.2 1.4.2 2.1.2 4.7 0 8.3-3 8.3-7.2S16.7 4.2 12 4.2z"/></svg><span class="lbl">Comment</span><span class="n"></span></button>
+      <span class="cal-spacer"></span>
+      <button class="btn ghost" type="button" data-close>Cancel</button>
+      <button class="btn primary" type="submit" id="ev-save">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog class="dlg day-dlg" id="day-dlg" aria-labelledby="day-dlg-h">
+  <div class="dlg-in">
+    <div class="dlg-top"><h2 id="day-dlg-h"></h2><button class="icon-btn" type="button" data-close title="Close" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg></button></div>
+    <ol class="up-list" id="day-list"></ol>
+    <div class="dlg-act"><span class="cal-spacer"></span><button class="btn primary" type="button" id="day-add"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>New event on this day</span></button></div>
+  </div>
+</dialog>
+
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

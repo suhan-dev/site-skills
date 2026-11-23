@@ -1,0 +1,11 @@
+{
+  "_note": "Demo team (placeholder data). program.start is week 1's first day; its weekday is the week's start day.",
+  "repo": "example-org/example-lab",
+  "branch": "main",
+  "members": [
+    { "id": "alex", "name": "Alex", "colorId": "7" },
+    { "id": "blair", "name": "Blair", "colorId": "10" },
+    { "id": "casey", "name": "Casey", "colorId": "6" }
+  ],
+  "program": { "start": "2027-01-05", "weeks": 10, "timeZone": "Asia/Seoul" }
+}

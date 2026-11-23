@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- Lecture-notes reader: one chapter as a document. The server answers /theory/<sub-tab>/<chapter> with this page
+     (lib/reader-route.js); js/reader.js reads the chapter from the address and /data/theory.json. -->
+<title>Theory · {{SITE_NAME}}</title>
+<meta name="application-name" content="{{SITE_NAME}}">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1c1c1e" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<!-- light / dark: the same saved choice ("site_theme", design-system theme.js) as the main site, applied before the first paint -->
+<script>try{var t=localStorage.getItem("site_theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="/css/tokens.css">
+<link rel="stylesheet" href="/css/doc.css">
+<link rel="stylesheet" href="/css/reader.css">
+</head>
+<body class="rd">
+
+<header class="rd-top">
+  <a class="rd-back" id="rd-back" href="/#theory"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6 8.5 12l6 6"/></svg>Theory</a>
+  <nav class="rd-crumbs" id="rd-crumbs" aria-label="Breadcrumb"><a href="/">{{SITE_NAME}}</a><i aria-hidden="true">·</i><a href="/#theory">Theory</a></nav>
+  <div class="rd-tools">
+    <button class="rd-tool" type="button" id="rd-theme" title="Light or dark" aria-label="Light or dark" aria-pressed="false">
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.4 14.6A8.5 8.5 0 0 1 9.4 3.6a8.5 8.5 0 1 0 11 11z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+    </button>
+    <button class="rd-tool" type="button" id="rd-print">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9V3.5h10V9M7 17.5H4.5v-7a1.5 1.5 0 0 1 1.5-1.5h12a1.5 1.5 0 0 1 1.5 1.5v7H17M7 14h10v6.5H7z"/></svg>
+      <span>Print</span>
+    </button>
+  </div>
+</header>
+
+<main class="rd-main">
+  <nav class="rd-toc" id="rd-toc" aria-label="Contents"></nav>
+  <article class="rd-doc" id="rd-doc" aria-busy="true"></article>
+</main>
+
+<script type="module" src="/js/reader.js"></script>
+</body>
+</html>

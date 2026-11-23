@@ -1,0 +1,39 @@
+# site-skills
+
+> Claude skills that rebuild a private team site (shared Google Calendar, weekly research log, references, lecture-notes
+> reader, Google sign-in for a fixed team, iPhone Home Screen app with notifications, team chat with comments on text,
+> onboarding tour, link previews, 3D scroll intro) on Cloudflare Pages + D1, plus the team working rules around it.
+> Placeholder data only; no secrets are ever in this repository.
+
+To build a site for a user: read CLAUDE.md, then docs/START-HERE.md (intake questions, build order, what only the user
+can do in a console, checks after each step). Never ask the user to paste a secret into chat; secrets go into
+Cloudflare Variables and Secrets by the user's own hand.
+
+## Start here
+
+- [CLAUDE.md](https://raw.githubusercontent.com/suhan-dev/site-skills/main/CLAUDE.md): the two jobs (build a site, change this library) and the never list
+- [docs/START-HERE.md](https://raw.githubusercontent.com/suhan-dev/site-skills/main/docs/START-HERE.md): intake questions, build order, checks, settings checklist, handover
+- [team-site-setup/references/end-to-end.md](https://raw.githubusercontent.com/suhan-dev/site-skills/main/skills/team-site-setup/references/end-to-end.md): every console click from an empty account to a live site
+- [SECURITY.md](https://raw.githubusercontent.com/suhan-dev/site-skills/main/SECURITY.md): what is never committed and where each secret lives
+
+## Skills (build order)
+
+- [team-project-playbook](https://raw.githubusercontent.com/suhan-dev/site-skills/main/skills/team-project-playbook/SKILL.md): Set up the working rules for a small team project (student team, lab, capstone) that shares one repo and one site and works with several Claude sessions. Use at the start of a team project, or when a team's repo, records or sessions start to drift.
+- [team-site-setup](https://raw.githubusercontent.com/suhan-dev/site-skills/main/skills/team-site-setup/SKILL.md): Stand up the base of a private team site on Cloudflare Pages (static site + Pages Functions + a stdlib Python build + D1) and walk through every console setting end to end (Cloudflare, Google sign-in client, shared Google Calendar service account, cron Worker, secrets). Use when starting a new team site or when someone needs the full setup checklist.
+- [team-site-design-system](https://raw.githubusercontent.com/suhan-dev/site-skills/main/skills/team-site-design-system/SKILL.md): Apply the restrained, Apple-like design system of the team site (tokens for light and soft-grey dark, type scale, hairline layout, pill controls, sheets, header at every width, EN/KO rules). Use before building or restyling any page of a team site, and whenever another skill in this repo draws UI.
+- [google-signin-team-gate](https://raw.githubusercontent.com/suhan-dev/site-skills/main/skills/google-signin-team-gate/SKILL.md): Puts a password-free Google sign-in gate in front of a Cloudflare Pages site so only a listed team gets in (OIDC form_post, RS256 checked with WebCrypto, allow-list in a secret, 180-day sessions hashed in D1). Use for a private team or lab site.
+- [shared-google-calendar](https://raw.githubusercontent.com/suhan-dev/site-skills/main/skills/shared-google-calendar/SKILL.md): Build a team calendar tab backed by one shared Google Calendar (service account on Cloudflare Pages Functions), with an Apple-style week and month view, 07:00-to-07:00 days, owner colours, a phone bottom sheet, and an idempotent "Add official schedule". Use for a small signed-in team site.
+- [weekly-research-log](https://raw.githubusercontent.com/suhan-dev/site-skills/main/skills/weekly-research-log/SKILL.md): Add a weekly research log to a team repo and site - one Markdown file per person per week, a GitHub Action that refuses edits to closed weeks, a week-table generator, and a Research log tab with week tabs and per-member logs. Use for a lab or capstone team that meets weekly.
+- [references-library](https://raw.githubusercontent.com/suhan-dev/site-skills/main/skills/references-library/SKILL.md): Add a References tab to a team repo and site - link lists with Verified/Unverified marks from references/README.md, a reading list from papers.csv with search and topic filters, an optional project overview, contents that follow the reading, a phone jump row, and a lint that keeps PDFs out.
+- [lecture-notes-reader](https://raw.githubusercontent.com/suhan-dev/site-skills/main/skills/lecture-notes-reader/SKILL.md): Builds a lecture-notes reader for Markdown + KaTeX chapters, with numbered sections, equations and figures, cross-chapter links, a scroll-spy outline, resume-where-you-stopped, a phone section bar and print styles. Use for course notes on a static or Cloudflare Pages site.
+- [ios-webapp-push](https://raw.githubusercontent.com/suhan-dev/site-skills/main/skills/ios-webapp-push/SKILL.md): Turn a Cloudflare Pages team site into an installable iPhone web app that pushes new calendar events and 30-minute reminders (manifest, icons, a notify-only service worker, RFC 8291/8292 in WebCrypto, D1, a cron Worker). Use when a team wants calendar alerts without an App Store app.
+- [team-chat](https://raw.githubusercontent.com/suhan-dev/site-skills/main/skills/team-chat/SKILL.md): Add a small team chat to a private team site, with comments on any selected passage (select text, Copy or Comment, the passage gets a thin underline and a link back). D1 storage, the author taken from the sign-in, rev-based polling, soft deletes, a side panel on desktop and a sheet on phones. Use when a signed-in team site needs discussion next to its notes, logs and references.
+- [first-visit-spotlight-guide](https://raw.githubusercontent.com/suhan-dev/site-skills/main/skills/first-visit-spotlight-guide/SKILL.md): Adds a quiet first-visit tour to a site, a dimmed page with a rounded spotlight hole and a small panel (a bottom sheet on phones), shown once per member, never over the page's own actions, and reopened from the name menu. Use for onboarding new team members.
+- [kakao-link-preview](https://raw.githubusercontent.com/suhan-dev/site-skills/main/skills/kakao-link-preview/SKILL.md): Make a signed-in site show a sharp, correctly cropped link preview in KakaoTalk and other messengers (OG tags on the sign-in page, a 2400×1260 image with a versioned URL, Kakao cache reset, inline images for notice posts). Use when a site link is shared in chat and the preview is missing, blurry, cropped or stale.
+- [scroll-3d-intro](https://raw.githubusercontent.com/suhan-dev/site-skills/main/skills/scroll-3d-intro/SKILL.md): Build a scroll-driven three.js intro that dives one continuous camera into a photoreal product render (PBR, studio light, AO, depth of field), with 1–3 word headlines, a time-driven clock, adaptive quality and a fade into the site. Use for a desktop and tablet landing intro; phones skip it.
+
+## Optional
+
+- [docs/gallery.md](https://raw.githubusercontent.com/suhan-dev/site-skills/main/docs/gallery.md): every screenshot
+- [CONTRIBUTING.md](https://raw.githubusercontent.com/suhan-dev/site-skills/main/CONTRIBUTING.md): how a skill folder is built, placeholders, screenshots
+- [.claude-plugin/marketplace.json](https://raw.githubusercontent.com/suhan-dev/site-skills/main/.claude-plugin/marketplace.json): install as a Claude Code plugin

@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>App &amp; notifications · Example Lab</title>
+<!-- Demo of ios-webapp-push with a fake server and a fake device. Serve the REPOSITORY ROOT (it links the design
+     system skill next door) and open /skills/ios-webapp-push/assets/demo/.
+       ?ua=ios | kakao | oldios | desktop   which browser to pretend to be (default: the real one)
+       ?app=1                               pretend to be the app opened from the Home Screen (standalone)
+       ?state=off | on | server | denied    the server's and the device's state (default off)
+       ?prefs=11 | 10 | 01 | 00             the two switches (New events, 30 minutes before) the server has saved
+       ?open=push | install                 open the sheet or the pop-up at once
+       ?lang=ko                             the second language
+     With ?ua=ios (or kakao) the "Add to Home Screen" pop-up opens by itself half a second after the page, once per
+     member in this browser; ?open=install shows it again. -->
+<script>try{var t=localStorage.getItem("site_theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<script>
+/* ---- the fake device and the fake server (demo only; push.js itself has no demo switches) ---- */
+(function () {
+  var q = new URLSearchParams(location.search), ua = q.get("ua"), state = q.get("state") || "off", prefs = q.get("prefs") || "11";
+  var UAS = {
+    ios: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1",
+    kakao: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 KAKAOTALK 10.8.5",
+    oldios: "Mozilla/5.0 (iPhone; CPU iPhone OS 15_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.7 Mobile/15E148 Safari/604.1",
+  };
+  if (UAS[ua]) {
+    Object.defineProperty(navigator, "userAgent", { get: function () { return UAS[ua]; } });
+    Object.defineProperty(navigator, "platform", { get: function () { return "iPhone"; } });
+  }
+  if (q.get("app") === "1") Object.defineProperty(navigator, "standalone", { get: function () { return true; } });
+  if (q.get("lang") === "ko" || q.get("lang") === "en") try { localStorage.setItem("site_lang", q.get("lang")); } catch (e) {}
+
+  var perm = state === "on" ? "granted" : state === "denied" ? "denied" : "default";
+  var saved = { registered: state === "on", notifyNew: prefs[0] !== "0", notifyBefore: prefs[1] !== "0" };
+  var fakeSub = { endpoint: "https://push.example.com/demo", toJSON: function () { return { endpoint: this.endpoint, keys: { p256dh: "demo", auth: "demo" } }; } };
+  var sub = state === "on" ? fakeSub : null;
+  if ("Notification" in window) {
+    Object.defineProperty(Notification, "permission", { get: function () { return perm; }, configurable: true });
+    Notification.requestPermission = function () { perm = "granted"; return Promise.resolve(perm); };
+  }
+  if ("serviceWorker" in navigator) {
+    var reg = { pushManager: { getSubscription: function () { return Promise.resolve(sub); }, subscribe: function () { sub = fakeSub; return Promise.resolve(sub); } } };
+    navigator.serviceWorker.register = function () { return Promise.resolve(reg); };
+    Object.defineProperty(navigator.serviceWorker, "ready", { get: function () { return Promise.resolve(reg); } });
+  }
+  var real = window.fetch.bind(window);
+  var reply = function (body, status) { return new Promise(function (ok) { setTimeout(function () { ok(new Response(JSON.stringify(body), { status: status || 200, headers: { "content-type": "application/json" } })); }, 180); }); };
+  window.fetch = function (input, init) {
+    var u = new URL(typeof input === "string" ? input : input.url, location.href), m = ((init && init.method) || "GET").toUpperCase();
+    if (u.pathname === "/api/push" && m === "GET") return reply(state === "server" ? { ready: false, publicKey: "" } : { ready: true, publicKey: "ZGVtbw" });
+    if (u.pathname === "/api/push" && m === "POST") {
+      var b = JSON.parse((init && init.body) || "{}");
+      if (u.search === "?read") return reply(sub ? saved : { registered: false });
+      if (typeof b.notifyNew === "boolean") saved.notifyNew = b.notifyNew;
+      if (typeof b.notifyBefore === "boolean") saved.notifyBefore = b.notifyBefore;
+      saved.registered = true;
+      return reply(saved);
+    }
+    if (u.pathname === "/api/me") return reply({ auth: "google", member: "alex", seen: { install: false } });
+    return real(input, init);
+  };
+})();
+</script>
+<link rel="stylesheet" href="../../../team-site-design-system/assets/tokens.css">
+<link rel="stylesheet" href="../../../team-site-design-system/assets/components.css">
+<link rel="stylesheet" href="../site/css/push.css">
+<!-- push.js imports "./i18n.js"; in a site that file is the design system's i18n.js copied next to it -->
+<script type="importmap">{"imports":{"../site/js/i18n.js":"../../../team-site-design-system/assets/i18n.js"}}</script>
+<style>
+  /* demo-only page body: a week of placeholder events behind the sheet */
+  .wk{display:grid;max-width:720px}
+  .wk h1{margin:0 0 18px;font-size:26px;font-weight:700;letter-spacing:-.025em}
+  .ev{display:grid;grid-template-columns:92px minmax(0,1fr) auto;gap:14px;align-items:baseline;padding:13px 0;border-top:.5px solid var(--sep2)}
+  .ev time{color:var(--ink3);font-size:13px;font-variant-numeric:tabular-nums}
+  .ev b{font-weight:600;letter-spacing:-.012em}
+  .ev span{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink3)}
+  .ev span::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
+</style>
+</head>
+<body>
+<header class="bar" data-lang-fixed>
+  <div class="bar-in">
+    <button class="brand" type="button"><span>Example Lab</span></button>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <a role="tab" href="#" aria-selected="true">Calendar</a>
+      <a role="tab" href="#">Notes</a>
+      <a role="tab" href="#">References</a>
+    </nav>
+    <div class="bar-right">
+      <!-- the bell is inserted here from ../site/push-dialogs.html -->
+      <button class="me set" type="button" id="me-btn" style="--c:var(--gc-7)"><span class="me-dot"></span><span id="me-name">Alex</span></button>
+      <button class="lang-btn" type="button" id="lang-btn">EN</button>
+      <button class="icon-btn theme-btn" type="button" id="theme-btn" title="Light or dark" aria-pressed="false">
+        <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.4 14.6A8.5 8.5 0 0 1 9.4 3.6a8.5 8.5 0 1 0 11 11z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+      </button>
+      <button class="icon-btn chat-btn" type="button" id="chat-btn" title="Team chat" aria-label="Team chat" aria-expanded="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.2c-4.7 0-8.3 3-8.3 6.9 0 2.2 1.2 4.1 3 5.4-.1 1.3-.7 2.5-1.6 3.4 1.9 0 3.6-.7 4.8-1.8.7.2 1.4.2 2.1.2 4.7 0 8.3-3 8.3-7.2S16.7 4.2 12 4.2z"/></svg>
+      </button>
+      <a class="icon-btn out-btn" href="#" title="Sign out" aria-label="Sign out"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 16.5 14.5 12 10 7.5M14.5 12H4"/></svg></a>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+  <section class="wk">
+    <h1>This week</h1>
+    <div class="ev"><time>Tue 10:00</time><b>Weekly sync</b><span style="--c:var(--gc-9)">Team</span></div>
+    <div class="ev"><time>Wed 14:00</time><b>Design review</b><span style="--c:var(--gc-7)">Alex</span></div>
+    <div class="ev"><time>Thu 13:00</time><b>Lab session</b><span style="--c:var(--gc-10)">Blair</span></div>
+    <div class="ev"><time>Fri 16:00</time><b>Reading group</b><span style="--c:var(--gc-6)">Casey</span></div>
+  </section>
+</main>
+<footer class="foot"><span>Example Lab · demo data</span><span>?ua=ios · ?ua=kakao · ?app=1 · ?state=on · ?open=push</span></footer>
+
+<script type="module">
+  import { initTheme, lockPhoneZoom } from "../../../team-site-design-system/assets/theme.js";
+  import { wireLangButton, apply } from "../../../team-site-design-system/assets/i18n.js";
+  import { createPush } from "../site/js/push.js";
+
+  // the real markup: the bell goes first in the header's right side, the two dialogs at the end of <body>
+  const html = await (await fetch("../site/push-dialogs.html")).text();
+  const tpl = document.createElement("template");
+  tpl.innerHTML = html;
+  document.querySelector(".bar-right").prepend(tpl.content.querySelector("#push-btn"));
+  document.body.append(tpl.content);
+  // in a site the icon is /icons/apple-touch-icon.png; here it comes from ./icons
+  document.documentElement.style.setProperty("--app-icon", `url("${new URL("icons/apple-touch-icon.png", location.href)}")`);
+
+  initTheme({ button: document.getElementById("theme-btn") });
+  wireLangButton();
+  lockPhoneZoom();
+
+  const push = createPush({ appName: "Lab", member: "alex", seen: { install: false }, onOpen: (url) => console.log("open", url) });
+  apply();
+
+  const q = new URLSearchParams(location.search);
+  if (q.get("open") === "push") push.open();
+  else if (q.get("open") === "install") push.openInstall();
+  else if (!push.welcome()) setTimeout(() => push.offerInstall(), 500); // the site: ~0.5 s after the page, before the site guide
+</script>
+</body>
+</html>

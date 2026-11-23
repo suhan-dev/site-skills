@@ -1,0 +1,28 @@
+# Marks commits and pull requests that edit a closed week's log (logs/weekNN_MMDD/) with a red X.
+# Rules: logs/README.md. Script: tools/check_record_lock.py (reads site/data/team.json → program).
+name: record-lock
+on:
+  push:
+    paths: ["logs/**"]
+  pull_request:
+    paths: ["logs/**"]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # the whole history, so the diff below has its base
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check that no closed week was edited
+        env:
+          # a pull request: its base; a push: the commit before it
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          # a new branch's first push has no "before": compare with the default branch, or with the first commit
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ]; then
+            BASE=$(git merge-base "origin/${{ github.event.repository.default_branch }}" "$GITHUB_SHA" 2>/dev/null || git rev-list --max-parents=0 "$GITHUB_SHA" | tail -1)
+          fi
+          git -c core.quotepath=off diff --name-only "$BASE" "$GITHUB_SHA" -- logs | python3 tools/check_record_lock.py

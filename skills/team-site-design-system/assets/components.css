@@ -1,0 +1,212 @@
+/* Components — header and tabs, buttons, pill nav, segmented control, dialogs that become bottom sheets on phones,
+   fields, choice pills, the iOS switch, 44 px tap areas. Needs tokens.css first. Class names are the contract the
+   other skills use; rename them only all at once. */
+
+/* ---------- header ---------- */
+.bar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--paper) 78%,transparent);
+  backdrop-filter:saturate(1.8) blur(20px);-webkit-backdrop-filter:saturate(1.8) blur(20px);border-bottom:.5px solid var(--sep2)}
+/* tabs sit in the middle while the two sides have room; when they do not, a side keeps its full width and the tabs move
+   over, so the tabs never run under the buttons */
+.bar-in{max-width:1280px;margin:0 auto;padding:0 28px;height:52px;display:grid;grid-template-columns:minmax(max-content,1fr) auto minmax(max-content,1fr);align-items:center;gap:20px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:600;font-size:15px;letter-spacing:-.015em;white-space:nowrap;justify-self:start;border-radius:8px;padding:4px 6px 4px 2px}
+.brand:hover{opacity:.72}
+.tabs{display:flex;gap:2px}
+.tabs a{display:flex;align-items:center;height:52px;padding:0 14px;color:var(--ink3);font-weight:500;font-size:13.5px;letter-spacing:-.006em;text-decoration:none;white-space:nowrap;box-shadow:inset 0 0 0 transparent;transition:color .15s,box-shadow .15s}
+.tabs a:hover{color:var(--ink);text-decoration:none}
+.tabs a[aria-selected=true]{color:var(--ink);font-weight:600;box-shadow:inset 0 -2px 0 var(--ink)}
+.bar-right{justify-self:end;display:flex;align-items:center;gap:6px}
+.me{display:flex;align-items:center;gap:7px;height:30px;padding:0 10px 0 8px;border-radius:999px;font-size:13px;font-weight:500;color:var(--ink2);white-space:nowrap}
+.me:hover{background:var(--fill)}
+.me-dot{width:10px;height:10px;border-radius:50%;background:var(--c,var(--ink4));box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+.me:not(.set) .me-dot{background:none;box-shadow:inset 0 0 0 1.5px var(--ink4)}
+.me.set{color:var(--ink)}
+/* EN / KO: one button that shows the language in use; a tap switches (i18n.js wireLangButton) */
+.lang-btn{display:grid;place-items:center;height:32px;min-width:34px;padding:0 6px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:.03em;color:var(--ink2)}
+.lang-btn:hover{background:var(--fill);color:var(--ink)}
+/* team chat button (team-chat skill): a speech bubble, a small accent dot for unread messages */
+.chat-btn{position:relative}
+.chat-btn svg{width:19px;height:19px}
+.chat-btn[aria-expanded=true]{color:var(--ink);background:var(--fill)}
+.chat-dot{position:absolute;top:calc(50% - 11px);left:calc(50% + 5px);width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 2px var(--paper)}
+.icon-btn{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;color:var(--ink2)}
+.icon-btn:hover{background:var(--fill);color:var(--ink);text-decoration:none}
+.icon-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.theme-btn .moon{fill:currentColor;stroke:none;width:17px;height:17px}
+.theme-btn .sun{display:none}
+.theme-btn[aria-pressed=true] .moon{display:none}
+.theme-btn[aria-pressed=true] .sun{display:block}
+
+.main{max-width:1280px;margin:0 auto;padding:36px 28px 56px;min-height:calc(100vh - 110px)}
+.foot{max-width:1280px;margin:0 auto;padding:18px 28px 32px;display:flex;justify-content:space-between;gap:16px;color:var(--ink4);font-size:12px;border-top:.5px solid var(--sep2)}
+
+/* ---------- buttons · cards ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:32px;padding:0 15px;border-radius:999px;font-weight:500;font-size:13.5px;letter-spacing:-.01em;
+  text-decoration:none;white-space:nowrap;color:var(--ink);transition:background .15s,opacity .15s}
+.btn:hover{text-decoration:none}
+.btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.btn.sq{width:32px;padding:0}
+.btn.ghost{background:var(--fill)}
+.btn.ghost:hover{background:var(--fill2)}
+.btn.primary{background:var(--accent);color:var(--on-accent)}
+.btn.primary:hover{background:var(--accent2)}
+.btn.primary:disabled{opacity:.4;cursor:default}
+.btn.danger{color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,transparent)}
+.btn.danger:hover{background:color-mix(in srgb,var(--bad) 16%,transparent)}
+.btn.danger.armed{background:var(--bad);color:#fff}
+.btn.small{height:28px;padding:0 12px;font-size:12.5px}
+.btn .ext{opacity:.55}
+.eyebrow{margin:0 0 6px;font-size:13px;font-weight:600;letter-spacing:-.005em;color:var(--ink3)}
+.page-h{text-wrap:balance;margin:0;font-size:clamp(26px,2.6vw,34px);font-weight:700;line-height:1.12;letter-spacing:-.025em}
+.card{padding:14px 0 0;border-top:.5px solid var(--sep2)}
+.card-h{margin:0 0 10px;font-size:15px;font-weight:600;letter-spacing:-.015em;color:var(--ink);display:flex;align-items:center;gap:8px}
+.card-h small{font-weight:400;color:var(--ink4);font-size:12px;letter-spacing:0}
+.banner{margin:0 0 14px;padding:1px 0 1px 12px;border-left:2px solid var(--warn);font-size:13.5px;color:var(--ink2)}
+.banner b{color:var(--ink);font-weight:600}
+.banner.bad{border-left-color:var(--bad)}
+
+
+/* ---------- pill nav (‹ Today ›) and segmented control (Week | Month) ---------- */
+.pill-nav .btn.ghost{height:28px;padding:0 12px;font-size:13px;background:none}
+.pill-nav .btn.ghost.sq{width:30px;padding:0}
+.pill-nav .btn.ghost:hover{background:var(--fill)}
+.pill-nav svg{width:16px;height:16px;stroke-width:2.3}
+.tdy{display:none}
+.sync{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--ink3);white-space:nowrap;font-variant-numeric:tabular-nums}
+.sync i{width:7px;height:7px;border-radius:50%;background:var(--ink4)}
+.segmented{display:flex;align-items:center;padding:2px;border-radius:999px;background:var(--fill)}
+.segmented button{height:28px;min-width:62px;padding:0 12px;border-radius:999px;font-size:13px;font-weight:500;color:var(--ink2);transition:background .15s,color .15s}
+.segmented button:hover{color:var(--ink)}
+.segmented button[aria-pressed=true]{background:var(--seg-on);color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.1),0 0 0 .5px rgba(0,0,0,.04)}
+
+/* ---------- dialogs ---------- */
+/* a dialog scrolls up and down, never sideways: its one column cannot grow wider than the dialog */
+.dlg{border:0;padding:0;border-radius:20px;background:var(--card);color:var(--ink);box-shadow:var(--shadow);width:min(560px,calc(100vw - 32px));max-height:calc(100vh - 48px);overflow-x:hidden}
+.dlg:focus-visible{outline:none} /* the sheet itself never shows a focus ring; its first control does */
+.dlg[open]{animation:dlg-in .22s cubic-bezier(.2,.8,.2,1)}
+@keyframes dlg-in{from{opacity:0;transform:translateY(8px) scale(.98)}}
+.dlg::backdrop{background:rgba(0,0,0,.28);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.dlg-in{padding:20px 22px 20px;display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.dlg-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.dlg-top h2{margin:0;font-size:19px;font-weight:700;letter-spacing:-.02em}
+.dlg-top .icon-btn{background:var(--fill);width:28px;height:28px}
+.dlg-top .icon-btn svg{width:14px;height:14px;stroke-width:2.2}
+.fld{display:grid;gap:5px;min-width:0}
+.fld>span{font-size:12px;font-weight:500;color:var(--ink3);padding-left:2px}
+.fld input,.fld textarea{width:100%;min-width:0;height:38px;padding:0 12px;border-radius:10px;border:0;background:var(--fill);outline:none;transition:box-shadow .15s,background .15s}
+.fld textarea{height:auto;padding:9px 12px;resize:vertical;line-height:1.55}
+.fld input:focus,.fld textarea:focus{background:var(--card);box-shadow:0 0 0 1px var(--accent),0 0 0 4px color-mix(in srgb,var(--accent) 22%,transparent)}
+.fld input::placeholder,.fld textarea::placeholder{color:var(--ink4)}
+.chk{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;cursor:pointer;width:max-content}
+.chk input{width:16px;height:16px;accent-color:var(--accent)}
+/* a wider dialog for two-column forms */
+@media (min-width:761px){.dlg.wide{width:min(620px,calc(100vw - 32px))}}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg label{position:relative;cursor:pointer}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg span{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 12px 0 10px;border-radius:999px;background:var(--fill);font-size:13px;font-weight:500;color:var(--ink2)}
+.seg span::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c)}
+.seg input:checked+span{background:color-mix(in srgb,var(--c) var(--ev-bg),var(--card));color:var(--ink);font-weight:600;box-shadow:inset 0 0 0 1.5px var(--c)}
+.seg input:focus-visible+span{outline:3px solid color-mix(in srgb,var(--accent) 55%,transparent);outline-offset:1px}
+.dlg-note{margin:0;font-size:12.5px;color:var(--ink3)}
+.dlg-note:empty,.dlg-err:empty{display:none}
+.dlg-err{margin:0;font-size:13px;color:var(--bad)}
+.dlg-act{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:4px}
+
+
+/* ---------- the iOS switch (green when on) ---------- */
+:root{--sw-on:#34c759;--sw-off:rgba(120,120,128,.16);--sw-knob:#ffffff}
+:root[data-theme=dark]{--sw-on:#30d158;--sw-off:rgba(120,120,128,.32)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--sw-on:#30d158;--sw-off:rgba(120,120,128,.32)}}
+
+.sw{position:relative;flex:none;width:51px;height:31px;border-radius:16px;background:var(--sw-off);transition:background .2s ease}
+.sw::after{content:"";position:absolute;left:2px;top:2px;width:27px;height:27px;border-radius:50%;background:var(--sw-knob);
+  box-shadow:0 3px 8px rgba(0,0,0,.15),0 1px 1px rgba(0,0,0,.16);transition:transform .22s cubic-bezier(.3,.7,.4,1)}
+.sw-row[aria-checked=true] .sw{background:var(--sw-on)}
+.sw-row[aria-checked=true] .sw::after{transform:translateX(20px)}
+.sw-row:focus-visible{outline:none}
+.sw-row:focus-visible .sw{outline:3px solid color-mix(in srgb,var(--accent) 55%,transparent);outline-offset:2px}
+
+/* ---------- phones: dialogs as bottom sheets ---------- */
+@media (max-width:760px){
+  dialog.dlg{width:100%;max-width:none;max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);margin:auto 0 0;border-radius:18px 18px 0 0;
+    overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain}
+  .dlg[open]{animation:dlg-sheet .32s cubic-bezier(.2,.8,.2,1)}
+  .dlg-in{padding:18px max(16px,calc((100% - 560px) / 2)) calc(20px + env(safe-area-inset-bottom,0px))}
+  .fld input,.fld textarea{font-size:16px} /* 16 px: iOS does not zoom in on focus */
+  .chk{font-size:15px}
+  .chk input{width:18px;height:18px}
+}
+@keyframes dlg-sheet{from{transform:translateY(100%)}}
+
+/* ---------- header at every width ---------- */
+@media (min-width:761px) and (max-width:1023px){
+  .bar-in{padding:0 20px;gap:12px}
+  .tabs a{padding:0 10px}
+  .main{padding-left:20px;padding-right:20px}
+  .foot{width:calc(100% - 40px)}
+}
+@media (min-width:761px) and (max-width:900px){
+  .me{padding:0 10px}
+  .me #me-name{display:none}
+}
+@media (max-width:960px){.bar-right .out-btn{display:none}} /* Sign out moves into the name menu */
+@media (max-width:760px){
+  .bar-in{height:auto;grid-template-columns:auto 1fr;padding:0 6px 0 16px;row-gap:0}
+  .bar-right{grid-column:2}
+  .tabs{grid-column:1/-1;grid-row:2;justify-self:stretch;justify-content:space-between;margin-right:10px}
+  .tabs a{flex:0 1 auto;justify-content:center;padding:0 4px;height:38px}
+  .me #me-name{max-width:6em;overflow:hidden;text-overflow:ellipsis}
+  .main{padding:22px 16px 36px}
+  .foot{flex-direction:column;padding:16px 16px 28px}
+}
+@media (max-width:460px){
+  .bar-in{column-gap:8px}
+  .bar-right{gap:0}
+  .me{padding:0 8px}
+  .me #me-name{display:none}
+  .lang-btn{min-width:30px;padding:0 4px}
+  .icon-btn{width:30px}
+}
+
+/* ---------- phones: every control is at least 44 px to tap (Apple HIG) ----------
+   Controls in the page rhythm get the real size. Small text controls keep their look and get an invisible 44 px hit
+   area (::after), so rows of them do not grow. Add your own small controls to the :is() list. */
+@media (max-width:760px){
+  .brand{height:44px;padding:0 8px 0 0}
+  .bar-right{gap:0}
+  .me{height:44px;min-width:44px;justify-content:center;padding:0 10px}
+  .lang-btn{height:44px;min-width:44px;padding:0 6px;border-radius:50%}
+  .icon-btn{width:44px;height:44px}
+  .btn{height:44px;padding:0 16px}
+  .btn.sq{width:44px}
+  .pill-nav .btn.ghost{height:30px;padding:0 11px}
+  .pill-nav .btn.ghost.sq{width:30px;padding:0}
+  .segmented button{height:30px;min-width:0;padding:0 10px}
+  .fld input{height:44px}
+  .chk{min-height:44px}
+  .dlg-act{margin-top:8px}
+  :is(.pill-nav .btn,.segmented button,.btn.small,.dlg-top .icon-btn,.seg span){position:relative}
+  :is(.pill-nav .btn,.segmented button,.btn.small,.dlg-top .icon-btn,.seg span)::after{
+    content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}
+  .seg{gap:10px 8px}
+}
+@media (max-width:374px){
+  .bar-in{padding-left:14px;column-gap:6px}
+  .me{min-width:38px;padding:0 6px}
+  .lang-btn{min-width:38px;padding:0 4px}
+  .icon-btn{width:38px}
+  .tabs{margin-right:8px}
+  .tabs a{font-size:12.5px;padding:0 3px}
+}
+@media (max-width:340px){
+  .brand{font-size:14px}
+  .me{min-width:36px}
+  .lang-btn{min-width:36px}
+  .icon-btn{width:36px}
+  .tabs{gap:0}
+  .tabs a{font-size:11.5px;padding:0 2px}
+}
+
+/* a phone held upright does not zoom (theme.js also sets the viewport) */
+@media (max-width:760px) and (orientation:portrait){html{touch-action:pan-x pan-y}}
+@media (prefers-reduced-motion:reduce){.dlg[open]{transition:none;animation:none}.sw,.sw::after{transition:none}}

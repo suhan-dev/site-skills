@@ -1,0 +1,64 @@
+<!-- ios-webapp-push markup. Three parts:
+     1. the bell, in the header's .bar-right, first in the row (bell · name · language · theme · chat · sign-out);
+     2. the "App & notifications" sheet;
+     3. the "Add to Home Screen" pop-up.
+     Put 2 and 3 at the end of <body>. Any element with data-push-open opens the sheet (the bell, a menu entry).
+     Texts are filled from push-strings.js by data-i18n keys; the English here is only what shows before scripts run. -->
+
+<!-- 1. the bell (its title stays English with the rest of the header) -->
+<button class="icon-btn bell-btn" type="button" id="push-btn" data-push-open title="App &amp; notifications" aria-label="App &amp; notifications">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6c-2.95 0-5.1 2.3-5.1 5.25v3.6l-1.55 2.7c-.24.42.06.95.55.95h12.2c.49 0 .79-.53.55-.95l-1.55-2.7v-3.6C17.1 5.9 14.95 3.6 12 3.6z"/><path d="M9.75 18.6a2.3 2.3 0 0 0 4.5 0"/></svg>
+</button>
+
+<!-- 2. App & notifications: the two switches, a status line, and the iPhone steps when the app isn't installed -->
+<dialog class="dlg push-dlg" id="push-dlg" aria-labelledby="push-dlg-h" tabindex="-1">
+  <div class="dlg-in">
+    <div class="dlg-top"><h2 id="push-dlg-h" data-i18n="push.h">App &amp; notifications</h2><button class="icon-btn" type="button" data-close data-i18n-title="close" data-i18n-aria="close" title="Close" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg></button></div>
+    <p class="push-status" id="push-status" role="status" aria-live="polite"></p>
+    <div class="push-rows">
+      <button type="button" class="sw-row push-row" role="switch" aria-checked="true" data-pref="notifyNew">
+        <span class="push-txt"><b data-i18n="push.new">New events</b><small data-i18n="push.newSub">When someone adds an event</small></span><i class="sw" aria-hidden="true"></i>
+      </button>
+      <button type="button" class="sw-row push-row" role="switch" aria-checked="true" data-pref="notifyBefore">
+        <span class="push-txt"><b data-i18n="push.before">30 minutes before</b><small data-i18n="push.beforeSub">Before each timed event</small></span><i class="sw" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="push-act">
+      <button class="btn primary" type="button" id="push-on" data-i18n="push.on" hidden>Turn on notifications</button>
+    </div>
+    <details class="push-ios" id="push-ios" hidden>
+      <summary><span data-i18n="push.iosH">On iPhone</span> <small data-i18n="push.iosReq">iOS 16.4 or later</small></summary>
+      <ol class="push-steps">
+        <li id="push-s1"><span data-i18n-html="push.s1">Open this site in <b>Safari</b>.</span></li>
+        <li id="push-s1k" hidden><span data-i18n="push.s1k">KakaoTalk can't add apps to the Home Screen. Open this page in Safari first.</span>
+          <a class="btn primary small" id="push-safari" href="#" data-i18n="push.safari">Open in Safari</a>
+          <small data-i18n-html="push.s1kAlt">Or tap <b>⋯</b> → <b>Open in Safari</b>.</small></li>
+        <li><span data-i18n-html="push.s2">Tap <b class="g-share">Share</b> → <b>Add to Home Screen</b>.</span></li>
+        <li><span data-i18n-html="push.s3">Open the app from your Home Screen.</span></li>
+        <li><span data-i18n-html="push.s4">Tap the bell → <b>Turn on notifications</b> → <b>Allow</b>.</span></li>
+      </ol>
+    </details>
+  </div>
+</dialog>
+
+<!-- 3. Add to Home Screen: once per member in an iPhone or iPad browser, about half a second after the page opens
+     (before the site guide), and from the bell there. Inside KakaoTalk, step 1 is "Open in Safari". -->
+<dialog class="dlg install-dlg" id="install-dlg" aria-labelledby="install-dlg-h" aria-describedby="install-dlg-sub" tabindex="-1">
+  <div class="dlg-in">
+    <h2 id="install-dlg-h" data-i18n="install.h">Add the app to your Home Screen</h2>
+    <p class="install-sub" id="install-dlg-sub" data-i18n="install.sub">Add it as an app to get notifications.</p>
+    <ol class="push-steps install-steps">
+      <li id="install-s1"><span data-i18n-html="install.s1">Tap <b class="g-share">Share</b>. If it isn't there, tap <b>⋯</b> first.</span></li>
+      <li id="install-s1k" hidden><span data-i18n="install.s1k">KakaoTalk can't add apps. Open this page in Safari first.</span>
+        <a class="btn tint" id="install-safari" href="#" data-i18n="push.safari">Open in Safari</a></li>
+      <li id="install-s2"><span data-i18n-html="install.s2">Scroll down and tap <b>Add to Home Screen</b>.</span></li>
+      <li id="install-s2k" hidden><span data-i18n-html="install.s2k">Tap <b class="g-share">Share</b> → <b>Add to Home Screen</b>.</span></li>
+      <li><span data-i18n-html="install.s3">Keep <b>Open as Web App</b> on if it shows, then tap <b>Add</b>.</span></li>
+      <li><span data-i18n-html="install.s4">Open the app from your Home Screen.</span></li>
+    </ol>
+    <div class="install-act">
+      <button class="btn install-later" type="button" data-install-close data-i18n="install.later">Not now</button>
+      <button class="btn primary" type="button" data-install-close data-i18n="install.ok">Got it</button>
+    </div>
+  </div>
+</dialog>

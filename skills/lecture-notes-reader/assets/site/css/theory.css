@@ -1,0 +1,127 @@
+/* Theory tab (js/theory-tab.js): sub-tabs, a chapter list and one chapter from theory/<section>/<label>-slug.md.
+   Document style: no boxes, backgrounds or shadows. Thin hairlines separate the parts. Colours come from tokens.css,
+   the shared .doc Markdown styles from doc.css. */
+:lang(ko) #pane-theory{word-break:keep-all;overflow-wrap:anywhere}
+
+/* sub-tabs: plain text, the selected one in ink with a thin underline on the hairline */
+.th-tabs{display:flex;gap:28px;margin:0 0 32px;border-bottom:.5px solid var(--sep2);overflow-x:auto;scrollbar-width:none}
+.th-tabs::-webkit-scrollbar{display:none}
+.th-tabs a{flex:none;padding:6px 0 11px;margin-bottom:-.5px;border-bottom:1.5px solid transparent;color:var(--ink3);font-size:14px;font-weight:500;white-space:nowrap;text-decoration:none}
+.th-tabs a:hover{color:var(--ink);text-decoration:none}
+.th-tabs a[aria-selected=true]{color:var(--ink);font-weight:600;border-bottom-color:var(--ink)}
+.th-short{display:none}
+
+/* chapter list on the left, chapter on the right */
+.th-layout{display:grid;grid-template-columns:208px minmax(0,1fr);gap:40px;align-items:start}
+.th-layout.empty{display:block}
+.th-toc{position:sticky;top:76px;display:grid;gap:1px;font-size:13.5px;max-height:calc(100vh - 96px);overflow-y:auto}
+.th-toc b{font-size:12px;font-weight:600;color:var(--ink4);margin:0 0 6px}
+.th-toc a,.th-mtoc a{display:flex;gap:10px;padding:5px 0;color:var(--ink2);line-height:1.4;text-decoration:none}
+.th-toc a:hover,.th-mtoc a:hover{color:var(--ink);text-decoration:none}
+.th-toc a .n,.th-mtoc a .n{flex:none;min-width:1.4em;color:var(--ink4);font-variant-numeric:tabular-nums}
+.th-toc a.on,.th-mtoc a.on{color:var(--ink);font-weight:600}
+.th-body{min-width:0;max-width:70ch}
+.th-empty{margin:0;color:var(--ink3)}
+
+/* phones: the chapter list folds into a disclosure above the chapter */
+.th-mtoc{display:none}
+.th-mtoc summary{display:flex;align-items:center;gap:6px;padding:2px 0 12px;font-size:13px;font-weight:600;color:var(--ink3);cursor:pointer;list-style:none}
+.th-mtoc summary::-webkit-details-marker{display:none}
+.th-mtoc summary::after{content:"›";font-size:15px;line-height:1;transition:transform .15s}
+.th-mtoc[open] summary::after{transform:rotate(90deg)}
+.th-mtoc[open]{padding-bottom:10px}
+
+/* chapter text: the shared .doc markdown styles, plus hairlines above sections and centered figures */
+.th-doc h2{margin:36px 0 8px;padding-top:22px;border-top:.5px solid var(--sep2)}
+.th-doc>.cs:first-child>h2:first-child{margin-top:20px;padding-top:0;border-top:0}
+.th-doc .katex-display{margin:18px 0}
+.th-doc figure{margin:26px 0;color:var(--ink);font-family:var(--sans)}
+.th-doc>.cs>svg,.th-doc>.cs>p>svg,.th-doc figure>svg{display:block;max-width:100%;height:auto;margin:22px auto}
+.th-doc figure>svg{margin:0 auto}
+.th-doc figcaption{margin-top:10px;font-size:13px;line-height:1.5;color:var(--ink3);text-align:center}
+.th-doc figure img{display:block;max-width:100%;height:auto;margin:0 auto;border-radius:0}
+/* sections, as in the reader (see reader.css). Here an h3's own margin is smaller than an equation's or a figure's,
+   so after those the larger margin is kept, as plain margins would do. */
+@media screen{
+  .th-doc .cs{content-visibility:auto;contain-intrinsic-block-size:auto calc(var(--t,0)*.358px + var(--e,0)*69px + var(--f,0)*285px + var(--r,0)*23px)}
+  .th-doc .cs>:first-child{margin-top:0}
+  .th-doc .cs>:last-child{margin-bottom:0}
+  .th-doc .cs+.cs{margin-top:36px}
+  .th-doc .cs+.cs3{margin-top:16px}
+  .th-doc .cs:has(>:is(.katex-display,hr):last-child)+.cs3{margin-top:18px}
+  .th-doc .cs:has(>figure:last-child)+.cs3{margin-top:26px}
+}
+@media screen and (max-width:760px){
+  .th-doc .cs{contain-intrinsic-block-size:auto calc(var(--t,0)*.625px + var(--e,0)*45px + var(--f,0)*68px + var(--r,0)*26px)}
+}
+.th-doc figcaption .fn{color:var(--ink2);font-weight:600}
+.th-doc figcaption.long{text-align:left;text-wrap:pretty} /* a full-sentence caption reads better flush left */
+.th-doc .soon{color:var(--ink3)} /* a chapter that is not published yet */
+.th-doc ol:has(>li:nth-child(10)){padding-left:2.1em} /* two-digit numbers (reference lists) stay inside the section, which clips */
+/* numbers from chapter.js: sections (H1.1), figures (Figure H1.1.), references to equations and figures */
+.th-doc .hn{margin-right:.4em;color:var(--ink4);font-variant-numeric:tabular-nums}
+.th-doc .xref{white-space:nowrap}
+.th-doc a{word-break:inherit;overflow-wrap:anywhere} /* links between chapters are words: break between them, not inside */
+.th-doc .xref.bad{color:var(--bad)}
+.th-doc :is(h2,h3,figure,.katex-display){scroll-margin-top:76px}
+.th-doc .hit{animation:th-hit 1.8s ease-out}
+@keyframes th-hit{from{background:color-mix(in srgb,var(--accent) 16%,transparent)}to{background:transparent}}
+/* untagged rows of align & co.: no page-wide (1), (2) counter; numbers come from \tag only */
+.th-doc .katex .eqn-num::before{content:none}
+/* equation numbers: KaTeX's .tag, not the design system's small badge .tag */
+.th-doc .katex .tag{display:inline;margin:0;font-size:inherit;font-weight:inherit;vertical-align:baseline;letter-spacing:inherit}
+/* figure files are black on transparent: turn them light in dark mode */
+:root[data-theme=dark] .th-doc img[src$=".svg"]{filter:invert(1) hue-rotate(180deg)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .th-doc img[src$=".svg"]{filter:invert(1) hue-rotate(180deg)}}
+
+/* chapter title with the "Open in reader" link at its right */
+.th-title{display:flex;align-items:baseline;justify-content:space-between;gap:6px 24px;flex-wrap:wrap}
+.th-open{flex:none;font-size:13px;font-weight:500;white-space:nowrap}
+.th-toc .th-open-side{gap:0;margin-top:12px;padding-top:12px;border-top:.5px solid var(--sep2);color:var(--accent)}
+.th-toc .th-open-side:hover{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+.th-toc a.on .n{color:var(--ink)}
+/* wide screens: the link sits on the line above the title, at its right, so the title keeps the full width */
+@media (min-width:761px){
+  #th-body>header{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;column-gap:24px;margin-bottom:22px}
+  #th-body>header>.eyebrow{grid-area:1/1}
+  .th-title{display:contents}
+  .th-title>h1{grid-area:2/1/3/3}
+  .th-title>.th-open{grid-area:1/2}
+}
+
+/* previous / next chapter */
+.th-pn{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:44px;padding-top:18px;border-top:.5px solid var(--sep2)}
+.th-pn a{display:grid;gap:2px;color:var(--accent);text-decoration:none;line-height:1.4}
+.th-pn a:hover span{text-decoration:underline;text-underline-offset:2px}
+.th-pn a small{font-size:12px;font-weight:600;color:var(--ink4)}
+.th-pn .next{grid-column:2;text-align:right}
+
+@media (max-width:760px){
+  .th-doc .katex-display>.katex,.th-doc .katex-display.wide+.eq-n{font-size:1.1em}
+  .th-tabs{gap:22px;margin-bottom:22px}
+  .th-layout{grid-template-columns:minmax(0,1fr);gap:0}
+  .th-toc{display:none}
+  .th-mtoc{display:block;margin:0 0 22px;border-bottom:.5px solid var(--sep2)}
+  .th-pn{gap:16px}
+  /* phones: 44 px to tap; the sub-tab strip fades at the right edge while more tabs are hidden */
+  .th-tabs{gap:24px;-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 32px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 32px),transparent)}
+  .th-tabs.at-end{-webkit-mask-image:none;mask-image:none}
+  .th-tabs a{padding:13px 0 12px}
+  /* the four parts fit the width with their short names, spread edge to edge: nothing to scroll */
+  .th-tabs{justify-content:space-between;gap:12px;margin-bottom:18px}
+  .th-tabs a:has(.th-short) .th-full{display:none}
+  .th-short{display:inline}
+  .th-mtoc summary{min-height:44px;padding:0}
+  .th-mtoc a{min-height:44px;align-items:center;padding:4px 0}
+  .th-open{position:relative}
+  .th-open::after{content:"";position:absolute;left:0;right:0;top:50%;height:44px;transform:translateY(-50%)}
+}
+@media (max-width:374px){
+  .th-tabs{gap:6px}
+  .th-tabs a{font-size:13px}
+}
+/* reduced motion: no highlight flash, no turning chevron (added in the skill; the source site had none) */
+@media (prefers-reduced-motion:reduce){
+  .th-doc .hit{animation:none}
+  .th-mtoc summary::after{transition:none}
+}

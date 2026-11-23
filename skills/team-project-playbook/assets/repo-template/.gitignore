@@ -1,0 +1,17 @@
+# build output and local secrets — never committed
+dist/
+node_modules/
+.wrangler/
+.dev.vars*
+!.dev.vars.example
+.env
+.env.*
+!.env.example
+*.key.json
+service-account*.json
+__pycache__/
+*.pyc
+.DS_Store
+
+# no paper or notice PDFs (copyright) — link them in references/README.md
+*.[pP][dD][fF]

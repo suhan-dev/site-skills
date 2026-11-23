@@ -1,0 +1,36 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- Render at 1200 × 630 CSS px with deviceScaleFactor 2 → a 2400 × 1260 JPEG (make-og.mjs).
+     Everything that must be read sits inside the centre 630 × 630 (the dashed square with ?guides): KakaoTalk crops
+     previews to about 2 : 1 and smaller cards to a square. -->
+<style>
+  html,body{margin:0;width:1200px;height:630px;overflow:hidden}
+  body{background:radial-gradient(120% 90% at 50% 38%,#2a2c33 0%,#111216 62%,#0b0c0f 100%);color:#f5f5f7;
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Pretendard Variable",system-ui,sans-serif;display:grid;place-items:center}
+  .wrap{display:grid;justify-items:center;gap:26px;transform:translateY(-6px)}
+  svg{width:300px;height:300px;filter:drop-shadow(0 30px 40px rgba(0,0,0,.45))}
+  h1{margin:0;font-size:64px;font-weight:700;letter-spacing:-.035em;line-height:1}
+  p{margin:-8px 0 0;font-size:22px;font-weight:500;color:#a1a1a6;letter-spacing:-.01em}
+  .g{position:fixed;inset:0;pointer-events:none;display:none}
+  .g i{position:absolute;border:2px dashed rgba(255,214,10,.8)}
+  .guides .g{display:block}
+</style></head>
+<body>
+<div class="wrap">
+  <!-- placeholder art: a stack of rounded plates. Replace with your own render (a 3D still, not a flat icon). -->
+  <svg viewBox="0 0 300 300" aria-hidden="true">
+    <defs><linearGradient id="p" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8e8ed"/><stop offset="1" stop-color="#8e8e93"/></linearGradient>
+      <linearGradient id="e" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#636366"/><stop offset="1" stop-color="#3a3a3c"/></linearGradient></defs>
+    <g transform="translate(150 150)">
+      <g transform="translate(0 70)"><path d="M-120 0 0 -60 120 0 0 60z" fill="url(#p)" opacity=".55"/><path d="M-120 0v14L0 74 120 14V0L0 60z" fill="url(#e)"/></g>
+      <g transform="translate(0 25)"><path d="M-120 0 0 -60 120 0 0 60z" fill="url(#p)" opacity=".75"/><path d="M-120 0v14L0 74 120 14V0L0 60z" fill="url(#e)"/></g>
+      <g transform="translate(0 -20)"><path d="M-120 0 0 -60 120 0 0 60z" fill="url(#p)"/><path d="M-120 0v14L0 74 120 14V0L0 60z" fill="url(#e)"/>
+        <circle cx="0" cy="0" r="16" fill="#0a84ff" opacity=".9"/></g>
+    </g>
+  </svg>
+  <h1>Example Lab</h1>
+  <p>Team site · 2026</p>
+</div>
+<div class="g"><i style="left:300px;top:15px;width:600px;height:600px"></i><i style="left:0;top:15px;width:1196px;height:596px;border-color:rgba(100,210,255,.7)"></i></div>
+<script>if(/[?&]guides\b/.test(location.search))document.documentElement.classList.add("guides")</script>
+</body></html>

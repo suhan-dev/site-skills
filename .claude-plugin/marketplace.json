@@ -1,0 +1,33 @@
+{
+  "name": "site-skills",
+  "owner": {
+    "name": "suhan-dev"
+  },
+  "metadata": {
+    "description": "Reusable Claude skills for building a private team site: design system, shared Google Calendar, lecture-notes reader, Google sign-in, iOS web push, team chat, onboarding tour, link previews, weekly records and a 3D scroll intro.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "team-site-skills",
+      "description": "Every skill in this repository, installed together (they share one design system and one setup).",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/team-project-playbook",
+        "./skills/team-site-setup",
+        "./skills/team-site-design-system",
+        "./skills/google-signin-team-gate",
+        "./skills/shared-google-calendar",
+        "./skills/weekly-research-log",
+        "./skills/references-library",
+        "./skills/lecture-notes-reader",
+        "./skills/ios-webapp-push",
+        "./skills/team-chat",
+        "./skills/first-visit-spotlight-guide",
+        "./skills/kakao-link-preview",
+        "./skills/scroll-3d-intro"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+group,title,authors,year,venue,doi,url,read_by,note
+Task 1,Steady heat conduction in slender rods with side losses,"B. Hart, C. Lin",2021,Journal of Example Thermal Science 12(3),10.0000/jets.2021.0312,,blair,the m² = hP/kA model we use
+Task 1,A simple bench for measuring thermal conductivity,"A. Moreno, D. Okafor",2019,Example Lab Methods 4,10.0000/elm.2019.0042,,alex,their sensor spacing is close to ours
+Task 1,Contact resistance in clamped thermocouples,"D. Okafor, E. Novak",2023,Example Sensors Letters 8,10.0000/esl.2023.0107,,,
+Task 2,Fitting convection coefficients from temperature profiles,"C. Lin, B. Hart, F. Ito",2022,Journal of Example Thermal Science 13(1),10.0000/jets.2022.0105,,"alex, casey",
+Task 2,Natural convection from horizontal cylinders at low power,G. Rossi,2018,Example Heat Transfer Review 30,10.0000/ehtr.2018.0330,,,
+Task 3,Finite-difference schemes for the heat equation: a practical guide,"E. Novak, A. Moreno",2020,Example Numerical Notes 2,10.0000/enn.2020.0021,,blair,stability rule on page 4
+Task 3,Error estimates for coarse grids in 1D conduction,"F. Ito, G. Rossi",2024,Example Numerical Notes 6,10.0000/enn.2024.0063,,,
+,Reporting uncertainty in student lab work,"H. Weber",2017,Example Teaching Journal 9,10.0000/etj.2017.0090,,casey,

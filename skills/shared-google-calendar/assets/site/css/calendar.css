@@ -1,0 +1,278 @@
+/* Shared calendar — week view, month view, the right column and the event sheet.
+   Load after the design system's tokens.css and components.css (team-site-design-system): every colour is a token from
+   there (--paper, --ink…, --fill, --sep, --accent, --gc-1…11, --ev-bg, --ev-ink, --ev-mix, --today, --seg-on).
+   Breakpoints: ≥1101 two columns · ≤1100 one column · ≤760 phones · ≤374 and ≤340 small phones. */
+
+/* ---------- layout and head ---------- */
+.cal-layout{display:grid;grid-template-columns:minmax(0,1fr) 312px;gap:28px;align-items:start}
+/* the sync note and "New event" go to a second line, still on the right, when the column is too narrow for one */
+.cal-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-bottom:14px}
+.cal-end{margin-left:auto;display:flex;align-items:center;gap:12px}
+.cal-title{margin:0;font-size:26px;font-weight:700;line-height:1.2;letter-spacing:-.025em;min-width:8.4em}
+/* ‹ Today › in one pill, and Week | Month as a segmented control next to it */
+.cal-nav{display:flex;align-items:center;padding:2px;border-radius:999px;background:var(--fill)}
+.cal-nav .btn.ghost{height:28px;padding:0 12px;font-size:13px;background:none}
+.cal-nav .btn.ghost.sq{width:30px;padding:0}
+.cal-nav .btn.ghost:hover{background:var(--fill)}
+.cal-nav svg{width:16px;height:16px;stroke-width:2.3}
+.tdy{display:none}
+.cal-view{display:flex;align-items:center;padding:2px;border-radius:999px;background:var(--fill)}
+.cal-view button{height:28px;min-width:62px;padding:0 12px;border-radius:999px;font-size:13px;font-weight:500;color:var(--ink2);transition:background .15s,color .15s}
+.cal-view button:hover{color:var(--ink)}
+.cal-view button[aria-pressed=true]{background:var(--seg-on);color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.1),0 0 0 .5px rgba(0,0,0,.04)}
+.cal-spacer{flex:1}
+/* sync note: a 7 px dot (grey loading, green synced, orange not connected, red error; pulses while syncing) and a word */
+.sync{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--ink3);white-space:nowrap;font-variant-numeric:tabular-nums}
+.sync i{width:7px;height:7px;border-radius:50%;background:var(--ink4)}
+.sync.ok i{background:var(--ok)}
+.sync.warn i{background:var(--warn)}
+.sync.bad i{background:var(--bad)}
+.sync.busy i{animation:cal-pulse 1s ease-in-out infinite}
+@keyframes cal-pulse{50%{opacity:.3}}
+
+/* ---------- month view ---------- */
+.cal-grid{border-top:.5px solid var(--sep2);border-bottom:.5px solid var(--sep2)}
+.dow{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-bottom:.5px solid var(--sep2)}
+.dow span{padding:9px 10px 7px;font-size:11.5px;font-weight:600;color:var(--ink3);text-align:right;letter-spacing:.01em}
+.week{position:relative;display:flow-root;min-height:118px;border-bottom:.5px solid var(--sep)}
+.week:last-child{border-bottom:0}
+.days{position:absolute;inset:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.day{position:relative;border-right:.5px solid var(--sep);padding:5px 6px;cursor:pointer;text-align:right;transition:background .12s}
+.day:last-child{border-right:0}
+.day:hover{background:color-mix(in srgb,var(--fill) 60%,transparent)}
+.dn{display:inline-grid;place-items:center;min-width:26px;height:26px;padding:0 5px;border-radius:13px;font-size:13px;font-weight:500;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.day.out .dn{color:var(--ink4);opacity:.7}
+.day.today .dn{background:var(--accent);color:var(--on-accent);font-weight:600}
+.day.sel{box-shadow:inset 0 0 0 2px var(--accent)}
+.more{position:absolute;left:6px;right:6px;bottom:4px;font-size:11.5px;font-weight:600;color:var(--ink3);text-align:left;padding:1px 5px;border-radius:5px}
+.more:hover{background:var(--fill);color:var(--ink)}
+/* bars sit in lanes over the day cells; the lanes pass clicks through to the day, the bars take their own */
+.lanes{position:relative;margin-top:34px;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));grid-auto-rows:minmax(21px,auto);row-gap:3px;padding-bottom:24px;pointer-events:none}
+.ev{pointer-events:auto;display:flex;align-items:flex-start;gap:5px;min-width:0;margin:0 4px;padding:2px 7px;min-height:21px;border-radius:5px;font-size:12px;line-height:17px;font-weight:500;
+  text-align:left;overflow:hidden;letter-spacing:-.01em}
+.ev .t{min-width:0}
+/* month view: one line per event, cut with an ellipsis (the full title is in its tooltip and the day list) */
+.lanes .ev .t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev .tm{font-size:11px;color:var(--ink3);flex:none;font-variant-numeric:tabular-nums;font-weight:400}
+/* an all-day bar: a tint of the member colour, darker text in the same hue, a 3 px colour edge on the left */
+.ev.allday{align-self:start;background:color-mix(in srgb,var(--c) var(--ev-bg),var(--paper));color:color-mix(in srgb,var(--c) var(--ev-ink),var(--ev-mix));box-shadow:inset 3px 0 0 var(--c);padding-left:9px}
+/* a bar that goes on past the week's edge: square on that side, no edge stripe when it came from the week before */
+.ev.allday.cont-l{border-top-left-radius:0;border-bottom-left-radius:0;margin-left:0;box-shadow:none;padding-left:7px}
+.ev.allday.cont-r{border-top-right-radius:0;border-bottom-right-radius:0;margin-right:0}
+/* a timed event in the month: a 7 px colour dot, the start time, the title, no fill */
+.ev.timed{color:var(--ink)}
+.ev.timed::before{content:"";flex:none;width:7px;height:7px;margin-top:5px;border-radius:50%;background:var(--c)}
+.ev.timed:hover{background:var(--fill)}
+.ev.allday:hover{background:color-mix(in srgb,var(--c) calc(var(--ev-bg) + 8%),var(--paper))}
+/* preview (Google not connected): diagonal stripes over the event, read only */
+.ev.preview{background-image:repeating-linear-gradient(135deg,transparent 0 5px,color-mix(in srgb,var(--paper) 55%,transparent) 5px 10px)}
+
+/* ---------- right column: Upcoming · Calendars · Google Calendar ---------- */
+.cal-side{display:grid;gap:26px;position:sticky;top:72px}
+.cal-side .card{padding:14px 0 0;border-top:.5px solid var(--sep2)}
+.up-list{list-style:none;margin:0 -8px;padding:0;display:grid;gap:1px}
+.up-list li button{width:100%;display:grid;grid-template-columns:42px minmax(0,1fr);gap:10px;align-items:start;padding:7px 8px;border-radius:10px;text-align:left}
+.up-list li button:hover{background:var(--fill)}
+.up-d{font-size:10.5px;font-weight:600;line-height:1.2;color:var(--ink3);text-align:center;padding-top:1px;text-transform:uppercase;letter-spacing:.02em}
+.up-d b{display:block;font-size:20px;color:var(--ink);font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums;text-transform:none}
+.up-t{min-width:0}
+.up-t .tt{display:flex;align-items:flex-start;gap:7px;font-weight:500;font-size:13.5px;line-height:1.4;letter-spacing:-.01em}
+.up-t .tt::before{content:"";flex:none;width:7px;height:7px;margin-top:6px;border-radius:50%;background:var(--c)}
+.up-t .tt span{min-width:0}
+.up-t .mt{display:block;margin-top:1px;font-size:12px;line-height:1.45;color:var(--ink3);padding-left:14px;font-variant-numeric:tabular-nums}
+.up-empty{color:var(--ink3);font-size:13px;padding:6px 8px}
+.legend{display:flex;flex-wrap:wrap;gap:2px 14px}
+.legend button{display:inline-flex;align-items:center;gap:7px;height:28px;font-size:13px;font-weight:500;color:var(--ink)}
+.legend button::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c)}
+.legend button:hover{color:var(--ink2)}
+.legend button.off{color:var(--ink4)}
+.legend button.off::before{background:none;box-shadow:inset 0 0 0 1.5px var(--c)}
+.gcal-card p{margin:0 0 12px;font-size:13px;line-height:1.5;color:var(--ink2)}
+.gcal-card p b{color:var(--ink);font-weight:600}
+.gcal-card .acts{display:flex;flex-wrap:wrap;gap:6px}
+.gcal-card code{font-family:var(--mono);font-size:11.5px;word-break:break-all;color:var(--ink3)}
+/* a 16 px calendar-page glyph drawn in CSS: outline, thicker top */
+.gmark{position:relative;width:16px;height:16px;border-radius:4px;box-shadow:inset 0 0 0 1.5px var(--ink3);flex:none}
+.gmark::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;border-radius:4px 4px 0 0;background:var(--ink3)}
+
+/* ---------- week view ---------- */
+.cal-grid.is-week{overflow:hidden}
+/* the grid runs from where it starts to the bottom of the window (--cal-top: calendar.js fit()); with a mouse its hours
+   scroll on their own, on touch screens a scroll that reaches the top or bottom carries on with the page */
+.wv-body{--wv-gut:56px;position:relative;overflow:auto;height:max(440px,calc(100vh - var(--cal-top,170px) - 28px));scrollbar-width:thin}
+@media (hover:hover) and (pointer:fine){.wv-body{overscroll-behavior:contain}}
+/* the month fills the same height, its weeks share it */
+.cal-grid:not(.is-week){display:flex;flex-direction:column;min-height:max(520px,calc(100vh - var(--cal-top,170px) - 28px))}
+.cal-grid:not(.is-week) .week{flex:1 0 auto}
+.wv-inner{min-width:100%}
+.wv-top{position:sticky;top:0;z-index:4;background:var(--paper);border-bottom:.5px solid var(--sep2)}
+.wv-head,.wv-all,.wv-grid{display:grid;grid-template-columns:var(--wv-gut) repeat(var(--wv-n,7),minmax(0,1fr))}
+.wv-corner,.wv-gut,.wv-hours{position:sticky;left:0;z-index:2;background:var(--paper)}
+.wv-dh{display:flex;align-items:baseline;justify-content:center;gap:6px;padding:9px 4px 8px;border-left:.5px solid var(--sep);color:var(--ink3);cursor:pointer}
+.wv-dh:hover .wv-dn{background:var(--fill)}
+.wv-dw{font-size:11.5px;font-weight:600;letter-spacing:.01em}
+.wv-dn{display:inline-grid;place-items:center;min-width:28px;height:28px;padding:0 5px;border-radius:14px;font-size:17px;font-weight:600;letter-spacing:-.02em;color:var(--ink);font-variant-numeric:tabular-nums}
+.wv-dh.today .wv-dw{color:var(--accent)}
+.wv-dh.today .wv-dn,.wv-dh.today:hover .wv-dn{background:var(--accent);color:var(--on-accent)}
+.wv-all{border-top:.5px solid var(--sep)}
+.wv-gut{font-size:10.5px;font-weight:500;color:var(--ink4);text-align:right;padding:6px 8px 0 0;white-space:nowrap}
+.wv-allarea{grid-column:2/-1;position:relative;min-height:30px}
+/* --i: the cell's column (0 = first day shown), set inline */
+.wv-allcell{position:absolute;top:0;bottom:0;left:calc(var(--i,0) * 100% / var(--wv-n,7));width:calc(100% / var(--wv-n,7));border-left:.5px solid var(--sep);cursor:pointer}
+.wv-allcell.today{background:color-mix(in srgb,var(--accent) var(--today),transparent)}
+.wv-allcell:hover{background:color-mix(in srgb,var(--fill) 60%,transparent)}
+.wv-allcell .more{left:4px;right:4px;bottom:2px}
+.wv-alllanes{position:relative;display:grid;grid-template-columns:repeat(var(--wv-n,7),minmax(0,1fr));grid-auto-rows:minmax(21px,auto);row-gap:3px;padding:4px 0 5px;pointer-events:none}
+.wv-alllanes:empty{padding:0;min-height:30px}
+.wv-grid{position:relative;height:calc(24 * var(--wv-h))}
+.wv-hours{position:sticky;left:0;height:100%}
+.wv-hours span{position:absolute;right:8px;transform:translateY(-50%);font-size:10.5px;font-weight:500;color:var(--ink4);font-variant-numeric:tabular-nums;transition:opacity .2s}
+.wv-hours span.near{opacity:0}
+/* midnight: a stronger label and a full line across the days (the calendar day goes on past it) */
+.wv-hours span.mid{color:var(--ink3);font-weight:600}
+.wv-mid{position:absolute;left:var(--wv-gut);right:0;height:0;border-top:1px solid var(--sep2);pointer-events:none}
+.wv-hours .wv-nowlbl{right:6px;padding:1px 4px;border-radius:5px;background:var(--accent);color:var(--on-accent);font-weight:600;z-index:1}
+/* hour lines: a 1 px --sep line at the bottom of every hour, drawn by the column's background */
+.wv-col{position:relative;border-left:.5px solid var(--sep);cursor:pointer;
+  background-image:repeating-linear-gradient(to bottom,transparent 0 calc(var(--wv-h) - 1px),var(--sep) calc(var(--wv-h) - 1px) var(--wv-h))}
+.wv-col.today{background-color:color-mix(in srgb,var(--accent) var(--today),transparent)}
+.wv-col:hover{background-color:color-mix(in srgb,var(--fill) 35%,transparent)}
+/* a timed block: --hh its own height, --hmax the room up to the next event (it grows into it to show all its words) */
+.wv-ev{position:absolute;z-index:1;display:flex;flex-direction:column;gap:1px;padding:3px 6px 3px 9px;border-radius:6px;overflow:hidden;min-height:var(--hh);max-height:var(--hmax);text-align:left;cursor:pointer;
+  font-size:12px;line-height:1.25;letter-spacing:-.01em;background:color-mix(in srgb,var(--c) var(--ev-bg),var(--paper));color:color-mix(in srgb,var(--c) var(--ev-ink),var(--ev-mix));
+  box-shadow:inset 3px 0 0 var(--c),0 0 0 1px var(--paper)}
+.wv-ev:hover,.wv-ev:focus-visible{background-color:color-mix(in srgb,var(--c) calc(var(--ev-bg) + 8%),var(--paper));z-index:5;max-height:none;
+  box-shadow:inset 3px 0 0 var(--c),0 0 0 1px var(--paper),0 8px 22px rgba(0,0,0,.14)}
+.wv-ev .t{font-weight:600;overflow-wrap:break-word}
+.wv-ev .tm{font-size:11px;font-weight:500;opacity:.8;font-variant-numeric:tabular-nums}
+.wv-ev.preview{background-image:repeating-linear-gradient(135deg,transparent 0 5px,color-mix(in srgb,var(--paper) 55%,transparent) 5px 10px)}
+.wv-now{position:absolute;left:-1px;right:0;height:0;border-top:2px solid var(--accent);z-index:3;pointer-events:none}
+.wv-now::before{content:"";position:absolute;left:-5px;top:-6px;width:10px;height:10px;border-radius:50%;background:var(--accent)}
+
+/* ---------- event sheet ---------- */
+/* wider screens: Starts and Ends side by side. The event editor is a little wider than the other dialogs (620 vs 560) and a
+   time gets as much room as a date, so "02:00 PM" keeps its AM/PM next to Chrome's clock icon */
+@media (min-width:761px){#ev-dlg{width:min(620px,calc(100vw - 32px))}}
+.dt-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:end}
+/* date and time fields: no built-in minimum width (iOS Safari keeps one and spills into the next column). A plain block,
+   with one line of room between the top and bottom paddings, so the value sits in the middle in every browser; text from the left */
+.dt-row input{display:block;min-width:0;max-width:100%;padding-block:8px;-webkit-appearance:none;appearance:none}
+.dt-row input::-webkit-date-and-time-value{text-align:left}
+.dt-arrow{padding-bottom:9px;color:var(--ink4)}
+.dt-row.allday .t{visibility:hidden}
+/* Comment (team-chat, optional): the word, then the number of comments when there are some */
+#ev-comment .n{color:var(--ink3);font-variant-numeric:tabular-nums}
+#ev-comment .n:empty{display:none}
+/* the one-day list reuses the Upcoming rows */
+.day-dlg .up-list{margin:0 -8px}
+
+/* ---------- one column below 1101 px ---------- */
+@media (max-width:1100px){
+  .cal-layout{grid-template-columns:minmax(0,1fr)}
+  .cal-side{position:static;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+}
+
+/* ---------- phones (≤ 760 px) ---------- */
+@media (max-width:760px){
+  /* one row on top (month, ‹ Today ›, Week | Month); the sync note and New event stay on wider screens, a tap on the
+     calendar adds an event */
+  .main:has(>#pane-calendar:not([hidden])){padding-top:8px}
+  .cal-head{flex-wrap:nowrap;gap:8px;margin-bottom:8px;min-height:44px}
+  .cal-title{font-size:20px;min-width:0;flex:1 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cal-end{display:none}
+  .week{min-height:88px}
+  /* month view: each event is a thin colour bar (no words to break); tap the day for its week */
+  .lanes{grid-auto-rows:5px;row-gap:3px;margin-top:32px}
+  .lanes .ev{min-height:5px;height:5px;padding:0;margin:0 3px;border-radius:3px;font-size:0;box-shadow:none;pointer-events:none}
+  .lanes .ev .t,.lanes .ev .tm,.lanes .ev.timed::before{display:none}
+  .lanes .ev.timed{background:var(--c)}
+  .lanes .ev.allday{background:color-mix(in srgb,var(--c) 70%,var(--paper))}
+  .ev .t{font-size:11px;line-height:14px}
+  .ev .tm{display:none}
+  .day{padding:3px}
+  .day .more{left:0;right:0;bottom:3px;padding:0;font-size:11px;text-align:center;white-space:nowrap}
+  .legend{row-gap:0}
+  .legend button{height:44px}
+
+  /* the calendar's pill controls keep their size; their tap area is 44 px tall */
+  .cal-nav .btn.ghost{height:30px;padding:0 11px}
+  .cal-nav .btn.ghost.sq{width:30px;padding:0}
+  /* Today becomes a small calendar page with today's date on it */
+  #cal-today{width:34px;padding:0}
+  #cal-today>span{display:none}
+  #cal-today .tdy{display:grid;place-items:center;width:18px;height:18px;padding-top:2px;border:1.5px solid currentColor;border-top-width:3.5px;border-radius:4.5px;
+    font:700 9.5px/1 var(--sans);font-style:normal;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .cal-view button{height:30px;min-width:0;padding:0 10px}
+  :is(.cal-nav .btn,.cal-view button){position:relative}
+  :is(.cal-nav .btn,.cal-view button)::after{content:"";position:absolute;left:0;right:0;top:50%;height:44px;transform:translateY(-50%)}
+
+  /* week view: the whole week fits the width, no sideways scrolling. One screen: the grid ends at the bottom edge;
+     sideways swipes change the week (calendar.js), nothing pans or zooms */
+  .cal-grid{touch-action:pan-y}
+  .cal-grid.is-week{border-bottom:0}
+  .wv-body{--wv-gut:36px;overflow-x:hidden;height:max(320px,calc(100vh - var(--cal-top,160px) - 1px));height:max(320px,calc(100dvh - var(--cal-top,160px) - 1px))}
+  .cal-grid:not(.is-week){min-height:calc(100vh - var(--cal-top,160px) - 1px);min-height:calc(100dvh - var(--cal-top,160px) - 1px)}
+  /* day header: the weekday letter over the date */
+  .wv-dh{flex-direction:column;align-items:center;gap:1px;padding:6px 0}
+  .wv-dw{font-size:11px;line-height:14px}
+  .wv-dn{font-size:15px;min-width:26px;height:26px;padding:0 3px}
+  .wv-gut{font-size:9px;padding:7px 3px 0 0}
+  .wv-hours span{right:4px;font-size:9.5px}
+  .wv-hours .wv-nowlbl{right:1px;padding:1px 2px}
+  /* timed blocks keep their own height; a small title cut with an ellipsis, never split inside a word */
+  .wv-ev,.wv-ev:hover,.wv-ev:focus-visible{max-height:var(--hh)}
+  .wv-ev{gap:1px;padding:2px 1px 2px 5px;border-radius:4px;font-size:10.5px;line-height:13px;letter-spacing:-.015em}
+  .wv-ev .t{flex:none;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:var(--cl,1);overflow:hidden;text-overflow:ellipsis;overflow-wrap:normal}
+  .wv-ev .tm{font-size:10px;line-height:12px;white-space:nowrap;overflow:hidden}
+  /* all-day bars: one line with an ellipsis; "+n" gets its own line below the lanes */
+  .wv-alllanes{grid-auto-rows:minmax(19px,auto)}
+  .wv-alllanes .ev{gap:3px;min-height:19px;margin:0 1px;padding:2px 1px 2px 5px;border-radius:4px}
+  .wv-alllanes .ev.cont-l{margin-left:0;padding-left:5px}
+  .wv-alllanes .ev.cont-r{margin-right:0}
+  .wv-alllanes .ev .t{font-size:10.5px;line-height:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .wv-alllanes .ev.timed::before{width:6px;height:6px;margin-top:4.5px}
+  .wv-allarea.has-more .wv-alllanes{padding-bottom:22px}
+  .wv-allcell .more{left:0;right:0;bottom:2px;padding:1px 0;font-size:11px;text-align:center}
+
+  /* event sheet (a bottom sheet from components.css): All day, Starts and Ends read as one group in the body size, as
+     in iOS Calendar; Starts and Ends one row each: the word, the date, the time */
+  .dt-row input{padding-block:10px}
+  .dt-row{grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);align-items:center}
+  .dt-row .fld:not(.t){grid-template-columns:3.4em minmax(0,1fr);align-items:center;gap:8px}
+  .dt-row .fld:not(.t)>span{font-size:15px;font-weight:400;color:var(--ink)}
+  .dt-row .t>span,.dt-arrow{display:none}
+  /* all day: no times, the date takes the row */
+  .dt-row.allday .t{display:none}
+  .dt-row.allday .fld:not(.t){grid-column:1/-1}
+  /* an event's buttons: Delete, Google Calendar and Comment on a line of their own, Cancel and Save share the last line */
+  #ev-form .dlg-act .cal-spacer{display:none}
+  #ev-form .dlg-act:has(>#ev-del:not([hidden]),>#ev-glink:not([hidden]),>#ev-comment:not([hidden])) .cal-spacer{display:block;flex:0 0 100%;height:0}
+  #ev-form .dlg-act>:is([data-close],#ev-save){flex:1 1 0}
+  /* Comment shrinks to its bubble (and count), so Delete, Google Calendar and Comment share one line */
+  #ev-comment{padding:0 14px}
+  #ev-comment .lbl{display:none}
+}
+/* touch screens: a tap anywhere on a date or time opens the picker, so Chrome's small picker icons only take room */
+@media (max-width:760px) and (pointer:coarse){
+  .dt-row input::-webkit-calendar-picker-indicator{display:none}
+}
+/* small phones (360 px Android, 320 px iPhone SE) */
+@media (max-width:374px){
+  .cal-head{gap:6px}
+  .cal-title{font-size:19px}
+}
+/* the narrowest phones (320 px): the head closes up, and the words Starts / Ends go back above the fields */
+@media (max-width:340px){
+  .cal-title{font-size:17px}
+  .cal-nav .btn.ghost.sq{width:26px}
+  .cal-head .cal-view button{font-size:12px;padding:0 7px}
+  .dt-row{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);align-items:end}
+  .dt-row .fld:not(.t){grid-template-columns:minmax(0,1fr);gap:5px}
+  .dt-row .fld:not(.t)>span{font-size:12px;font-weight:500;color:var(--ink3)}
+  .dt-row .t>span{display:block}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .sync.busy i{animation:none;opacity:.6}
+}
+@media print{.cal-side,.cal-end{display:none}}

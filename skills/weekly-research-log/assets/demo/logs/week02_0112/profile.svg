@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 220" font-family="system-ui,sans-serif" font-size="12">
+  <rect width="480" height="220" fill="#ffffff"/>
+  <g stroke="#d0d0d6" stroke-width="1"><line x1="50" y1="20" x2="50" y2="180"/><line x1="50" y1="180" x2="460" y2="180"/></g>
+  <g fill="#6e6e73"><text x="50" y="200">0 cm</text><text x="420" y="200">30 cm</text><text x="8" y="28">60 °C</text><text x="8" y="182">20 °C</text></g>
+  <path d="M50 40 C150 80 250 120 460 160" fill="none" stroke="#007aff" stroke-width="2.5"/>
+  <g fill="#ff9500"><circle cx="118" cy="66" r="5"/><circle cx="187" cy="88" r="5"/><circle cx="323" cy="128" r="5"/><circle cx="432" cy="150" r="5"/></g>
+  <g fill="#1d1d1f"><text x="300" y="60">— model</text><text x="300" y="78" fill="#ff9500">● measured</text></g>
+</svg>

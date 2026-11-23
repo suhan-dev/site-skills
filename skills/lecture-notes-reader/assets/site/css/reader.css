@@ -1,0 +1,243 @@
+/* Lecture-notes reader (reader.html · js/reader.js): one chapter as a document.
+   Tokens and fonts come from tokens.css (design-system skill), the shared .doc Markdown styles from doc.css. No boxes, card backgrounds or shadows:
+   wide margins, a 72ch text column, hairlines between the parts. */
+.rd{font-size:16px}
+
+/* top line: where this is, light / dark, print */
+.rd-top{display:flex;align-items:center;gap:8px 20px;max-width:1360px;margin:0 auto;padding:14px 48px;border-bottom:.5px solid var(--sep2);font-size:12.5px;color:var(--ink3)}
+.rd-back{display:none}
+.rd-crumbs{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 .55em;min-width:0}
+.rd-crumbs a{color:var(--ink3)}
+.rd-crumbs a:first-child{color:var(--ink);font-weight:600}
+.rd-crumbs a:hover{color:var(--ink);text-decoration:none}
+.rd-crumbs i{font-style:normal;color:var(--ink4)}
+.rd-tools{display:flex;align-items:center;gap:2px;margin-left:auto}
+.rd-tool{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 8px;color:var(--ink3);font-size:12.5px;font-weight:500}
+.rd-tool:hover{color:var(--ink)}
+.rd-tool svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+#rd-theme .moon{fill:currentColor;stroke:none;width:15px;height:15px}
+#rd-theme .sun{display:none}
+#rd-theme[aria-pressed=true] .moon{display:none}
+#rd-theme[aria-pressed=true] .sun{display:block}
+
+/* page: outline in the left margin, the text centered at 72ch. The text size sets the measure (ch). */
+.rd-main{display:grid;grid-template-columns:minmax(220px,1.3fr) minmax(0,72ch) minmax(0,.7fr);column-gap:56px;align-items:start;
+  max-width:1360px;margin:0 auto;padding:64px 48px 112px;font-size:17px}
+.rd-doc{grid-column:2;min-width:0}
+
+/* contents, sticky beside the text: every part (I, II, …) with its chapters; the open chapter shows its sections, and the
+   section being read shows its subsections. Parts are set apart by space, a roman numeral and a hairline, not boxes. */
+.rd-toc{grid-column:1;grid-row:1;justify-self:end;width:min(264px,100%);position:sticky;top:28px;max-height:calc(100vh - 56px);overflow-y:auto;
+  padding-top:6px;font-size:13px;line-height:1.4;scrollbar-width:thin;overscroll-behavior:contain}
+.rd-toc-h{margin:0 0 6px;font-size:12px;font-weight:600;color:var(--ink4)}
+.rd-part{border-top:.5px solid var(--sep2)}
+.rd-part:last-child{border-bottom:.5px solid var(--sep2)}
+.rd-part>summary{display:grid;grid-template-columns:2.1em minmax(0,1fr) auto;align-items:baseline;gap:0 6px;padding:10px 0;cursor:pointer;list-style:none;
+  font-size:12px;font-weight:600;letter-spacing:.045em;text-transform:uppercase;color:var(--ink3)}
+.rd-part>summary::-webkit-details-marker{display:none}
+.rd-part>summary:hover,.rd-part[open]>summary{color:var(--ink)}
+.rd-part .pn{color:var(--ink4);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.rd-part .pr{color:var(--ink4);font-weight:500;letter-spacing:.02em;text-transform:none;font-variant-numeric:tabular-nums}
+.rd-chs{list-style:none;margin:0;padding:0 0 10px}
+.rd-chs>li>a{display:grid;grid-template-columns:2.1em minmax(0,1fr);gap:0 6px;padding:4px 0;color:var(--ink3);text-decoration:none}
+.rd-chs>li>a:hover{color:var(--ink);text-decoration:none}
+.rd-chs .n{color:var(--ink4);font-variant-numeric:tabular-nums}
+.rd-chs>li.cur>a{color:var(--ink);font-weight:600}
+.rd-chs>li.cur>a .n{color:var(--ink)}
+/* the open chapter's sections, under it, on a thin rule */
+.rd-ol{list-style:none;margin:4px 0 8px 2.1em;padding:0 0 0 6px;border-left:.5px solid var(--sep2)}
+.rd-ol ol{list-style:none;margin:0;padding:0;display:none}
+.rd-ol .l2.open>ol{display:block}
+.rd-ol a{display:flex;gap:7px;padding:4px 0 4px 10px;margin-left:-6.5px;border-left:1.5px solid transparent;color:var(--ink3);text-decoration:none}
+.rd-ol a:hover{color:var(--ink);text-decoration:none}
+.rd-ol .l2>a{color:var(--ink2)}
+.rd-ol a.on{color:var(--ink);border-left-color:var(--ink)}
+.rd-ol .l2>a.on{font-weight:600}
+.rd-ol .n{flex:none;color:var(--ink4);font-variant-numeric:tabular-nums}
+.rd-ol .l3 a{padding-left:22px;font-size:12.5px}
+.rd-ol .katex{font-size:1em}
+
+/* phones: a slim bar under the title that stays at the top, with the section being read; it opens the same contents */
+.rd-bar{display:none}
+.rd-scrim{position:fixed;inset:0;z-index:25;background:rgba(0,0,0,.18);-webkit-tap-highlight-color:transparent}
+:root[data-theme=dark] .rd-scrim{background:rgba(0,0,0,.45)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .rd-scrim{background:rgba(0,0,0,.45)}}
+.rd-scrim[hidden]{display:none}
+
+/* title, with its part above it */
+.rd-head{margin:0 0 36px}
+.rd-part-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 .7em;margin:0 0 14px;font-size:12.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)}
+.rd-part-h .pn{color:var(--ink4)}
+.rd-part-h a{color:var(--ink2);text-decoration:none}
+.rd-part-h a:hover{color:var(--ink);text-decoration:none}
+.rd-head h1{margin:0;font-size:clamp(30px,3.2vw,40px);line-height:1.12;font-weight:700;letter-spacing:-.028em;color:var(--ink);text-wrap:balance}
+.rd-head .hn{margin-right:.4em;color:var(--ink4);font-weight:600;font-variant-numeric:tabular-nums}
+
+/* text: .doc from doc.css, larger and calmer for reading */
+.rd-text{font-size:17px;line-height:1.72;color:var(--ink2)}
+.rd-text>:first-child{margin-top:0}
+.rd-text p{margin:12px 0}
+.rd-text h2{margin:64px 0 14px;padding-top:32px;border-top:.5px solid var(--sep2);font-size:26px;line-height:1.25;font-weight:700;letter-spacing:-.022em;color:var(--ink)}
+.rd-text>.cs:first-child>h2:first-child{padding-top:0;border-top:0}
+.rd-text h3{margin:36px 0 8px;font-size:18px;line-height:1.4;font-weight:600;letter-spacing:-.012em;color:var(--ink)}
+.rd-text h2 .hn{margin-right:.5em}
+.rd-text h4{margin:24px 0 6px;font-size:17px;font-weight:600;color:var(--ink)}
+.rd-text .hn{margin-right:.45em;color:var(--ink4);font-variant-numeric:tabular-nums}
+.rd-text ul,.rd-text ol{padding-left:24px}
+.rd-text ol:has(>li:nth-child(10)){padding-left:2.1em} /* two-digit numbers (reference lists) stay inside the section, which clips */
+.rd-text li{margin:4px 0}
+.rd-text a{word-break:inherit;overflow-wrap:anywhere}
+.rd-text code{background:none;padding:0;border-radius:0;font-size:.88em;color:var(--ink)}
+.rd-text pre{background:none;border-radius:0;margin:20px 0;padding:4px 0 4px 18px;border-left:1.5px solid var(--sep2);font-size:13.5px}
+.rd-text blockquote{margin:20px 0;padding:0 0 0 18px;border-left:1.5px solid var(--sep2)}
+.rd-text table{font-size:15px;margin:20px 0}
+.rd-text img{border-radius:0}
+
+/* equations: numbers from \tag (or \label), id eq-<number> */
+.rd-text .katex-display{margin:24px 0;padding:6px 0}
+.rd-text .katex-display.wide+.eq-n{margin-bottom:24px}
+.rd-text .katex .eqn-num::before{content:none} /* untagged align rows: no page-wide (1), (2) counter */
+.rd-text .katex .tag{display:inline;margin:0;font-size:inherit;font-weight:inherit;vertical-align:baseline;letter-spacing:inherit} /* not the design system's small badge .tag */
+.rd-text .xref{white-space:nowrap}
+.rd-text .xref.bad{color:var(--bad)}
+
+/* figures: "Figure H1.1." in front of the caption */
+.rd-text figure{margin:36px 0;color:var(--ink);font-family:var(--sans)}
+.rd-text figure>img,.rd-text figure>svg,.rd-text figure>a>img{display:block;max-width:100%;height:auto;margin:0 auto}
+.rd-text figcaption{max-width:60ch;margin:14px auto 0;font-size:14px;line-height:1.55;color:var(--ink3);text-align:center;text-wrap:balance}
+.rd-text figcaption .fn{color:var(--ink);font-weight:600}
+.rd-text figcaption.long{text-align:left;text-wrap:pretty} /* a full-sentence caption reads better flush left */
+.rd-text .soon{color:var(--ink3)} /* a chapter that is not published yet */
+.rd-text>.cs>svg,.rd-text>.cs>p>svg{display:block;max-width:100%;height:auto;margin:28px auto}
+
+/* sections (chapter.js cuts the text at every h2 and h3): on screen, each is laid out only near the screen and has an
+   estimated height until then. A section keeps its children's margins inside, so its first and last children start
+   and end at 0 and the gap between sections is the section's own margin, the same as the heading's. Paper keeps the
+   plain flow. */
+@media screen{
+  .rd-text .cs{content-visibility:auto;contain-intrinsic-block-size:auto calc(var(--t,0)*.41px + var(--e,0)*85px + var(--f,0)*338px + var(--r,0)*23px)}
+  .rd-text .cs>:first-child{margin-top:0}
+  .rd-text .cs>:last-child{margin-bottom:0}
+  .rd-text .cs+.cs{margin-top:64px}
+  .rd-text .cs+.cs3{margin-top:36px}
+}
+@media screen and (max-width:760px){
+  .rd-text .cs{contain-intrinsic-block-size:auto calc(var(--t,0)*.735px + var(--e,0)*53px + var(--f,0)*48px + var(--r,0)*32px)}
+  .rd-text .cs+.cs{margin-top:44px}
+  .rd-text .cs+.cs3{margin-top:36px}
+}
+
+/* a jump to an equation, figure or section: a short highlight */
+.rd-text :target{scroll-margin-top:28px}
+.rd-text :is(h2,h3,.katex-display,figure,.eq-anchor){scroll-margin-top:28px}
+.rd-text :is(.katex-display,figure,h2,h3):target{animation:rd-hit 2s ease-out}
+@keyframes rd-hit{from{background:color-mix(in srgb,var(--accent) 16%,transparent)}to{background:transparent}}
+
+/* previous / next chapter */
+.rd-pn{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:80px;padding-top:20px;border-top:.5px solid var(--sep2);font-size:15px}
+.rd-pn a{display:grid;gap:2px;color:var(--accent);line-height:1.4;text-decoration:none}
+.rd-pn a:hover span{text-decoration:underline;text-underline-offset:2px}
+.rd-pn small{font-size:12px;font-weight:600;color:var(--ink4)}
+.rd-pn .next{grid-column:2;text-align:right}
+.rd-pn b{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink2)}
+.rd-pn .cross small{color:var(--ink3)}
+
+.rd-missing{margin:0;color:var(--ink2)}
+
+/* figure files are black on transparent: turn them light in dark mode (screen only; paper stays white) */
+@media screen{
+  :root[data-theme=dark] .rd-text img[src$=".svg"]{filter:invert(1) hue-rotate(180deg)}
+}
+@media screen and (prefers-color-scheme:dark){
+  :root:not([data-theme=light]) .rd-text img[src$=".svg"]{filter:invert(1) hue-rotate(180deg)}
+}
+
+/* narrower windows: outline and text side by side, no right margin */
+@media (max-width:1100px){
+  .rd-top{padding:14px 32px}
+  .rd-main{grid-template-columns:220px minmax(0,72ch);column-gap:40px;justify-content:start;padding:52px 32px 96px}
+}
+
+/* phones */
+@media (max-width:760px){
+  .rd-top{padding:10px 20px}
+  .rd-main{display:block;padding:32px 20px 72px}
+  .rd-toc{display:none}
+  .rd-head{margin-bottom:20px}
+  .rd-head h1{font-size:28px}
+  .rd-part-h{margin-bottom:10px;font-size:11.5px}
+  /* the bar: full width, stays at the top while the chapter scrolls */
+  .rd-bar{display:block;position:sticky;top:0;z-index:30;margin:0 -20px 28px;padding:0 max(20px,env(safe-area-inset-right)) 0 max(20px,env(safe-area-inset-left));
+    background:color-mix(in srgb,var(--paper) 90%,transparent);-webkit-backdrop-filter:saturate(1.8) blur(18px);backdrop-filter:saturate(1.8) blur(18px);
+    border-top:.5px solid var(--sep2);border-bottom:.5px solid var(--sep2)}
+  .rd-bar.open{background:var(--paper)}
+  .rd-bar-btn{display:flex;align-items:center;gap:8px;width:100%;min-height:48px;padding:0;color:var(--ink);font-size:14px;font-weight:600;text-align:left}
+  .rd-where{display:flex;gap:7px;min-width:0;flex:1}
+  .rd-where>span:last-child{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .rd-where .n{flex:none;color:var(--ink4);font-variant-numeric:tabular-nums}
+  .rd-where .katex{font-size:1em}
+  .rd-bar-btn svg{flex:none;width:18px;height:18px;fill:none;stroke:var(--ink3);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
+  .rd-bar.open .rd-bar-btn svg{transform:rotate(180deg)}
+  /* the contents sheet hangs from the bar over the text */
+  .rd-sheet{position:absolute;left:0;right:0;top:100%;max-height:min(72vh,620px);overflow-y:auto;overscroll-behavior:contain;
+    padding:4px max(20px,env(safe-area-inset-right)) 16px max(20px,env(safe-area-inset-left));background:var(--paper);border-bottom:.5px solid var(--sep2);font-size:14.5px;line-height:1.4}
+  .rd-sheet[hidden]{display:none}
+  .rd-sheet .rd-part:first-child{border-top:0}
+  .rd-sheet .rd-part>summary{min-height:44px;padding:0;align-items:center}
+  .rd-sheet .rd-chs>li>a{align-items:baseline;padding:11px 0}
+  .rd-sheet .rd-ol a{align-items:baseline;padding-top:10px;padding-bottom:10px}
+  .rd-sheet .rd-ol .l3 a{font-size:13.5px}
+  .rd-text{font-size:16px;line-height:1.7}
+  .rd-text .katex-display>.katex,.rd-text .katex-display.wide+.eq-n{font-size:1.1em}
+  .rd-text .katex-display{margin:20px 0}
+  .rd-text .katex-display.wide+.eq-n{margin-bottom:20px}
+  .rd-text h2{margin-top:52px;padding-top:24px;font-size:21.5px}
+  .rd-text h3{font-size:17px}
+  .rd-text :target,.rd-text :is(h2,h3,.katex-display,figure,.eq-anchor){scroll-margin-top:64px}
+  .rd-pn{gap:16px;margin-top:56px}
+  .rd-pn a{min-height:44px}
+  /* phones: 44 px to tap */
+  .rd-top{padding:0 4px 0 20px;min-height:52px}
+  .rd-crumbs a{position:relative}
+  .rd-crumbs a::after{content:"";position:absolute;left:-4px;right:-4px;top:50%;height:44px;transform:translateY(-50%)}
+  .rd-tool{height:44px;min-width:44px;justify-content:center}
+  /* the top line: back to Theory and the two tools (the path is in the part line above the title) */
+  .rd-crumbs{display:none}
+  .rd-back{display:inline-flex;align-items:center;gap:2px;min-height:44px;margin-left:-6px;padding:0 8px 0 0;color:var(--accent);font-size:15px;font-weight:500;text-decoration:none}
+  .rd-back:hover{text-decoration:none}
+  .rd-back svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+}
+
+/* reduced motion: no highlight flash and no turning chevron (added in the skill; the source site had none) */
+@media (prefers-reduced-motion:reduce){
+  .rd-text :target,.rd-text :is(.katex-display,figure,h2,h3):target{animation:none}
+  .rd-bar-btn svg{transition:none}
+}
+
+/* paper: white, black ink, no controls or outline; equations and figures are not split across pages */
+@media print{
+  :root,:root[data-theme],:root:not([data-theme=light]){
+    --paper:#fff;--ink:#000;--ink2:#000;--ink3:#333;--ink4:#666;--sep:#bbb;--sep2:#999;--accent:#000;--fill:transparent;--bad:#000;color-scheme:light}
+  @page{size:A4;margin:18mm 18mm 20mm}
+  html,body{background:#fff}
+  .rd{font-size:10.5pt}
+  .rd-tools,.rd-toc,.rd-bar,.rd-back,.rd-scrim,.rd-pn{display:none!important}
+  .rd-top{padding:0 0 8px;max-width:none;font-size:8.5pt}
+  .rd-crumbs a,.rd-crumbs a:first-child{color:#333;font-weight:400}
+  .rd-main{display:block;max-width:none;padding:18pt 0 0;font-size:11pt}
+  .rd-head{margin-bottom:18pt}
+  .rd-head h1{font-size:22pt}
+  .rd-text{font-size:11pt;line-height:1.55}
+  .rd-text h2{margin:22pt 0 6pt;padding-top:10pt;font-size:15pt}
+  .rd-part-h{margin-bottom:6pt;font-size:8.5pt;color:#333}
+  .rd-part-h a,.rd-part-h .pn{color:#333}
+  .rd-text h3{margin:14pt 0 4pt;font-size:12pt}
+  .rd-text :is(h2,h3,h4){break-after:avoid;page-break-after:avoid}
+  .rd-text :is(.katex-display,figure,pre,blockquote,table,tr){break-inside:avoid;page-break-inside:avoid}
+  .rd-text .katex-display{overflow:visible}
+  .rd-text p{orphans:3;widows:3}
+  .rd-text figcaption{color:#333}
+  a,.rd-text a,.rd-text .xref{color:inherit;text-decoration:none}
+  a[href]::after{content:none!important} /* no URLs after links */
+  .rd-text :target{animation:none}
+}

@@ -1,0 +1,18 @@
+{
+  "_note": "Optional. The References tab's Overview and Tasks sections. One block per language; en is the fallback. A fact with kpi becomes a row of numbers. Delete the file (or pass overviewUrl: null) to leave both sections out.",
+  "en": {
+    "eyebrow": "{{SITE_NAME}} · {{START_DATE}} – {{END_DATE}}",
+    "title": "{{PROJECT_TITLE}}",
+    "facts": [
+      { "k": "Period", "v": "{{START_DATE}} – {{END_DATE}}" },
+      { "k": "Meetings", "v": "Every {{WEEK_START}}" },
+      { "k": "Weights", "kpi": [["Task 1", "40"], ["Task 2", "30"], ["Task 3", "20"], ["Talk", "10"]], "unit": "%" }
+    ],
+    "background": "Two or three sentences on what the project is about.",
+    "premises": ["What is given.", "What is assumed."],
+    "steps": [
+      { "no": 1, "name": "First task", "q": "The question of the first task, in one or two sentences." }
+    ],
+    "grading": "How the work is judged, in one sentence."
+  }
+}

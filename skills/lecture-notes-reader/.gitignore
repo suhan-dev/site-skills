@@ -1,0 +1,11 @@
+# third-party libraries are fetched by assets/fetch-vendor.sh, never committed
+assets/demo/vendor/
+# local secrets, never committed
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+.env
+.env.*
+*.key.json
+service-account*.json
+*.pdf

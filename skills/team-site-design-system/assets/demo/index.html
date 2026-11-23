@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Design system · Example Lab</title>
+<script>try{var t=localStorage.getItem("site_theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../components.css">
+<link rel="stylesheet" href="../doc.css">
+<style>
+  /* demo-only layout */
+  .sg{display:grid;gap:44px}
+  .sg-sec>h2{margin:0 0 4px;font-size:24px;font-weight:700;letter-spacing:-.022em;line-height:1.25}
+  .sg-sec>p{margin:0 0 16px;color:var(--ink3);font-size:13.5px}
+  .row{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px}
+  .sw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px 18px}
+  .swatch{display:grid;grid-template-columns:28px minmax(0,1fr);gap:2px 10px;align-items:center;font-size:12.5px}
+  .swatch i{grid-row:span 2;width:28px;height:28px;border-radius:50%;background:var(--v);box-shadow:inset 0 0 0 .5px var(--sep2)}
+  .swatch b{font-weight:600;color:var(--ink)}
+  .swatch code{font-family:var(--mono);font-size:11px;color:var(--ink3)}
+  .type div{display:flex;align-items:baseline;gap:16px;padding:10px 0;border-bottom:.5px solid var(--sep)}
+  .type small{width:11.5em;flex:none;color:var(--ink3);font-size:12px;font-variant-numeric:tabular-nums}
+  .sw-row{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;max-width:460px;padding:12px 0;border-bottom:.5px solid var(--sep);text-align:left}
+  .sw-row b{display:block;font-weight:500}
+  .sw-row small{color:var(--ink3);font-size:12.5px}
+  .pair{white-space:nowrap}
+  .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px 44px}
+  @media (max-width:760px){.two{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<header class="bar" data-lang-fixed>
+  <div class="bar-in">
+    <button class="brand" type="button"><span>Example Lab</span></button>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <a role="tab" href="#" aria-selected="true">Calendar</a>
+      <a role="tab" href="#">Research log</a>
+      <a role="tab" href="#">References</a>
+      <a role="tab" href="#">Theory</a>
+    </nav>
+    <div class="bar-right">
+      <button class="icon-btn" type="button" title="App &amp; notifications" aria-label="App &amp; notifications">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6c-2.95 0-5.1 2.3-5.1 5.25v3.6l-1.55 2.7c-.24.42.06.95.55.95h12.2c.49 0 .79-.53.55-.95l-1.55-2.7v-3.6C17.1 5.9 14.95 3.6 12 3.6z"/><path d="M9.75 18.6a2.3 2.3 0 0 0 4.5 0"/></svg>
+      </button>
+      <button class="me set" type="button" id="me-btn" style="--c:var(--gc-7)"><span class="me-dot"></span><span id="me-name">Alex</span></button>
+      <button class="lang-btn" type="button" id="lang-btn" title="Switch to Korean" aria-label="Language: English. Switch to Korean">EN</button>
+      <button class="icon-btn theme-btn" type="button" id="theme-btn" title="Light or dark" aria-pressed="false">
+        <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.4 14.6A8.5 8.5 0 0 1 9.4 3.6a8.5 8.5 0 1 0 11 11z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+      </button>
+      <button class="icon-btn chat-btn" type="button" id="chat-btn" title="Team chat" aria-label="Team chat" aria-expanded="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.2c-4.7 0-8.3 3-8.3 6.9 0 2.2 1.2 4.1 3 5.4-.1 1.3-.7 2.5-1.6 3.4 1.9 0 3.6-.7 4.8-1.8.7.2 1.4.2 2.1.2 4.7 0 8.3-3 8.3-7.2S16.7 4.2 12 4.2z"/></svg>
+        <i class="chat-dot"></i>
+      </button>
+      <a class="icon-btn out-btn" href="#" title="Sign out" aria-label="Sign out"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 16.5 14.5 12 10 7.5M14.5 12H4"/></svg></a>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+  <p class="eyebrow">Design system</p>
+  <h1 class="page-h">Restrained, document-like, Apple greys</h1>
+  <div class="sg" style="margin-top:36px">
+
+    <section class="sg-sec">
+      <h2>Colour tokens</h2>
+      <p>Every colour comes from a token. Light and dark share names; dark is a soft grey, never pure black.</p>
+      <div class="sw-grid" id="swatches"></div>
+    </section>
+
+    <section class="sg-sec">
+      <h2>Member and calendar colours</h2>
+      <p>Google Calendar's eleven event colours, mapped to Apple system colours (<code>--gc-1</code> … <code>--gc-11</code>).</p>
+      <div class="sw-grid" id="gc"></div>
+    </section>
+
+    <section class="sg-sec type">
+      <h2>Type scale</h2>
+      <p>System font stack (SF Pro on Apple, Pretendard for Korean). Negative tracking grows with size.</p>
+      <div><small>34 / 700 / −.025em</small><span style="font-size:34px;font-weight:700;letter-spacing:-.025em;line-height:1.12">Page title</span></div>
+      <div><small>26 / 700 / −.025em</small><span style="font-size:26px;font-weight:700;letter-spacing:-.025em">Calendar title</span></div>
+      <div><small>24 / 700 / −.022em</small><span style="font-size:24px;font-weight:700;letter-spacing:-.022em">Section title</span></div>
+      <div><small>19 / 700 / −.02em</small><span style="font-size:19px;font-weight:700;letter-spacing:-.02em">Dialog title</span></div>
+      <div><small>15 / 600 / −.015em</small><span style="font-size:15px;font-weight:600;letter-spacing:-.015em">Card head</span></div>
+      <div><small>15 / 400 / 1.5</small><span>Body text. Korean breaks between words, never inside one.</span></div>
+      <div><small>13.5 / 500</small><span style="font-size:13.5px;font-weight:500">Tabs, buttons, controls</span></div>
+      <div><small>12.5 / 400 / ink3</small><span style="font-size:12.5px;color:var(--ink3)">Notes, meta, <span class="pair">Week 3 · 12/22–12/28</span></span></div>
+    </section>
+
+    <section class="sg-sec">
+      <h2>Buttons and controls</h2>
+      <p>Pills only. Fills, not borders. 32 px on desktop, 44 px tap areas on phones.</p>
+      <div class="row">
+        <button class="btn primary" type="button"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New event</button>
+        <button class="btn ghost" type="button">Cancel</button>
+        <button class="btn danger" type="button">Delete</button>
+        <button class="btn danger armed" type="button">Click again to delete</button>
+        <button class="btn ghost small" type="button">Small</button>
+        <button class="btn primary" type="button" disabled>Disabled</button>
+      </div>
+      <div class="row" style="margin-top:18px">
+        <div class="pill-nav">
+          <button class="btn ghost sq" type="button" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="M14.5 6 8.5 12l6 6"/></svg></button>
+          <button class="btn ghost" type="button">Today</button>
+          <button class="btn ghost sq" type="button" aria-label="Next"><svg viewBox="0 0 24 24"><path d="m9.5 6 6 6-6 6"/></svg></button>
+        </div>
+        <div class="segmented" role="group"><button type="button" aria-pressed="true">Week</button><button type="button" aria-pressed="false">Month</button></div>
+      </div>
+      <div class="seg" style="margin-top:18px">
+        <label style="--c:var(--gc-7)"><input type="radio" name="o" checked><span>Alex</span></label>
+        <label style="--c:var(--gc-10)"><input type="radio" name="o"><span>Blair</span></label>
+        <label style="--c:var(--gc-6)"><input type="radio" name="o"><span>Casey</span></label>
+        <label style="--c:var(--gc-9)"><input type="radio" name="o"><span>Team</span></label>
+      </div>
+      <div style="margin-top:12px">
+        <button class="sw-row" type="button" role="switch" aria-checked="true"><span><b>New events</b><small>When a teammate adds an event</small></span><span class="sw"></span></button>
+        <button class="sw-row" type="button" role="switch" aria-checked="false"><span><b>30 minutes before</b><small>Before every timed event</small></span><span class="sw"></span></button>
+      </div>
+      <div class="row" style="margin-top:18px"><button class="btn ghost" type="button" id="open-sheet">Open a dialog (sheet on phones)</button></div>
+    </section>
+
+    <section class="sg-sec two">
+      <div class="card">
+        <h3 class="card-h">Hairline section <small>no boxes</small></h3>
+        <div class="doc">
+          <h2>Document style</h2>
+          <p>Markdown renders into <code>.doc</code>: hairline rules, no card borders, generous line height. A <strong>label and its number</strong> never break apart.</p>
+          <ul><li>Lists keep a 22 px indent</li><li>Task lists hang their boxes</li></ul>
+          <blockquote>Quotes get a 3 px rule in the separator colour.</blockquote>
+          <table><thead><tr><th>Item</th><th>Value</th></tr></thead><tbody><tr><td>Header height</td><td>52 px</td></tr><tr><td>Page width</td><td>1280 px</td></tr></tbody></table>
+        </div>
+      </div>
+      <div class="card">
+        <h3 class="card-h">States</h3>
+        <div class="banner">A warning banner: a 2 px rule on the left, <b>no box</b>.</div>
+        <div class="banner bad">An error banner uses the bad colour.</div>
+        <div class="fld"><span>Title</span><input placeholder="e.g. Weekly sync"></div>
+      </div>
+    </section>
+  </div>
+</main>
+<footer class="foot"><span>Example Lab · 2026</span><span>Design system demo</span></footer>
+
+<dialog class="dlg" id="sheet">
+  <form class="dlg-in" method="dialog">
+    <div class="dlg-top"><h2>New event</h2><button class="icon-btn" value="x" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <label class="fld"><span>Title</span><input placeholder="e.g. Weekly sync"></label>
+    <label class="chk"><input type="checkbox"> All day</label>
+    <div class="seg">
+      <label style="--c:var(--gc-7)"><input type="radio" name="w" checked><span>Alex</span></label>
+      <label style="--c:var(--gc-10)"><input type="radio" name="w"><span>Blair</span></label>
+      <label style="--c:var(--gc-9)"><input type="radio" name="w"><span>Team</span></label>
+    </div>
+    <p class="dlg-note">Changes go straight to the shared calendar.</p>
+    <div class="dlg-act"><span style="flex:1"></span><button class="btn ghost" value="c">Cancel</button><button class="btn primary" value="s">Save</button></div>
+  </form>
+</dialog>
+
+<script type="module">
+  import { initTheme, lockPhoneZoom } from "../theme.js";
+  import { wireLangButton } from "../i18n.js";
+  initTheme({ button: document.getElementById("theme-btn") });
+  wireLangButton();
+  lockPhoneZoom();
+  const css = getComputedStyle(document.documentElement);
+  const names = ["paper","card","card2","ink","ink2","ink3","ink4","fill","fill2","sep","sep2","accent","ok","warn","bad"];
+  const paint = () => {
+    const c = getComputedStyle(document.documentElement);
+    document.getElementById("swatches").innerHTML = names.map((n) => `<div class="swatch" style="--v:var(--${n})"><i></i><b>--${n}</b><code>${c.getPropertyValue("--" + n).trim()}</code></div>`).join("");
+    document.getElementById("gc").innerHTML = Array.from({ length: 11 }, (_, i) => `<div class="swatch" style="--v:var(--gc-${i + 1})"><i></i><b>--gc-${i + 1}</b><code>${c.getPropertyValue("--gc-" + (i + 1)).trim()}</code></div>`).join("");
+  };
+  paint();
+  window.addEventListener("site:theme", paint);
+  document.getElementById("open-sheet").onclick = () => document.getElementById("sheet").showModal();
+  document.querySelectorAll(".sw-row").forEach((b) => b.onclick = () => b.setAttribute("aria-checked", String(b.getAttribute("aria-checked") !== "true")));
+  if (location.hash === "#sheet") document.getElementById("sheet").showModal();
+</script>
+</body>
+</html>

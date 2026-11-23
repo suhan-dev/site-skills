@@ -1,0 +1,20 @@
+# Companion Worker for the site's notifications (see worker.js). Deploy: cd push-cron && npx wrangler deploy
+# Or paste worker.js into a new Worker in the Cloudflare dashboard and add the same binding, variable and cron there
+# (references/setup.md, part C).
+name = "{{PAGES_PROJECT}}-push-cron"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+workers_dev = false
+
+[triggers]
+crons = ["* * * * *"]
+
+[vars]
+SITE_URL = "{{SITE_ORIGIN}}"
+
+# The site's D1 database (Workers & Pages → D1 → your database → copy its ID). The id is not a secret, but keep it out of
+# a public repository: paste it locally, deploy, and do not commit the filled-in file.
+[[d1_databases]]
+binding = "DB"
+database_name = "{{D1_NAME}}"
+database_id = "REPLACE_WITH_THE_DATABASE_ID"

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000">
+<!-- Placeholder sign-in background for the demo: an abstract stack of plates under a soft light. Replace it with a still
+     of your own intro (scroll-3d-intro) or any dark picture of your subject. -->
+<defs>
+<linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b3344"/><stop offset=".55" stop-color="#181b23"/><stop offset="1" stop-color="#0c0d11"/></linearGradient>
+<radialGradient id="g" cx=".74" cy=".26" r=".55"><stop offset="0" stop-color="#9db2d6" stop-opacity=".62"/><stop offset=".45" stop-color="#6f83a8" stop-opacity=".2"/><stop offset="1" stop-color="#6f83a8" stop-opacity="0"/></radialGradient>
+<linearGradient id="p" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#dfe7f3"/><stop offset="1" stop-color="#8d9bb3"/></linearGradient>
+<radialGradient id="f" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#0c0d11" stop-opacity=".9"/><stop offset="1" stop-color="#0c0d11" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="1600" height="1000" fill="url(#s)"/>
+<rect width="1600" height="1000" fill="url(#g)"/>
+<ellipse cx="1190" cy="594" rx="357" ry="128" fill="url(#f)"/>
+<g transform="translate(1190 560)">
+<path d="M-280 0 L0 -140 L280 0 L0 140Z" fill="url(#p)" fill-opacity="0.10" stroke="#e6ecf5" stroke-opacity="0.16" stroke-width="1"/>
+<path d="M-280 -26 L0 -166 L280 -26 L0 115Z" fill="url(#p)" fill-opacity="0.11" stroke="#e6ecf5" stroke-opacity="0.16" stroke-width="1"/>
+<path d="M-280 -51 L0 -191 L280 -51 L0 89Z" fill="url(#p)" fill-opacity="0.12" stroke="#e6ecf5" stroke-opacity="0.16" stroke-width="1"/>
+<path d="M-280 -76 L0 -217 L280 -76 L0 64Z" fill="url(#p)" fill-opacity="0.14" stroke="#e6ecf5" stroke-opacity="0.16" stroke-width="1"/>
+<path d="M-280 -102 L0 -242 L280 -102 L0 38Z" fill="url(#p)" fill-opacity="0.15" stroke="#e6ecf5" stroke-opacity="0.16" stroke-width="1"/>
+<path d="M-280 -128 L0 -268 L280 -128 L0 13Z" fill="url(#p)" fill-opacity="0.16" stroke="#e6ecf5" stroke-opacity="0.16" stroke-width="1"/>
+<path d="M-280 -153 L0 -293 L280 -153 L0 -13Z" fill="url(#p)" fill-opacity="0.18" stroke="#e6ecf5" stroke-opacity="0.16" stroke-width="1"/>
+<path d="M-280 -178 L0 -319 L280 -178 L0 -38Z" fill="url(#p)" fill-opacity="0.19" stroke="#e6ecf5" stroke-opacity="0.16" stroke-width="1"/>
+<path d="M-280 -204 L0 -344 L280 -204 L0 -64Z" fill="url(#p)" fill-opacity="0.20" stroke="#e6ecf5" stroke-opacity="0.34" stroke-width="1.5"/>
+</g>
+</svg>

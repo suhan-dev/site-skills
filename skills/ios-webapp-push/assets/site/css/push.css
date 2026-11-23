@@ -1,0 +1,79 @@
+/* App & notifications: the bell in the header, its sheet and the "Add to Home Screen" pop-up (js/push.js).
+   Hairlines, no boxes, the design system's tokens (tokens.css) and components (.dlg, .btn, .icon-btn, .sw).
+   The switch is Apple's: green when on (.sw and --sw-on come from components.css). */
+
+.push-dlg{width:min(460px,calc(100vw - 32px))}
+.push-dlg .dlg-in{gap:0}
+.push-dlg .dlg-top{margin-bottom:6px}
+
+/* one status line with a dot: green on, accent for "install first", warning for anything that needs fixing */
+.push-status{display:flex;align-items:baseline;gap:8px;margin:0 0 14px;font-size:13.5px;line-height:1.45;color:var(--ink2)}
+.push-status::before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--ink4);transform:translateY(-1px)}
+.push-status[data-state=on]::before{background:var(--sw-on)}
+.push-status[data-state=checking]::before,.push-status[data-state=note]::before{background:var(--ink4)}
+.push-status[data-state=denied]::before,.push-status[data-state=server]::before,.push-status[data-state=oldios]::before,.push-status[data-state=nosupport]::before{background:var(--warn)}
+.push-status[data-state=install]::before,.push-status[data-state=kakao]::before{background:var(--accent)}
+
+.push-rows{border-top:.5px solid var(--sep2)}
+.push-row{display:flex;align-items:center;gap:16px;width:100%;min-height:60px;padding:10px 0;border-bottom:.5px solid var(--sep2);text-align:left}
+.push-row:disabled{cursor:default}
+.push-row:disabled .push-txt,.push-row:disabled .sw{opacity:.42}
+.push-txt{flex:1;display:grid;gap:1px;min-width:0}
+.push-txt b{font-size:15px;font-weight:600;letter-spacing:-.012em;color:var(--ink)}
+.push-txt small{font-size:12.5px;color:var(--ink3)}
+
+.push-act{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.push-act:not(:has(.btn:not([hidden]))){display:none}
+
+/* the iPhone steps, folded under the switches */
+.push-ios{margin-top:16px;border-top:.5px solid var(--sep2)}
+.push-act:not(:has(.btn:not([hidden]))) + .push-ios{margin-top:0;border-top:0} /* right under the switches' own hairline */
+.push-ios summary{display:flex;align-items:baseline;gap:8px;min-height:44px;padding:12px 0 4px;cursor:pointer;list-style:none;font-size:15px;font-weight:600;letter-spacing:-.012em}
+.push-ios summary::-webkit-details-marker{display:none}
+.push-ios summary small{font-size:12.5px;font-weight:400;color:var(--ink3)}
+.push-ios summary::after{content:"";width:7px;height:7px;margin-left:auto;align-self:center;border-right:1.6px solid var(--ink3);border-bottom:1.6px solid var(--ink3);
+  transform:translateY(-2px) rotate(45deg);transition:transform .2s}
+.push-ios[open] summary::after{transform:translateY(1px) rotate(-135deg)}
+.push-steps{margin:4px 0 0;padding:0;list-style:none;counter-reset:st}
+.push-steps li{position:relative;padding:8px 0 8px 26px;font-size:14px;line-height:1.5;color:var(--ink2);counter-increment:st}
+.push-steps li::before{content:counter(st);position:absolute;left:0;top:8px;width:18px;font-size:13px;font-weight:600;color:var(--ink4);font-variant-numeric:tabular-nums}
+.push-steps b{font-weight:600;color:var(--ink)}
+.push-steps li[hidden]{display:none}
+.push-steps .btn{display:flex;width:max-content;margin:10px 0 6px}
+.push-steps small{display:block;font-size:12.5px;color:var(--ink3)}
+
+/* the Share glyph after the word, as Safari draws it (a box with an arrow up) */
+.g-share::after{content:"";display:inline-block;width:.86em;height:1.08em;margin-left:.3em;vertical-align:-.14em;background:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 25' fill='none' stroke='%23000' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 15.5V2.2M5.6 6.3 10 1.9l4.4 4.4M6.4 9.6H4.2a2 2 0 0 0-2 2v9.6a2 2 0 0 0 2 2h11.6a2 2 0 0 0 2-2v-9.6a2 2 0 0 0-2-2h-2.2'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 25' fill='none' stroke='%23000' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 15.5V2.2M5.6 6.3 10 1.9l4.4 4.4M6.4 9.6H4.2a2 2 0 0 0-2 2v9.6a2 2 0 0 0 2 2h11.6a2 2 0 0 0 2-2v-9.6a2 2 0 0 0-2-2h-2.2'/%3E%3C/svg%3E") center/contain no-repeat}
+
+/* the app's own icon before its name, as it will look on the Home Screen (--app-icon lets a demo point elsewhere) */
+.g-app::before{content:"";display:inline-block;width:1.3em;height:1.3em;margin-right:.35em;vertical-align:-.32em;border-radius:.3em;
+  background:var(--app-icon,url(/icons/apple-touch-icon.png)) center/cover;box-shadow:0 0 0 .5px var(--sep2)}
+
+/* "Add to Home Screen": once per member in an iPhone or iPad browser. A bottom sheet on phones (components.css),
+   a small dialog on iPad. No close cross: "Not now" and "Got it" both close it. */
+.install-dlg{width:min(440px,calc(100vw - 32px))}
+.install-dlg:focus-visible{outline:none} /* the sheet itself takes the focus when it opens, so no button shows a ring */
+.install-dlg .dlg-in{gap:0}
+.install-dlg h2{margin:2px 0 0;font-size:20px;font-weight:700;line-height:1.25;letter-spacing:-.022em;text-wrap:balance}
+.install-sub{margin:5px 0 8px;font-size:14px;line-height:1.45;color:var(--ink3)}
+.install-steps li{padding:9px 0 9px 26px;font-size:15px;line-height:1.45}
+.install-steps li::before{top:10px}
+.install-steps .btn{height:36px;padding:0 16px;font-size:14px}
+.btn.tint{background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent)}
+.btn.tint:hover{background:color-mix(in srgb,var(--accent) 18%,transparent);text-decoration:none}
+.install-act{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin-top:16px}
+.install-act .btn{height:36px;padding:0 18px;font-size:14px}
+.install-later{color:var(--ink2)}
+.install-later:hover{background:var(--fill)}
+/* phones: "Got it" across the sheet, "Not now" under it, both easy to reach with a thumb */
+@media (max-width:760px){
+  .install-act{flex-direction:column-reverse;align-items:stretch;gap:2px;margin-top:18px}
+  .install-act .btn{height:50px;font-size:16px;font-weight:600}
+  .install-act .install-later{height:44px;font-weight:500}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .push-ios summary::after{transition:none}
+}

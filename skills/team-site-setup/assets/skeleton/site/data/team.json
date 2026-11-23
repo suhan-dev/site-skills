@@ -1,0 +1,15 @@
+{
+  "_note": "Members of the site. ids are permanent (file names use them). colorId is the Google Calendar event colour 1–11.",
+  "repo": "{{REPO}}",
+  "branch": "main",
+  "members": [
+    { "id": "alex", "name": "Alex", "colorId": "7" },
+    { "id": "blair", "name": "Blair", "colorId": "10" },
+    { "id": "casey", "name": "Casey", "colorId": "6" }
+  ],
+  "owners": [
+    { "id": "team", "label": { "en": "Team", "ko": "팀 전체" }, "colorId": "9" },
+    { "id": "official", "label": { "en": "Official", "ko": "공식" }, "colorId": "11" }
+  ],
+  "program": { "start": "{{START_DATE}}", "end": "{{END_DATE}}", "timeZone": "{{TIMEZONE}}" }
+}

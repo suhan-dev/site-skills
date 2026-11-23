@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- Demo host page for the Theory tab. In a real site this is one tab pane of the main page (index.html). -->
+<title>Theory · Example Lab</title>
+<meta name="robots" content="noindex,nofollow">
+<script>try{var t=localStorage.getItem("site_theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);if(localStorage.getItem("site_lang")==="ko")document.documentElement.lang="ko"}catch(e){}</script>
+<link rel="stylesheet" href="/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="/css/tokens.css">
+<link rel="stylesheet" href="/css/components.css">
+<link rel="stylesheet" href="/css/doc.css">
+<link rel="stylesheet" href="/css/theory.css">
+</head>
+<body>
+<header class="bar" data-lang-fixed>
+  <div class="bar-in">
+    <button class="brand" type="button"><span>Example Lab</span></button>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <a role="tab" href="#calendar" aria-selected="false">Calendar</a>
+      <a role="tab" href="#records" aria-selected="false">Research log</a>
+      <a role="tab" href="#refs" aria-selected="false">References</a>
+      <a role="tab" href="#theory" aria-selected="true">Theory</a>
+    </nav>
+    <!-- the design system's header: bell · name · language · theme · chat · sign-out (only the theme and language work here) -->
+    <div class="bar-right">
+      <button class="icon-btn" type="button" title="App &amp; notifications" aria-label="App &amp; notifications">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6c-2.95 0-5.1 2.3-5.1 5.25v3.6l-1.55 2.7c-.24.42.06.95.55.95h12.2c.49 0 .79-.53.55-.95l-1.55-2.7v-3.6C17.1 5.9 14.95 3.6 12 3.6z"/><path d="M9.75 18.6a2.3 2.3 0 0 0 4.5 0"/></svg>
+      </button>
+      <button class="me set" type="button" id="me-btn" style="--c:var(--gc-7)"><span class="me-dot"></span><span id="me-name">Alex</span></button>
+      <button class="lang-btn" type="button" id="lang-btn">EN</button>
+      <button class="icon-btn theme-btn" type="button" id="theme-btn" title="Light or dark" aria-pressed="false">
+        <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.4 14.6A8.5 8.5 0 0 1 9.4 3.6a8.5 8.5 0 1 0 11 11z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+      </button>
+      <button class="icon-btn chat-btn" type="button" id="chat-btn" title="Team chat" aria-label="Team chat" aria-expanded="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.2c-4.7 0-8.3 3-8.3 6.9 0 2.2 1.2 4.1 3 5.4-.1 1.3-.7 2.5-1.6 3.4 1.9 0 3.6-.7 4.8-1.8.7.2 1.4.2 2.1.2 4.7 0 8.3-3 8.3-7.2S16.7 4.2 12 4.2z"/></svg>
+        <i class="chat-dot" hidden></i>
+      </button>
+      <a class="icon-btn out-btn" href="#" title="Sign out" aria-label="Sign out"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 16.5 14.5 12 10 7.5M14.5 12H4"/></svg></a>
+    </div>
+  </div>
+</header>
+<main class="main">
+  <section class="tab-pane" id="pane-theory">
+    <div id="th-tabs"></div>
+    <div class="th-layout" id="th-layout">
+      <nav class="th-toc" id="th-toc" aria-label="Chapters"></nav>
+      <article class="th-body" id="th-body"></article>
+    </div>
+  </section>
+</main>
+<script type="module">
+import { createTheory } from "/js/theory-tab.js";
+import { initTheme } from "/ds/theme.js";
+import { wireLangButton } from "/ds/i18n.js";
+// light / dark under the design system's key (site_theme), which the reader reads too; the one EN | KO button
+initTheme({ button: document.getElementById("theme-btn") });
+wireLangButton();
+// #theory/<part>/<chapter> → show it
+const theory = createTheory();
+const route = () => {
+  const [tab, sec, ch] = location.hash.slice(1).split("/").map(decodeURIComponent);
+  if (!tab || tab === "theory") theory.show(sec, ch);
+};
+addEventListener("hashchange", route);
+route();
+</script>
+</body>
+</html>

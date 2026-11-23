@@ -1,0 +1,66 @@
+/* Design tokens — light, dark (explicit) and dark (system). Every colour in every skill comes from these.
+   Source: extracted from a production team site. Swap --accent and --gc-* for your brand; keep the structure. */
+:root{
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Pretendard Variable",Pretendard,"Segoe UI",system-ui,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+  --paper:#ffffff;--card:#ffffff;--card2:#f5f5f7;
+  --ink:#1d1d1f;--ink2:#424245;--ink3:#6e6e73;--ink4:#86868b;
+  --fill:rgba(118,118,128,.12);--fill2:rgba(118,118,128,.2);--seg-on:#ffffff;
+  --sep:rgba(60,60,67,.14);--sep2:rgba(60,60,67,.26);--today:5%;
+  --accent:#0071e3;--accent2:#0077ed;--on-accent:#ffffff;
+  --ok:#28a745;--warn:#c25e00;--bad:#d70015;
+  --lift:0 1px 2px rgba(0,0,0,.04),0 0 0 .5px rgba(0,0,0,.05);
+  --shadow:0 24px 64px rgba(0,0,0,.18),0 2px 8px rgba(0,0,0,.08),0 0 0 .5px rgba(0,0,0,.06);
+  --gc-1:#af52de;--gc-2:#00c7be;--gc-3:#a2845e;--gc-4:#ff2d55;--gc-5:#ffcc00;--gc-6:#ff9500;
+  --gc-7:#007aff;--gc-8:#8e8e93;--gc-9:#5856d6;--gc-10:#34c759;--gc-11:#ff3b30;
+  --ev-bg:15%;--ev-ink:58%;--ev-mix:var(--ink);
+  --cell-wl:#d2d2d7;--cell-ox:#ffffff;--cell-ct:#e3d6bf;--cell-ch:#86868b;--cell-core:#ececf0;--cell-e:#0071e3;
+  color-scheme:light;
+}
+:root[data-theme=dark]{
+  --paper:#1c1c1e;--card:#2c2c2e;--card2:#3a3a3c;
+  --ink:#f5f5f7;--ink2:#d1d1d6;--ink3:#98989d;--ink4:#6e6e73;
+  --fill:rgba(118,118,128,.24);--fill2:rgba(118,118,128,.34);--seg-on:#636366;
+  --sep:rgba(255,255,255,.07);--sep2:rgba(255,255,255,.11);--today:3%;
+  --accent:#0a84ff;--accent2:#409cff;--on-accent:#ffffff;
+  --ok:#30d158;--warn:#ff9f0a;--bad:#ff453a;
+  --lift:0 0 0 .5px rgba(255,255,255,.06);
+  --shadow:0 24px 64px rgba(0,0,0,.6),0 0 0 .5px rgba(255,255,255,.1);
+  --gc-1:#bf5af2;--gc-2:#63e6e2;--gc-3:#ac8e68;--gc-4:#ff375f;--gc-5:#ffd60a;--gc-6:#ff9f0a;
+  --gc-7:#0a84ff;--gc-8:#98989d;--gc-9:#5e5ce6;--gc-10:#30d158;--gc-11:#ff453a;
+  --ev-bg:26%;--ev-ink:52%;--ev-mix:#ffffff;
+  --cell-wl:#48484a;--cell-ox:#1c1c1e;--cell-ct:#6b604f;--cell-ch:#aeaeb2;--cell-core:#2c2c2e;--cell-e:#0a84ff;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme=light]){
+    --paper:#1c1c1e;--card:#2c2c2e;--card2:#3a3a3c;
+    --ink:#f5f5f7;--ink2:#d1d1d6;--ink3:#98989d;--ink4:#6e6e73;
+    --fill:rgba(118,118,128,.24);--fill2:rgba(118,118,128,.34);--seg-on:#636366;
+    --sep:rgba(255,255,255,.07);--sep2:rgba(255,255,255,.11);--today:3%;
+    --accent:#0a84ff;--accent2:#409cff;--on-accent:#ffffff;
+    --ok:#30d158;--warn:#ff9f0a;--bad:#ff453a;
+    --lift:0 0 0 .5px rgba(255,255,255,.06);
+    --shadow:0 24px 64px rgba(0,0,0,.6),0 0 0 .5px rgba(255,255,255,.1);
+    --gc-1:#bf5af2;--gc-2:#63e6e2;--gc-3:#ac8e68;--gc-4:#ff375f;--gc-5:#ffd60a;--gc-6:#ff9f0a;
+    --gc-7:#0a84ff;--gc-8:#98989d;--gc-9:#5e5ce6;--gc-10:#30d158;--gc-11:#ff453a;
+    --ev-bg:26%;--ev-ink:52%;--ev-mix:#ffffff;
+    --cell-wl:#48484a;--cell-ox:#1c1c1e;--cell-ct:#6b604f;--cell-ch:#aeaeb2;--cell-core:#2c2c2e;--cell-e:#0a84ff;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;background:var(--paper);touch-action:manipulation} /* no double-tap zoom */
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;letter-spacing:-.006em;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-feature-settings:"kern"}
+/* CJK text breaks between words, never inside one; long tokens (URLs) may still wrap */
+body{word-break:keep-all;overflow-wrap:break-word}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline;text-underline-offset:2px}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0;letter-spacing:inherit}
+input,textarea,select{font:inherit;color:inherit;letter-spacing:inherit}
+:focus-visible{outline:3px solid color-mix(in srgb,var(--accent) 55%,transparent);outline-offset:1px}
+[hidden]{display:none!important}
+svg{display:block}
+.ext{display:inline-block;margin-left:3px;font-size:.86em;opacity:.6;text-decoration:none}
+.muted{color:var(--ink3)}

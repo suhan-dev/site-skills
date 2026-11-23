@@ -1,0 +1,13 @@
+# Local settings for `npx wrangler pages dev dist`. Copy to .dev.vars (never committed) and fill in.
+# Every value here is either public or a local test value. Production values live only in Cloudflare.
+
+# sign in as this member on localhost only, without Google (google-signin-team-gate)
+DEV_MEMBER=alex
+
+# Google sign-in (public client id; the allow-list is "address=member" pairs, commas or new lines)
+GOOGLE_CLIENT_ID=
+ALLOWED_EMAILS=
+
+# shared Google Calendar (shared-google-calendar). For local tests use tools/mock-google.mjs, which writes these for you.
+GOOGLE_CALENDAR_ID=
+GOOGLE_SA_JSON=

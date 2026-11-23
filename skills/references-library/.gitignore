@@ -1,0 +1,3 @@
+# never commit downloaded libraries (assets/fetch-vendor.sh fetches them)
+vendor/
+__pycache__/

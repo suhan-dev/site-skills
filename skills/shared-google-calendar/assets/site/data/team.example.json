@@ -1,0 +1,12 @@
+{
+  "_note": "Members and calendar owners. colorId is Google Calendar's event colour id (1–11); the site maps it to --gc-<id>. Keep ids fixed: events store them.",
+  "members": [
+    { "id": "alex", "en": "Alex", "colorId": "7" },
+    { "id": "blair", "en": "Blair", "colorId": "10" },
+    { "id": "casey", "en": "Casey", "colorId": "6" }
+  ],
+  "owners": [
+    { "id": "team", "label": "Team", "colorId": "9" },
+    { "id": "official", "label": "Official", "colorId": "11" }
+  ]
+}

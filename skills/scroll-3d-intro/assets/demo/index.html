@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Example Lab · intro demo</title>
+<!-- Serve the repository root (python3 -m http.server 8123) and open /skills/scroll-3d-intro/assets/demo/ .
+     Run ../fetch-vendor.sh first (three.js r170 into ../vendor/three). -->
+<style>html.intro-on,html.intro-on body{background:#111216}</style>
+<link rel="stylesheet" href="../../../team-site-design-system/assets/tokens.css">
+<link rel="stylesheet" href="../../../team-site-design-system/assets/components.css">
+<link rel="stylesheet" href="../intro.css">
+<script type="importmap">{"imports":{"three":"../vendor/three/three.module.min.js","three/addons/":"../vendor/three/addons/"}}</script>
+<script>
+(function(){var c=document.documentElement.classList,q=location.search,show=false,login=/[?&]arrive=login\b/.test(q);
+try{show=(/[?&]again\b/.test(q)||!sessionStorage.getItem("intro_seen"))&&!location.hash&&!matchMedia("(max-width:760px),(pointer:coarse) and (max-height:500px)").matches;if(sessionStorage.getItem("intro_arrive")){sessionStorage.removeItem("intro_arrive");login=true}}catch(e){}
+c.add(show?"intro-on":"intro-off");if(show&&login)c.add("ix-login");if(/[?&]ui=0\b/.test(q))c.add("ix-noui");
+if("scrollRestoration"in history)history.scrollRestoration="manual"})();
+</script>
+<style>
+  /* the placeholder app under the intro */
+  .demo{max-width:1080px;margin:0 auto;padding:36px 28px 80px}
+  .demo h1{margin:4px 0 22px;font-size:32px;font-weight:700;letter-spacing:-.025em}
+  .demo .eyebrow{margin:0;font-size:12.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)}
+  .rows{list-style:none;margin:0;padding:0;border-top:.5px solid var(--sep2)}
+  .rows li{display:grid;grid-template-columns:110px 1fr auto;gap:16px;align-items:baseline;padding:14px 0;border-bottom:.5px solid var(--sep2)}
+  .rows time{font-variant-numeric:tabular-nums;color:var(--ink3);font-size:13.5px}
+  .rows b{font-weight:600}
+  .rows i{font-style:normal;color:var(--ink3);font-size:13px}
+  @media (max-width:760px){.demo{padding:24px 16px 60px}.rows li{grid-template-columns:84px 1fr}.rows i{display:none}}
+</style>
+</head>
+<body>
+
+<section id="intro" class="ix" aria-label="Intro">
+  <div class="ix-stage">
+    <canvas class="ix-gl" aria-hidden="true"></canvas>
+    <div class="ix-shade" aria-hidden="true"></div>
+    <div class="ix-dim" aria-hidden="true"></div>
+    <div class="ix-hud"><span class="ix-brand">Example Lab</span><a class="ix-skip" href="#home" data-skip>Skip</a></div>
+    <nav class="ix-dots" aria-label="Scenes"></nav>
+    <div class="ix-heads">
+      <h1 class="h0"><span class="rise">Example Lab</span></h1>
+      <h2>Open It Up</h2>
+      <h2>Every Layer</h2>
+      <h2>One Chip</h2>
+    </div>
+  </div>
+  <div class="ix-end" aria-hidden="true"></div>
+</section>
+
+<div id="app" class="app">
+  <header class="bar">
+    <div class="bar-in">
+      <button class="brand" type="button" data-replay title="Replay the intro"><span>Example Lab</span></button>
+      <nav class="tabs" aria-label="Sections">
+        <a href="#home" aria-selected="true">Home</a><a href="#notes">Notes</a><a href="#people">People</a>
+      </nav>
+      <div class="bar-right"></div>
+    </div>
+  </header>
+  <main class="demo" id="home">
+    <p class="eyebrow">This week</p>
+    <h1>Welcome back</h1>
+    <ol class="rows">
+      <li><time>Tue 10:00</time><b>Weekly sync</b><i>Alex</i></li>
+      <li><time>Wed 14:00</time><b>Design review</b><i>Blair</i></li>
+      <li><time>Thu 19:00</time><b>Lab session</b><i>Casey</i></li>
+      <li><time>Fri 16:30</time><b>Reading group</b><i>Alex</i></li>
+    </ol>
+  </main>
+</div>
+
+<script type="module" src="../intro.js"></script>
+</body>
+</html>

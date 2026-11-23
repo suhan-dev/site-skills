@@ -1,0 +1,4 @@
+# never commit local secrets or downloaded libraries
+.dev.vars
+vendor/
+__pycache__/

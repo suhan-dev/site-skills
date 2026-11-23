@@ -1,0 +1,118 @@
+/* Research log tab — page head, week strip, closing table, the week's head and state, team notes and personal logs.
+   Load after the design system's tokens.css, components.css and doc.css (team-site-design-system): every colour is a
+   token from there; the Markdown inside .doc is styled by doc.css.
+   Breakpoints: ≥761 desktop polish · ≤1100 one column · ≤760 phones. */
+
+/* ---------- page head: eyebrow, title, GitHub folder link ---------- */
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:24px}
+
+/* ---------- week strip: one tab per week, an underline under the chosen one ---------- */
+.week-tabs{display:flex;gap:0;overflow-x:auto;margin-bottom:14px;border-bottom:.5px solid var(--sep2);scrollbar-width:none}
+.week-tabs::-webkit-scrollbar{display:none}
+.week-tabs button{position:relative;flex:1 0 auto;display:grid;gap:0;justify-items:center;padding:6px 12px 9px;color:var(--ink3);text-align:center;transition:box-shadow .15s}
+.week-tabs button b{font-size:13px;font-weight:600;color:var(--ink2);display:flex;align-items:center;letter-spacing:-.01em}
+.week-tabs button small{font-size:11px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.week-tabs button small em{font-style:normal;color:var(--accent);font-weight:600}
+.week-tabs button:hover b{color:var(--ink)}
+.week-tabs button.empty b{color:var(--ink3);font-weight:500}
+.week-tabs button[aria-selected=true]{box-shadow:inset 0 -2px 0 var(--ink)}
+.week-tabs button[aria-selected=true] b{color:var(--ink)}
+.week-tabs button[aria-selected=true] small{color:var(--ink2)}
+/* "has entries": a 6 px accent dot */
+.week-tabs button .dot{position:absolute;top:7px;right:7px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.week-tabs button.locked b{color:var(--ink3)}
+
+/* ---------- the week's head ---------- */
+.wk-top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:26px 0 12px}
+.wk-top h2{margin:0;font-size:24px;font-weight:700;line-height:1.25;letter-spacing:-.022em}
+.wk-sub{color:var(--ink3);font-weight:600}
+.wk-top .meta{font-size:12.5px;color:var(--ink3);margin-bottom:2px;font-variant-numeric:tabular-nums}
+
+/* ---------- team notes (left, a little wider) and personal logs (right) ---------- */
+.wk-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:24px 44px;align-items:start}
+.doc-card{border-top:.5px solid var(--sep2);min-width:0}
+.doc-card>header{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:.5px solid var(--sep)}
+.doc-card>header h3{margin:0;font-size:15px;font-weight:600;letter-spacing:-.015em}
+.doc-card>header .sp{flex:1}
+.doc-card>header a,.person-tabs>a{font-size:12.5px;font-weight:500;text-decoration:none;color:var(--accent);padding:4px 8px;border-radius:7px}
+.doc-card>header a:hover,.person-tabs>a:hover{background:var(--fill)}
+.doc-card .doc{padding:0 0 12px}
+/* one tab per member: a dot in their colour and the name; the chosen one darker and bolder, an empty log fainter */
+.person-tabs{display:flex;align-items:center;gap:2px 14px;flex-wrap:wrap;padding:8px 0;border-bottom:.5px solid var(--sep)}
+.person-tabs button{display:inline-flex;align-items:center;gap:7px;height:30px;font-size:13.5px;font-weight:500;color:var(--ink3)}
+.person-tabs button::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
+.person-tabs button:hover{color:var(--ink)}
+.person-tabs button[aria-selected=true]{color:var(--ink);font-weight:600}
+.person-tabs button.empty{color:var(--ink4)}
+.person-tabs .sp{flex:1}
+.empty-box{padding:22px 0;color:var(--ink3);font-size:13.5px}
+.empty-box p{margin:0 0 14px}
+.wk-extra{margin-top:28px}
+.wk-extra ul{margin:4px 0 0;padding-left:18px;font-size:13.5px}
+
+/* ---------- week state and the closing table ---------- */
+.lk{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.6;display:inline-block;vertical-align:-1px;margin-right:4px;flex:none}
+.wk-state{display:flex;align-items:center;gap:9px;margin:0 0 18px;font-size:13px;color:var(--ink2)}
+.wk-state b{color:var(--ink);font-weight:600}
+.wk-state i{width:8px;height:8px;border-radius:50%;flex:none}
+.wk-state.open i{background:var(--ok)}
+.wk-state.soon i{box-shadow:inset 0 0 0 1.5px var(--ink4)}
+.wk-state.locked{color:var(--ink3)}
+.wk-table{margin:0 0 4px;font-size:13px;color:var(--ink2)}
+.wk-table summary{cursor:pointer;color:var(--ink3);font-size:12.5px;width:max-content;padding:2px 4px;border-radius:6px}
+.wk-table summary:hover{color:var(--ink)}
+.wk-table p{margin:8px 0}
+.wk-table table{border-collapse:collapse;min-width:min(620px,100%);font-variant-numeric:tabular-nums}
+.wk-table td,.wk-table th{padding:6px 14px 6px 0;border-bottom:.5px solid var(--sep);text-align:left;font-size:12.5px}
+.wk-table th{color:var(--ink3);font-weight:600}
+.wk-table tr.locked td{color:var(--ink4)}
+.wk-table tr.now td{color:var(--ink);font-weight:600}
+
+/* ---------- desktop polish ---------- */
+@media (min-width:761px){
+  /* the two folder links share one size; the week strip fades where more weeks are hidden; the "has entries" dot sits
+     just after its week; the two column heads share one height, so their rules and links line up */
+  #rec-repo{height:28px;padding:0 12px;font-size:12.5px}
+  .week-tabs{-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 32px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 32px),transparent)}
+  .week-tabs.at-end{-webkit-mask-image:none;mask-image:none}
+  .week-tabs button b{position:relative}
+  .week-tabs button .dot{top:50%;right:auto;left:100%;margin:-3px 0 0 5px}
+  .wk-table summary{display:flex;align-items:center;gap:5px;padding:2px 0;list-style:none}
+  .wk-table summary::-webkit-details-marker{display:none}
+  .wk-table summary::after{content:"›";font-size:15px;line-height:1;transition:transform .15s}
+  .wk-table[open] summary::after{transform:rotate(90deg)}
+  .doc-card>header,.person-tabs{min-height:48px;padding-top:0;padding-bottom:0}
+  .doc-card .doc h1{font-size:19px;line-height:1.35;letter-spacing:-.018em}
+}
+
+/* ---------- one column below 1101 px: team notes, then personal logs ---------- */
+@media (max-width:1100px){
+  .wk-grid{grid-template-columns:minmax(0,1fr)}
+}
+
+/* ---------- phones (≤ 760 px) ---------- */
+@media (max-width:760px){
+  /* a lighter head: the title a size down, the GitHub link small on the eyebrow's line */
+  .page-head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:0 12px;margin-bottom:18px}
+  .page-head>div{display:contents}
+  .page-head .page-h{grid-column:1/-1;font-size:23px}
+  .page-head>.btn{grid-row:1;grid-column:2;height:30px;padding:0 12px;font-size:12.5px;margin-top:-6px;position:relative}
+  .page-head>.btn::after{content:"";position:absolute;left:0;right:0;top:50%;height:44px;transform:translateY(-50%)}
+  .wk-grid{gap:28px}
+  /* the week strip scrolls sideways and fades at the right edge, so the cut-off week reads as "more this way" */
+  .week-tabs{-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 32px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 32px),transparent)}
+  .week-tabs.at-end{-webkit-mask-image:none;mask-image:none}
+  .week-tabs button{min-height:44px}
+  /* the week's head stacks: title, then the folder link */
+  .wk-top{flex-direction:column;align-items:flex-start;gap:10px}
+  .wk-top h2{font-size:22px}
+  /* 44 px to tap: member tabs for real, the small links with an invisible area */
+  .person-tabs button{height:44px}
+  :is(.doc-card>header a,.person-tabs>a,.wk-table summary){position:relative}
+  :is(.doc-card>header a,.person-tabs>a,.wk-table summary)::after{
+    content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .week-tabs button,.wk-table summary::after{transition:none}
+}

@@ -1,0 +1,8 @@
+# Local runs with `npx wrangler pages dev`. Copy to .dev.vars (never commit it) and fill in, or let
+# `node tools/mock-google.mjs 8790 .dev.vars` write a fake set for you.
+# On Cloudflare these live in Pages → Settings → Variables and Secrets (see references/setup.md).
+GOOGLE_SA_JSON=
+GOOGLE_CALENDAR_ID=
+# local tests against tools/mock-google.mjs only; never set these on the live site
+GOOGLE_TOKEN_URL=
+GOOGLE_API_BASE=

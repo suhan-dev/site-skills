@@ -1,0 +1,11 @@
+{
+  "_note": "Demo team (placeholder data).",
+  "repo": "example-org/example-lab",
+  "branch": "main",
+  "members": [
+    { "id": "alex", "name": "Alex", "colorId": "7" },
+    { "id": "blair", "name": "Blair", "colorId": "10" },
+    { "id": "casey", "name": "Casey", "colorId": "6" }
+  ],
+  "program": { "start": "2027-01-05", "weeks": 10, "timeZone": "Asia/Seoul" }
+}

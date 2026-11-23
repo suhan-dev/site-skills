@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Research log · Example Lab</title>
+<!-- Demo only: the clock is frozen at Thu 2027-01-21 10:00 (week 3 open, weeks 1–2 closed, 4–10 not started).
+     ?now=2027-01-12T09:00:00%2B09:00 picks another moment. Runs before any module. -->
+<script>
+(function(){var s=new URLSearchParams(location.search).get("now")||"2027-01-21T10:00:00+09:00";var D=Date,delta=D.parse(s)-D.now();
+function F(){var a=[].slice.call(arguments);return a.length?new (Function.prototype.bind.apply(D,[null].concat(a)))():new D(D.now()+delta)}
+F.prototype=D.prototype;F.now=function(){return D.now()+delta};F.parse=D.parse;F.UTC=D.UTC;window.Date=F})();
+</script>
+<!-- md.js imports /vendor/marked/…; in the demo the libraries sit next to this page (bash ../fetch-vendor.sh) -->
+<script type="importmap">{"imports":{"/vendor/marked/marked.esm.js":"./vendor/marked/marked.esm.js"}}</script>
+<link rel="stylesheet" href="../../../team-site-design-system/assets/tokens.css">
+<link rel="stylesheet" href="../../../team-site-design-system/assets/components.css">
+<link rel="stylesheet" href="../../../team-site-design-system/assets/doc.css">
+<link rel="stylesheet" href="./vendor/katex/katex.min.css">
+<link rel="stylesheet" href="../site/css/records.css">
+</head>
+<body>
+<div id="app" class="app">
+  <header class="bar" data-lang-fixed>
+    <div class="bar-in">
+      <button class="brand" type="button"><span>Example Lab</span></button>
+      <nav class="tabs" role="tablist" aria-label="Sections">
+        <a role="tab" href="#calendar" aria-selected="false">Calendar</a>
+        <a role="tab" href="#records" aria-selected="true">Research log</a>
+        <a role="tab" href="#refs" aria-selected="false">References</a>
+      </nav>
+      <!-- bell · name · language · theme · chat · sign-out (team-site-design-system) -->
+      <div class="bar-right">
+        <button class="icon-btn" type="button" title="App &amp; notifications" aria-label="App &amp; notifications">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6c-2.95 0-5.1 2.3-5.1 5.25v3.6l-1.55 2.7c-.24.42.06.95.55.95h12.2c.49 0 .79-.53.55-.95l-1.55-2.7v-3.6C17.1 5.9 14.95 3.6 12 3.6z"/><path d="M9.75 18.6a2.3 2.3 0 0 0 4.5 0"/></svg>
+        </button>
+        <button class="me set" type="button" id="me-btn" style="--c:var(--gc-7)"><span class="me-dot"></span><span id="me-name">Alex</span></button>
+        <button class="lang-btn" type="button" id="lang-btn">EN</button>
+        <button class="icon-btn theme-btn" type="button" id="theme-btn" title="Light or dark" aria-label="Light or dark" aria-pressed="false">
+          <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.4 14.6A8.5 8.5 0 0 1 9.4 3.6a8.5 8.5 0 1 0 11 11z"/></svg>
+          <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+        </button>
+        <button class="icon-btn chat-btn" type="button" id="chat-btn" title="Team chat" aria-label="Team chat" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.2c-4.7 0-8.3 3-8.3 6.9 0 2.2 1.2 4.1 3 5.4-.1 1.3-.7 2.5-1.6 3.4 1.9 0 3.6-.7 4.8-1.8.7.2 1.4.2 2.1.2 4.7 0 8.3-3 8.3-7.2S16.7 4.2 12 4.2z"/></svg>
+          <i class="chat-dot" hidden></i>
+        </button>
+        <a class="icon-btn out-btn" href="#" title="Sign out" aria-label="Sign out"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 16.5 14.5 12 10 7.5M14.5 12H4"/></svg></a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="tab-pane" id="pane-records" data-pane="records">
+      <div class="page-head">
+        <div>
+          <p class="eyebrow">Research log</p>
+          <h1 class="page-h">What we did each week, and what's next</h1>
+        </div>
+        <a class="btn ghost" id="rec-repo" target="_blank" rel="noopener"><span>GitHub folder</span><span class="ext" aria-hidden="true">↗</span></a>
+      </div>
+      <nav class="week-tabs" id="week-tabs" role="tablist" aria-label="Weeks"></nav>
+      <details class="wk-table" id="week-table"></details>
+      <div id="week-body"></div>
+    </section>
+  </main>
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

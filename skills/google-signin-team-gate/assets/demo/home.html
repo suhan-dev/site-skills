@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- The demo's page behind the gate. In your site this is the app (index.html). -->
+<title>Example Lab</title>
+<script>try{var t=localStorage.getItem("site_theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="stylesheet" href="/css/tokens.css">
+<style>
+  main{max-width:520px;margin:18vh auto 0;padding:0 24px}
+  h1{font-size:28px;font-weight:700;letter-spacing:-.022em;margin:0 0 8px;color:var(--ink)}
+  p{margin:0 0 6px;color:var(--ink2)}
+  code{font-family:var(--mono);font-size:13px;color:var(--ink3)}
+  a{color:var(--accent);text-decoration:none}
+  .out{display:inline-flex;align-items:center;min-height:44px;margin-top:12px;font-weight:500}
+</style>
+</head>
+<body>
+<main>
+  <h1>Example Lab</h1>
+  <p id="who" aria-live="polite">Checking who you are…</p>
+  <p><code id="raw"></code></p>
+  <a class="out" href="/__logout" id="out">Sign out</a>
+</main>
+<script>
+// /api/me answers with the member id, never the address
+fetch("/api/me", { cache: "no-store" }).then((r) => r.json()).then((j) => {
+  document.getElementById("who").textContent = j.member ? "Signed in as " + j.member + "." : "Not signed in.";
+  document.getElementById("raw").textContent = "GET /api/me → " + JSON.stringify(j);
+});
+</script>
+</body>
+</html>
