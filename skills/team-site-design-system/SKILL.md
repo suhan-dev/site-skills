@@ -57,8 +57,8 @@ row on desktop and two rows on phones without ever cutting anything off.
   and space. Fills (`--fill`) are only for controls and inputs.
 - **No neon, no glow.** Apple system colours only, via tokens. One accent (`--accent`), used for primary actions, links
   and focus.
-- **Dark is soft grey** (`--paper #1c1c1e`, `--card #2c2c2e`), never `#000`. Hairlines get fainter in dark (`.07`/`.11`
-  white).
+- **Dark is soft grey** (`--paper #1c1c1e`, `--card #2c2c2e`), never `#000` on the page. (The dark `theme-color` meta is
+  `#000000`: it only tints the browser's own bar, as iOS does.) Hairlines get fainter in dark (`.07`/`.11` white).
 - **One font stack**: `-apple-system, "SF Pro Text", "Pretendard Variable", …`. Korean breaks between words only
   (`word-break: keep-all`). Never break inside a label–number pair ("Week 3", "12/22 – 12/28", "10:50 AM"): wrap such
   pairs in an element with `white-space: nowrap`.
@@ -74,8 +74,8 @@ row on desktop and two rows on phones without ever cutting anything off.
 - **No helper text that repeats the obvious.** Labels are one or two words. Empty states say what to do, once.
 - **English by default.** The header, intro, sign-in and main screen stay English even in KO mode (`data-lang-fixed`);
   terms and names stay English in both languages.
-- **Motion is short and optional.** 150 ms colour transitions, 220 ms dialog rise, 320 ms sheet slide;
-  `prefers-reduced-motion` removes them.
+- **Motion is short.** 150 ms colour transitions, 220 ms dialog rise, 320 ms sheet slide; `prefers-reduced-motion`
+  removes the dialog, sheet and switch motion (colour fades stay). Every value: `docs/design/motion.md`.
 
 ## Configuration
 

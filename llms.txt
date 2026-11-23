@@ -32,6 +32,16 @@ Cloudflare Variables and Secrets by the user's own hand.
 - [kakao-link-preview](https://raw.githubusercontent.com/suhan-dev/site-skills/main/skills/kakao-link-preview/SKILL.md): Make a signed-in site show a sharp, correctly cropped link preview in KakaoTalk and other messengers (OG tags on the sign-in page, a 2400×1260 image with a versioned URL, Kakao cache reset, inline images for notice posts). Use when a site link is shared in chat and the preview is missing, blurry, cropped or stale.
 - [scroll-3d-intro](https://raw.githubusercontent.com/suhan-dev/site-skills/main/skills/scroll-3d-intro/SKILL.md): Build a scroll-driven three.js intro that dives one continuous camera into a photoreal product render (PBR, studio light, AO, depth of field), with 1–3 word headlines, a time-driven clock, adaptive quality and a fade into the site. Use for a desktop and tablet landing intro; phones skip it.
 
+## Design, UI and UX
+
+- [docs/design/README.md](https://raw.githubusercontent.com/suhan-dev/site-skills/main/docs/design/README.md): the look in one paragraph and where every design detail lives
+- [docs/design/tokens.md](https://raw.githubusercontent.com/suhan-dev/site-skills/main/docs/design/tokens.md): every token with its light and dark value (generated from the CSS)
+- [docs/design/motion.md](https://raw.githubusercontent.com/suhan-dev/site-skills/main/docs/design/motion.md): every transition, animation and timed delay (generated)
+- [docs/design/components.md](https://raw.githubusercontent.com/suhan-dev/site-skills/main/docs/design/components.md): each shared control in every state
+- [docs/design/screens.md](https://raw.githubusercontent.com/suhan-dev/site-skills/main/docs/design/screens.md): each screen at 1440, 1024, 768, 390 and 320 px, light and dark
+- [docs/design/ux.md](https://raw.githubusercontent.com/suhan-dev/site-skills/main/docs/design/ux.md): journeys, empty/loading/error states with their words, wording, keyboard, accessibility
+- [team-site-design-system/references/mobile.md](https://raw.githubusercontent.com/suhan-dev/site-skills/main/skills/team-site-design-system/references/mobile.md): every phone rule with code and reason
+
 ## Optional
 
 - [docs/gallery.md](https://raw.githubusercontent.com/suhan-dev/site-skills/main/docs/gallery.md): every screenshot

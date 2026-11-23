@@ -93,7 +93,9 @@ detail), `assets/` (code to copy, a demo with placeholder data) and `screenshots
 </tr>
 </table>
 
-Every screenshot on one page: [docs/gallery.md](docs/gallery.md).
+Every screenshot on one page: [docs/gallery.md](docs/gallery.md). Design, UI and UX across all skills (tokens with
+their real values, motion, component states, every screen at every width in light and dark, journeys and states):
+[docs/design/](docs/design/README.md).
 
 ## Use it
 
