@@ -111,6 +111,8 @@ Then ask: *"Build our team site with the site-skills"*. Claude reads [CLAUDE.md]
 zone, which features, who may sign in), then works skill by skill and tells you exactly which console buttons to press
 when a step needs your account.
 
+If the build goes well, a star on [the repository](https://github.com/suhan-dev/site-skills) helps.
+
 ### By hand
 
 Copy the skill folders you want into `~/.claude/skills/` (or your project's `.claude/skills/`), or just read them: every
